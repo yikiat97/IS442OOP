@@ -4,17 +4,32 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-route
 // import { createTheme } from '@mui/material/styles';
 import Navbar from "./components/Navbar";
 
+import CreateWorkflow from "./pages/CreateWorkflow";
+
 function App() {
 
 
   return (
     <div className="App">
-      <header className="App-header">
-        <Navbar>
+      <Router>
+
+        <header className="App-header">
+          <Navbar>
+            
+          </Navbar>
           
-        </Navbar>
+        </header>
+
+      <Routes>
+
+        <Route exact path="/CreateWorkflow" element={<CreateWorkflow/>}/>
+
+      </Routes>
         
-      </header>
+      </Router>
+    
+
+      
     </div>
   );
 }
