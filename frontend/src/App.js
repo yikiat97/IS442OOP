@@ -6,30 +6,23 @@ import Navbar from "./components/Navbar";
 
 import CreateWorkflow from "./pages/CreateWorkflow";
 
+import Form from "./pages/Form";
+
 function App() {
 
 
   return (
     <div className="App">
-      <Router>
+      <header className="App-header">
+      <>
+      <Navbar />
 
-        <header className="App-header">
-          <Navbar>
-            
-          </Navbar>
-          
-        </header>
-
+      </>
+      </header>      
       <Routes>
-
+        <Route path="/Form" element={<Form />} />
         <Route exact path="/CreateWorkflow" element={<CreateWorkflow/>}/>
-
-      </Routes>
-        
-      </Router>
-    
-
-      
+      </Routes> 
     </div>
   );
 }
