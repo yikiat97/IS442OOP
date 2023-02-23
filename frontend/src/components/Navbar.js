@@ -18,7 +18,7 @@ import FeedIcon from '@mui/icons-material/Feed';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import StartIcon from '@mui/icons-material/Start';
-
+import {Link} from "react-router-dom";
 const Navbar = (props) => {
 return (
 
@@ -64,9 +64,9 @@ return (
 
         <MenuItem>
         <ListItemIcon><FeedIcon/></ListItemIcon>
-          
           <Typography variant="body2">
-            Form management
+            <Link to="/Form">Form management</Link>
+
           </Typography>
         </MenuItem>
     </MenuList>
