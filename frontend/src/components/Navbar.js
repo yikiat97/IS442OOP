@@ -58,7 +58,7 @@ return (
         <ListItemIcon> <SettingsSuggestIcon/> </ListItemIcon>
           
           <Typography variant="body2">
-            Workflows
+            <Link to="/WorkflowsAdmin">Workflows</Link>
           </Typography>
         </MenuItem>
 

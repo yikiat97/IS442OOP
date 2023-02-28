@@ -8,6 +8,8 @@ import CreateWorkflow from "./pages/CreateWorkflow";
 
 import Form from "./pages/Form";
 
+import WorkflowsAdmin from "./pages/WorkflowsAdmin";
+
 function App() {
 
 
@@ -22,6 +24,7 @@ function App() {
       <Routes>
         <Route path="/Form" element={<Form />} />
         <Route exact path="/CreateWorkflow" element={<CreateWorkflow/>}/>
+        <Route path="/WorkflowsAdmin" element={<WorkflowsAdmin />} />
       </Routes> 
     </div>
   );
