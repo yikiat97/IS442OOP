@@ -3,10 +3,9 @@ package com.java.project.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("User")
+@Document("User") //collection point database table(document)
 public class User {
-
-        @Id
+        @Id //annotate the below is primary key 
         private String username;
         private String password;  
         private String name;

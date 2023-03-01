@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.java.project.model.User;
 import com.java.project.repository.UserRepository;
+import com.java.project.controller.*;
 
 @SpringBootApplication
 @RestController
