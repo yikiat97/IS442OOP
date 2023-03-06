@@ -25,17 +25,22 @@ import {
     Button,
     Link
 } from "@mui/material";
-import { Form } from 'react-router-dom';
+
 
 
 function CreateWorkflow(){
+    //create new workflow
+    const [workflow, setWorkflow] = React.useState([]);
 
+    //set steps
     const [stepValue, setSteps] = React.useState([{id:1, label:'Select form'}]);
     function onAddBtnClick() {
         setSteps([
             ...stepValue,
             {label:"Select form"} 
         ]);
+
+        setWorkflow([...workflow])
     }
 
     const [activeStep, setActiveStep] = React.useState(0);
@@ -55,9 +60,9 @@ function CreateWorkflow(){
         })
         }    
 
-
+    //set form values
     const forms = [{form:'Vendor Assessment'}, {form:'Pre-Evaluation Form'}, {form:'Health Performance'}];
-    const [formvalue, setFormValue] = React.useState(null);
+    const [formValue, setFormValue] = React.useState(null);
     const filter = createFilterOptions();
 
 
@@ -77,34 +82,15 @@ function CreateWorkflow(){
     ];
 
     const [assigneeValue, setAssigneeValue] = React.useState(null);
-    const assigneeList=[
+    const assigneeList=['Carol Chua','Charlie Tan','Emmanuel Kant','Jack Liu'];
 
-            {companyName:"Ever Green", users:
-                    [{name:"Carol Chua", id:1},
-                    {name:"Louie Peh", id:2}]
-            },
-            
-            {companyName:"Sparks Analytics", users:
-                    [{name:"Carol Chua", id:1},
-                    {name:"Louie Peh", id:2}]
-            },
-
-            {companyName:"Ever Green", users:
-                    [{name:"Carol Chua", id:1},
-                    {name:"Louie Peh", id:2}]
-            }
-        ];
-    
-    
 
     return(
         <Grid sx={{mt:6, textAlign:'left', px:4}}>
             
             <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:3}}>
                 <Grid item md={2}>
-
                     <h1>New Workflow</h1>
-
                 </Grid>
 
                 <Grid item md={0.5} sm={6} sx={{alignItems:"center", justifyContent:"center", display:'flex'}}>
@@ -140,11 +126,16 @@ function CreateWorkflow(){
                         <Grid item>
                             <FormControl>
                                 <FormLabel htmlFor="Assignee">Assignee</FormLabel>
-                                    <OutlinedInput
-                                    id="Assignee"
-                                    defaultValue="Choose Assignee"
-                                    aria-describedby="Assignee-text"
-                                    />  
+                            
+                                    <Autocomplete
+                                    id="grouped-demo"
+                                    options={assigneeList}
+                                    sx={{width:200}}
+                                    renderInput={(params) => <TextField {...params} />}
+                                    onChange={(newValue) => {
+                                        setAssigneeValue(newValue);
+                                        }}
+                                    /> 
                                                         
                             </FormControl>
                         </Grid>
@@ -152,13 +143,33 @@ function CreateWorkflow(){
                         <Grid item>
                             <FormControl>
                                 <FormLabel htmlFor="Company-helper">Company</FormLabel>
-                                    <OutlinedInput
-                                    id="Company"
-                                    defaultValue="Choose Company"
-                                    aria-describedby="Company-text"
+                                    
+                                <Autocomplete
+                                    id="country-select-demo"
+                                    sx={{width:200}}
+                                    options={companyList}
+                                    autoHighlight
+                                    onChange={(newValue) => {
+                                        setCompanyValue(newValue);
+                                        }}
+                                    getOptionLabel={(option) => option.name}
+                                    renderOption={(props, option) => (
+                                        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                        {option.name}
+                                        </Box>
+                                    )}
+                                    renderInput={(params) => (
+                                        <TextField
+                                        {...params}
+                                        inputProps={{
+                                            ...params.inputProps,
+                                        }}
+                                        />
+                                    )}
                                     />
 
                             </FormControl>
+                            
                         </Grid>
 
                         <Grid item>
@@ -166,8 +177,7 @@ function CreateWorkflow(){
                                 <FormLabel htmlFor="DueDate">Due Date</FormLabel>
                                 
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DatePicker
-                                            
+                                        <DatePicker   
                                             value={value}
                                             onChange={(newValue) => {
                                             setValue(newValue);
@@ -221,13 +231,16 @@ function CreateWorkflow(){
                                 
                                 <Box sx={{ mb: 2 }}>
 
-                                
-                                            
                                     <Grid container spacing={{ xs: 2, md: 6 }} columns={{ xs: 4, sm: 8, md: 12 }} sx={{display:"flex",alignItems:"center"}}>
                                         <Grid item sx={{}}>
                                         
-                                            {/* needs fixing */}
-                                                <TextField defaultValue="EUR" size="medium" select>
+                                            
+                                                <TextField 
+                                                            // value={{formValue}}
+                                                            // // onChange={(formValue) => {
+                                                            // //     setFormValue(formValue);
+                                                            // //     }}
+                                                            size="medium" select sx={{width:300}}>
                                                     <Button><Link underline="none" href='Form'>Create New Form</Link><AddCircleIcon color='success' sx={{pl:1}}/></Button>
                                                     {forms.map((option) => (
                                                         <MenuItem key={option.form} value={option.form}>{option.form}</MenuItem>
@@ -235,63 +248,7 @@ function CreateWorkflow(){
                                                 </TextField>
                                         
                                         
-                                            {/* <Autocomplete
-                                            
-                                                    required
-                                                    value={formvalue}
-                                                    onChange={(event, newValue) => {
-                                                    if (typeof newValue === 'string') {
-                                                        setFormValue({
-                                                        form: newValue,
-                                                        });
-                                                    } else if (newValue && newValue.inputValue) {
-                                                        // Create a new value from the user input
-                                                        setFormValue({
-                                                        form: newValue.inputValue,
-                                                        });
-                                                    } else {
-                                                        setFormValue(newValue);
-                                                    }
-                                                    }}
-                                                    filterOptions={(options, params) => {
-                                                    const filtered = filter(options, params);
 
-                                                    const { inputValue } = params;
-                                                    // Suggest the creation of a new value
-                                                    const isExisting = options.some((option) => inputValue === option.title);
-                                                    if (inputValue !== '' && !isExisting) {
-                                                        filtered.push({
-                                                        inputValue,
-                                                        form: `Add "${inputValue}"`,
-                                                        });
-                                                    }
-
-                                                    return filtered;
-                                                    }}
-                                                    selectOnFocus
-                                                    clearOnBlur
-                                                    handleHomeEndKeys
-                                                    id="free-solo-with-text-demo"
-                                                    options={forms}
-                                                    getOptionLabel={(option) => {
-                                                    // Value selected with enter, right from the input
-                                                    if (typeof option === 'string') {
-                                                        return option;
-                                                    }
-                                                    // Add "xxx" option created dynamically
-                                                    if (option.inputValue) {
-                                                        return option.inputValue;
-                                                    }
-                                                    // Regular option
-                                                    return option.form;
-                                                    }}
-                                                    renderOption={(props, option) => <li {...props}>{option.form}</li>}
-                                                    sx={{ width: 300 }}
-                                                    freeSolo
-                                                    renderInput={(params) => (
-                                                    <TextField {...params}  />
-                                                    )}
-                                                /> */}
                                         </Grid>
                                         <Grid item>
                                             <Button columns={{ xs: 12, sm: 12, md: 12 }}
@@ -299,6 +256,7 @@ function CreateWorkflow(){
                                                 onClick={()=> {
                                                     handleNext();
                                                     onAddBtnClick();
+                                                    workflow.push(formValue)
                                                 }}
                                                 sx={{ mt: 1, mr: 1 }}>
                                                 Add Step
