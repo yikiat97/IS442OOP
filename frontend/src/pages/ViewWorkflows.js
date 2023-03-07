@@ -27,7 +27,7 @@ import {
 
 
 
-function RejectedWorkflow(){
+function ViewWorkflows(){
 
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -51,16 +51,16 @@ function RejectedWorkflow(){
         },
       }));
 
-    function createData(Workflow, DueDate, Assignee, Company, Status) {
-        return { Workflow, DueDate, Assignee, Company, Status};
+    function createData(Workflow) {
+        return { Workflow};
       }
       
       const rows = [
-        createData('Health Evaluation', '12 Feb 2023', 'Carol Chua', 'Ever Green','Rejected'),
-        createData('Health Evaluation', '12 Feb 2023', 'Carol Chua', 'Ever Green','Rejected'),
-        createData('Health Evaluation', '12 Feb 2023', 'Carol Chua', 'Ever Green','Rejected'),
-        createData('Health Evaluation', '12 Feb 2023', 'Carol Chua', 'Ever Green','Rejected'),
-        createData('Health Evaluation', '12 Feb 2023', 'Carol Chua', 'Ever Green','Rejected'),
+        createData('Health Evaluation'),
+        createData('Health Evaluation'),
+        createData('Health Evaluation'),
+        createData('Health Evaluation'),
+        createData('Health Evaluation'),
       ];
     
     return(
@@ -68,7 +68,7 @@ function RejectedWorkflow(){
             
             <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:3}}>
                 <Grid item md={2}>
-                    <h1>Rejected Workflows</h1>
+                    <h1>Workflow Templates</h1>
                 </Grid>
 
             </Grid>
@@ -79,7 +79,7 @@ function RejectedWorkflow(){
                 
 
                 <Grid item md={0.5} sm={6} sx={{mb:5}}>
-                <Link href='CreateWorkflow' underline='none'><Button variant="contained" sx={{width:120}} startIcon={<AddIcon/>}>Create</Button></Link>
+                    <Link href='CreateWorkflow' underline='none'><Button variant="contained" sx={{width:120,backgroundColor:"#2596BE"}} startIcon={<AddIcon/>}>Create</Button></Link>
                 </Grid>
 
                 <Grid item md={0.5} sm={6} sx={{mb:5}}>
@@ -102,10 +102,7 @@ function RejectedWorkflow(){
                     <TableHead>
                     <TableRow>
                         <StyledTableCell>Workflows</StyledTableCell>
-                        <StyledTableCell align="left">Due Date</StyledTableCell>
-                        <StyledTableCell align="left">Assignee</StyledTableCell>
-                        <StyledTableCell align="left">Company</StyledTableCell>
-                        <StyledTableCell align="left">Status</StyledTableCell>
+
                         <StyledTableCell align="left"> </StyledTableCell>
                     </TableRow>
                     </TableHead>
@@ -115,11 +112,7 @@ function RejectedWorkflow(){
                         <StyledTableCell component="th" scope="row">
                             {row.Workflow}
                         </StyledTableCell>
-                        <StyledTableCell align="left">{row.DueDate}</StyledTableCell>
-                        <StyledTableCell align="left">{row.Assignee}</StyledTableCell>
-                        <StyledTableCell align="left">{row.Company}</StyledTableCell>
-                        <StyledTableCell align="left"><Chip label={row.Status} sx={{background:'#c62828', color:'#FFFFFF'}}></Chip></StyledTableCell>
-                        <StyledTableCell align="right"><ArrowForwardIosIcon /></StyledTableCell>
+                        <StyledTableCell align="right"><Link href='CreateWorkflow' underline='none' color="#616161"><ArrowForwardIosIcon /></Link></StyledTableCell>
                         </StyledTableRow>
                     ))}
                     </TableBody>
@@ -134,4 +127,4 @@ function RejectedWorkflow(){
     
 }
 
-export default RejectedWorkflow;
+export default ViewWorkflows;

@@ -19,7 +19,8 @@ import {
     InputBase,
     Autocomplete,
     InputAdornment,
-    Input
+    Input,
+    Link
         
 } from "@mui/material";
 
@@ -78,7 +79,7 @@ function UncompletedWorkflow(){
                 
 
                 <Grid item md={0.5} sm={6} sx={{mb:5}}>
-                    <Button variant="contained" sx={{width:120}} startIcon={<AddIcon/>}>Create</Button>
+                    <Link href='CreateWorkflow' underline='none'><Button variant="contained" sx={{width:120}} startIcon={<AddIcon/>}>Create</Button></Link>
                 </Grid>
 
                 <Grid item md={0.5} sm={6} sx={{mb:5}}>
