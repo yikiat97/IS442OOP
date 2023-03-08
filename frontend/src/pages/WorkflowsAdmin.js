@@ -118,14 +118,12 @@ function WorkflowsAdmin(){
         <Grid sx={{mt:6, textAlign:'left', px:4}}>
             
             <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:4}} sx={{display:"flex", justifyContent:"space-between", alignItems:"center"}}>
-                <Grid item md={2.5}>
+                <Grid item md={2.0} sm={2.5}>
                     <h1>Workflows</h1>
                 </Grid>
-                <Grid item md={0.5} sm={6} sx={{}}>
-                    <Link href='AssignWorkflow' underline='none'><Button variant="contained" sx={{width:250, backgroundColor:"#2596BE"}} endIcon={<AssignmentIndIcon/>}>Assign Workflow</Button></Link>
-                </Grid>
-                <Grid item md={1} sm={6} sx={{justifyContent:"flex-end", display:'flex'}}>
-                    <Button variant="contained" sx={{width:250, backgroundColor:"#2596BE"}} 
+                
+                <Grid item md={2.0} sm={1} sx={{justifyContent:"flex-end", display:'flex'}}>
+                    <Button variant="contained" sx={{width:250, backgroundColor:"#2596BE"}}
                             endIcon={<KeyboardArrowDownIcon />}
                             aria-controls={open ? 'demo-customized-menu' : undefined}
                             aria-haspopup="true"
@@ -133,7 +131,7 @@ function WorkflowsAdmin(){
                             disableElevation
                             onClick={handleClick}>
                     
-                            Workflow Template 
+                            Manage Workflows 
                     </Button>
                     <StyledMenu
                         id="demo-customized-menu"
@@ -144,6 +142,7 @@ function WorkflowsAdmin(){
                         open={open}
                         onClose={handleClose}
                     >
+                            <Link href='ViewWorkflows' underline='none' color="#616161"><MenuItem onClick={handleClose} color="#616161"><AssignmentIndIcon/>Assign Workflow</MenuItem></Link>
                             <Link href='ViewWorkflows' underline='none' color="#616161"><MenuItem onClick={handleClose} color="#616161"><GridViewIcon/>View Templates</MenuItem></Link>
                             <Link href='CreateWorkflow' underline='none' color="#616161"><MenuItem onClick={handleClose} ><AddIcon/>Create Template</MenuItem></Link>
 
