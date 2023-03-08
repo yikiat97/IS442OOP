@@ -142,7 +142,7 @@ function WorkflowsAdmin(){
                         open={open}
                         onClose={handleClose}
                     >
-                            <Link href='ViewWorkflows' underline='none' color="#616161"><MenuItem onClick={handleClose} color="#616161"><AssignmentIndIcon/>Assign Workflow</MenuItem></Link>
+                            <Link href='AssignWorkflow' underline='none' color="#616161"><MenuItem onClick={handleClose} color="#616161"><AssignmentIndIcon/>Assign Workflow</MenuItem></Link>
                             <Link href='ViewWorkflows' underline='none' color="#616161"><MenuItem onClick={handleClose} color="#616161"><GridViewIcon/>View Templates</MenuItem></Link>
                             <Link href='CreateWorkflow' underline='none' color="#616161"><MenuItem onClick={handleClose} ><AddIcon/>Create Template</MenuItem></Link>
 
@@ -227,7 +227,7 @@ function WorkflowsAdmin(){
                 </Grid>
 
                 <Grid item md={1} sm={6} sx={{justifyContent:"flex-end", display:'flex'}}>
-                <Link href='CreateWorkflow' underline='none'><Button variant="contained" sx={{width:200, backgroundColor:"#fafafa", color:"#212121"}} endIcon={<ArrowForwardIosIcon/>}>View All</Button></Link>
+                <Link href='ViewAllWorkflow' underline='none'><Button variant="contained" sx={{width:200, backgroundColor:"#fafafa", color:"#212121"}} endIcon={<ArrowForwardIosIcon/>}>View All</Button></Link>
                 </Grid>
             </Grid>
 

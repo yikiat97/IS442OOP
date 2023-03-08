@@ -27,7 +27,7 @@ import {
 
 
 
-function UncompletedWorkflow(){
+function ViewAllWorkflow(){
 
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -56,19 +56,19 @@ function UncompletedWorkflow(){
       }
       
       const rows = [
-        createData('Health Evaluation', '12 Feb 2023', 'Carol Chua', 'Ever Green','Awaiting Approver'),
+        createData('Health Evaluation', '12 Feb 2023', 'Carol Chua', 'Ever Green','Rejected'),
+        createData('Health Evaluation', '12 Feb 2023', 'Carol Chua', 'Ever Green','Approved'),
         createData('Health Evaluation', '12 Feb 2023', 'Carol Chua', 'Ever Green','Awaiting Approver'),
         createData('Health Evaluation', '12 Feb 2023', 'Carol Chua', 'Ever Green','Awaiting Vendor'),
-        createData('Health Evaluation', '12 Feb 2023', 'Carol Chua', 'Ever Green','Awaiting Approver'),
-        createData('Health Evaluation', '12 Feb 2023', 'Carol Chua', 'Ever Green','Awaiting Approver'),
+        createData('Health Evaluation', '12 Feb 2023', 'Carol Chua', 'Ever Green','Rejected'),
       ];
     
     return(
-        <Grid sx={{mt:6, textAlign:'left', px:4}}>
+        <Grid sx={{mt:6, textAlign:'left', px:4, mb:5}}>
             
             <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:3}}>
                 <Grid item md={2}>
-                    <h1>Uncompleted Workflows</h1>
+                    <h1>All Workflows</h1>
                 </Grid>
 
             </Grid>
@@ -79,7 +79,7 @@ function UncompletedWorkflow(){
                 
 
                 <Grid item md={0.5} sm={6} sx={{mb:5}}>
-                    <Link href='CreateWorkflow' underline='none'><Button variant="contained" sx={{width:120}} startIcon={<AddIcon/>}>Create</Button></Link>
+                <Link href='CreateWorkflow' underline='none'><Button variant="contained" sx={{width:120}} startIcon={<AddIcon/>}>Create</Button></Link>
                 </Grid>
 
                 <Grid item md={0.5} sm={6} sx={{mb:5}}>
@@ -118,7 +118,12 @@ function UncompletedWorkflow(){
                         <StyledTableCell align="left">{row.DueDate}</StyledTableCell>
                         <StyledTableCell align="left">{row.Assignee}</StyledTableCell>
                         <StyledTableCell align="left">{row.Company}</StyledTableCell>
-                        <StyledTableCell align="left"><Chip label={row.Status} sx={{background:'#ff9800' , color:'#FFFFFF'}}></Chip></StyledTableCell>
+                        <StyledTableCell align="left">
+                            <Chip label={row.Status} sx={{color:'#FFFFFF', 
+                                                            'backgroundColor': 
+                                                                row.Status === 'Approved' ? '#4caf50' : 
+                                                                row.Status === 'Rejected' ? '#c62828' :
+                                                                row.Status === 'Awaiting Approver' ? '#ff9800' : '#ff9800' }}></Chip></StyledTableCell>
                         <StyledTableCell align="right"><ArrowForwardIosIcon /></StyledTableCell>
                         </StyledTableRow>
                     ))}
@@ -134,4 +139,4 @@ function UncompletedWorkflow(){
     
 }
 
-export default UncompletedWorkflow;
+export default ViewAllWorkflow;

@@ -64,7 +64,7 @@ function ViewWorkflows(){
       ];
     
     return(
-        <Grid sx={{mt:6, textAlign:'left', px:4}}>
+        <Grid sx={{mt:6, textAlign:'left', px:4, mb:5}}>
             
             <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:3}}>
                 <Grid item md={2}>
