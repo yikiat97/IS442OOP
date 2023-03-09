@@ -8,9 +8,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-@CrossOrigin(origins = "http://localhost:8080")
 @RestController
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 @RequestMapping("/login")
 public class LoginController {
 
@@ -20,23 +21,40 @@ public class LoginController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @PostMapping(value = "/authenticate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getUser(@RequestBody User userDetails) {
+        System.out.println(userDetails.getPassword());
+        System.out.println(userDetails.getEmail());
+
+        User user = UserRepository.findUserByEmail(userDetails.getEmail());
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist");
+        }
+        if (!user.getPassword().equals(userDetails.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password does not match");
+        }
+
+
+        return ResponseEntity.ok(userDetails.getRole());
+    }
+
     @GetMapping("/role")
-    public ResponseEntity getUser(@RequestParam("email") String email, @RequestParam("password") String password){
+    public ResponseEntity getRole(@RequestParam("email") String email, @RequestParam("password") String password) {
         User user = UserRepository.findUserByEmail(email);
-        if(user == null){
+        if (user == null) {
             return new ResponseEntity<>("User does not exist", HttpStatus.NOT_FOUND);
 
-        }else{
-            if(passwordEncoder.matches(password, user.getPassword())){
+        } else {
+            if (passwordEncoder.matches(password, user.getPassword())) {
                 return ResponseEntity.ok(user.getRole());
-            }else{
+            } else {
                 return new ResponseEntity<>("Wrong password", HttpStatus.NOT_FOUND);
             }
         }
 
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, value = "/createUser")
+    @PostMapping(value = "/createUser", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createUser(@RequestBody User newUser) {
         String encodedPassword = passwordEncoder.encode(newUser.getPassword());
         newUser.setPassword(encodedPassword);
