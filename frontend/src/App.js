@@ -10,6 +10,8 @@ import Form from "./pages/Form";
 
 import WorkflowsAdmin from "./pages/WorkflowsAdmin";
 
+import Login from "./pages/Login";
+
 function App() {
 
 
@@ -25,6 +27,7 @@ function App() {
         <Route path="/Form" element={<Form />} />
         <Route exact path="/CreateWorkflow" element={<CreateWorkflow/>}/>
         <Route path="/WorkflowsAdmin" element={<WorkflowsAdmin />} />
+        <Route path="/Login" element={<Login />} />
       </Routes> 
       
     </div>
