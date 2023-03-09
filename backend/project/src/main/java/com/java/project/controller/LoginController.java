@@ -34,8 +34,7 @@ public class LoginController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password does not match");
         }
 
-
-        return ResponseEntity.ok(userDetails.getRole());
+        return ResponseEntity.ok(user.getRole());
     }
 
     @GetMapping("/role")

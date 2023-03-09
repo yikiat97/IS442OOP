@@ -14,6 +14,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { redirect, useNavigate } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -34,7 +35,7 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-function App() {
+function Login(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -42,38 +43,22 @@ function App() {
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
     setMessage("");
-    console.log(email);
   };
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
     setMessage("");
-    console.log(password);
   };
 
-  const login = (e) => {
+  const login = async (e) => {
     e.preventDefault();
 
-    // fetch("http://localhost:8080/login/authenticate", {
-    //   method: "POST",
-    //   mode: "no-cors",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: {
-    //     email,
-    //     password,
-    //   },
-    // })
-
-    axios
+    const res = await axios
       .post(
         "http://localhost:8080/login/authenticate",
         {
-          
-            email,
-            password,
-          
+          email,
+          password,
         },
         {
           headers: {
@@ -82,16 +67,23 @@ function App() {
           },
         }
       )
-      .then((response) => {
-        sessionStorage.setItem("email", email);
-        console.log(email, password);
-
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      console.log(res)
+      sessionStorage.setItem("email", email);
+      sessionStorage.setItem("role", res.data)
+      handleReroute()
   };
+
+  const handleReroute = () =>{
+    const role = sessionStorage.getItem("role")
+    console.log(sessionStorage.getItem("role") == "Admin")
+    props.setRole(sessionStorage.getItem("role"))
+    console.log(props.setRole)
+    if (role === "Admin") {
+      window.location.replace(window.location.origin + "/WorkflowsAdmin")
+    } else if (role === "Vendor") {
+      window.location.replace(window.location.origin + "/ViewWorkflows")
+    }
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -160,4 +152,4 @@ function App() {
   );
 }
 
-export default App;
+export default Login;
