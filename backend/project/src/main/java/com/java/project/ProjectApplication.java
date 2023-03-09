@@ -1,9 +1,9 @@
 package com.java.project;
 
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.java.project.model.User;
 import com.java.project.repository.UserRepository;
-import com.java.project.controller.*;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 @RestController
 @EnableMongoRepositories
 public class ProjectApplication  {
@@ -31,8 +30,6 @@ public class ProjectApplication  {
         System.out.println("Data creation complete...");
       return String.format("Hello %s!", name);
     }
-    
-
     
 }
 
