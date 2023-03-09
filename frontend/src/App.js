@@ -9,7 +9,12 @@ import CreateWorkflow from "./pages/CreateWorkflow";
 import Form from "./pages/Form";
 
 import WorkflowsAdmin from "./pages/WorkflowsAdmin";
-
+import RejectedWorkflow from "./pages/RejectedWorkflow";
+import CompletedWorkflow from "./pages/CompletedWorkflow";
+import UncompletedWorkflow from "./pages/UncompletedWorkflow";
+import AssignWorkflow from "./pages/AssignWorkflow";
+import ViewWorkflows from "./pages/ViewWorkflowsTemplate";
+import ViewAllWorkflow from "./pages/ViewAllWorkflow";
 import Login from "./pages/Login";
 
 function App() {
@@ -28,6 +33,13 @@ function App() {
         <Route exact path="/CreateWorkflow" element={<CreateWorkflow/>}/>
         <Route path="/WorkflowsAdmin" element={<WorkflowsAdmin />} />
         <Route path="/Login" element={<Login />} />
+        <Route path="/CompletedWorkflow" element={<CompletedWorkflow />} />
+        <Route path="/RejectedWorkflow" element={<RejectedWorkflow />} />
+        <Route path="/UncompletedWorkflow" element={<UncompletedWorkflow />} />
+        <Route path="/AssignWorkflow" element={<AssignWorkflow />} />
+        <Route path="/ViewWorkflows" element={<ViewWorkflows />} />
+        <Route path="/ViewAllWorkflow" element={<ViewAllWorkflow />} />
+
       </Routes> 
       
     </div>
