@@ -10,16 +10,18 @@ public class Vendor {
     @Id
     private String id;
     private Integer VendorID;
+    private String CompanyName;
     private List<String> Answers;
     private List<String> LockedSections;
     private List<String> Workflows;
     private List<String> Status;
     private List<String> Priority;
-    
-    public Vendor(String id, Integer VendorID, List<String> Answers, List<String> LockedSections, List<String> Workflows, List<String> Status, List<String> Priority) {
+
+    public Vendor(String id, Integer VendorID, String CompanyName, List<String> Answers, List<String> LockedSections, List<String> Workflows, List<String> Status, List<String> Priority) {
         super();
         this.id = id;
         this.VendorID = VendorID;
+        this.CompanyName = CompanyName;
         this.Answers = Answers;
         this.LockedSections = LockedSections;
         this.Workflows = Workflows;
@@ -41,6 +43,13 @@ public class Vendor {
 
     public void setVendorID(Integer vendorID) {
         VendorID = vendorID;
+    }
+    public String getCompanyName() {
+        return CompanyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        CompanyName = companyName;
     }
 
     public List<String> getAnswers() {

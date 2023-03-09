@@ -31,7 +31,7 @@ public class VendorController {
       // logic handling of the Form to fit object Form
         //String[] intArray = new String[]{ "FormSection2","FormSection2" }; 
         // handle String Vendor such that it can add in List<> to constructor
-        Vendor _Vendor = VendorRepository.save(new Vendor(Vendor, 3, null, null, null, null, null));
+        Vendor _Vendor = VendorRepository.save(new Vendor(Vendor, 3, "company1",null, null, null, null, null));
         // System.out.println(form);
         return new ResponseEntity<>(_Vendor, HttpStatus.CREATED);
     } catch (Exception e) {
