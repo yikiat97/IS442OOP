@@ -52,24 +52,33 @@ function Login(props) {
   const login = async (e) => {
     e.preventDefault();
 
-    const res = await axios.post(
-      "http://localhost:8080/login/authenticate",
-      {
-        email,
-        password,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
+    try {
+      const res = await axios.post(
+        "http://localhost:8080/login/authenticate",
+        {
+          email,
+          password,
         },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+      console.log(res, "res");
+      sessionStorage.setItem("email", email);
+      sessionStorage.setItem("user", email);
+      sessionStorage.setItem("role", res.data);
+      handleReroute();
+    } catch (error) {
+      if (error.response.status === 401) {
+        setMessage("Wrong email/password")
+      } else {
+        setMessage("Something went wrong")
       }
-    );
-    console.log(res);
-    sessionStorage.setItem("email", email);
-    sessionStorage.setItem("user", email);
-    sessionStorage.setItem("role", res.data);
-    handleReroute();
+    }
+    
   };
 
   const handleReroute = () => {
@@ -121,10 +130,9 @@ function Login(props) {
               autoComplete="current-password"
               onChange={handlePasswordChange}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+            <Typography sx={{color: "red"}}>
+              {message}
+            </Typography>
             <Button
               type="submit"
               fullWidth

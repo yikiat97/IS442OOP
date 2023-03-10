@@ -1,10 +1,6 @@
 import { React } from "react";
 import "./App.css";
-import {
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 
 import CreateWorkflow from "./pages/CreateWorkflow";
@@ -26,7 +22,7 @@ function App() {
   const ProtectedRoute = ({ rolesAllowed = [], children }) => {
     const role = sessionStorage.getItem("role");
     const user = sessionStorage.getItem("user");
-    console.log(role);
+
     if (user !== null && !rolesAllowed.includes(role)) {
       return <Navigate to="/NotAuthorized" replace />;
     }

@@ -8,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
@@ -22,35 +21,16 @@ public class LoginController {
     PasswordEncoder passwordEncoder;
 
     @PostMapping(value = "/authenticate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getUser(@RequestBody User userDetails) {
-        System.out.println(userDetails.getPassword());
-        System.out.println(userDetails.getEmail());
-
+    public ResponseEntity<?> authenticateUser(@RequestBody User userDetails) {
         User user = UserRepository.findUserByEmail(userDetails.getEmail());
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist");
+            return new ResponseEntity<>("User does not exist", HttpStatus.UNAUTHORIZED);
         }
         if (!user.getPassword().equals(userDetails.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password does not match");
+            return new ResponseEntity<>("Password does not match", HttpStatus.UNAUTHORIZED);
         }
 
         return ResponseEntity.ok(user.getRole());
-    }
-
-    @GetMapping("/role")
-    public ResponseEntity getRole(@RequestParam("email") String email, @RequestParam("password") String password) {
-        User user = UserRepository.findUserByEmail(email);
-        if (user == null) {
-            return new ResponseEntity<>("User does not exist", HttpStatus.NOT_FOUND);
-
-        } else {
-            if (passwordEncoder.matches(password, user.getPassword())) {
-                return ResponseEntity.ok(user.getRole());
-            } else {
-                return new ResponseEntity<>("Wrong password", HttpStatus.NOT_FOUND);
-            }
-        }
-
     }
 
     @PostMapping(value = "/createUser", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

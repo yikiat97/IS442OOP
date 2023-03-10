@@ -1,13 +1,8 @@
 import {
   AppBar,
-  IconButton,
   Typography,
   Box,
-  Menu,
   MenuItem,
-  List,
-  ListItemButton,
-  ListItemText,
   MenuList,
   ListItemIcon,
   Grid,
@@ -20,16 +15,39 @@ import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
 import StartIcon from "@mui/icons-material/Start";
 import { Link } from "react-router-dom";
 
-const Navbar = (props) => {
-  
+const Navbar = () => {
+  const role = sessionStorage.getItem("role");
+  const roleText = role ? role : "Sign in";
+
+  const handleAuthItemClick = () => {
+    if (role) {
+      sessionStorage.clear();
+      window.location.replace(window.location.origin);
+    } else {
+      window.location.replace(window.location.origin + "/login");
+    }
+  };
+
   return (
     <AppBar position="static" sx={{ height: "100%" }}>
-      <Box sx={{ py: "25px", background: "#2596BE" }}>
+      <Box
+        sx={{
+          py: "25px",
+          background: "#2596BE",
+          textDecoration: "none",
+          color: "white",
+        }}
+        as={Link}
+        to={"/"}>
         <Grid container>
           <Grid>
             <Typography
               variant="title"
-              sx={{ fontSize: "32px", pl: "15px", pr: "10px" }}>
+              sx={{
+                fontSize: "32px",
+                pl: "15px",
+                pr: "10px",
+              }}>
               Quantum
             </Typography>
           </Grid>
@@ -37,7 +55,10 @@ const Navbar = (props) => {
           <Grid>
             <Typography
               variant="title"
-              sx={{ fontSize: "32px", fontWeight: 700 }}>
+              sx={{
+                fontSize: "32px",
+                fontWeight: 700,
+              }}>
               VMS
             </Typography>
           </Grid>
@@ -48,8 +69,7 @@ const Navbar = (props) => {
         <MenuList>
           <MenuItem>
             <ListItemIcon>
-              {" "}
-              <GroupsIcon />{" "}
+              <GroupsIcon />
             </ListItemIcon>
 
             <Typography variant="body2">User Management</Typography>
@@ -57,8 +77,7 @@ const Navbar = (props) => {
 
           <MenuItem>
             <ListItemIcon>
-              {" "}
-              <SettingsSuggestIcon />{" "}
+              <SettingsSuggestIcon />
             </ListItemIcon>
 
             <Typography variant="body2">
@@ -77,22 +96,20 @@ const Navbar = (props) => {
         </MenuList>
       </Box>
 
-      <Box sx={{ background: "#C6F0FF", py: "10px" }}>
+      <Box sx={{ background: "#C6F0FF", py: "10px", textDecoration: "none" }} onClick={handleAuthItemClick}>
         <MenuItem>
           <ListItemIcon>
-            {" "}
-            <PersonIcon />{" "}
+            <PersonIcon />
           </ListItemIcon>
 
           <Typography
             variant="body2"
             sx={{ color: "#000000", fontWeight: 700 }}>
-            Admin
+            {roleText}
           </Typography>
 
-          <ListItemIcon sx={{ pl: "120px" }}>
-            {" "}
-            <StartIcon />{" "}
+          <ListItemIcon sx={{ pl: "120px" }} >
+            <StartIcon />
           </ListItemIcon>
         </MenuItem>
       </Box>
