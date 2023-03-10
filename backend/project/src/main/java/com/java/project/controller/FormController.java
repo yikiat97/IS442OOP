@@ -45,9 +45,9 @@ public class FormController {
         Form _Form = FormRepository.save(new Form(form, 3, null  , "Ratio", "Safety Pre-Check Form 2"));
         // System.out.println(form);
         return new ResponseEntity<>(_Form, HttpStatus.CREATED);
-    } catch (Exception e) {
+      } catch (Exception e) {
         return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR); 
-    }
+      }
     }
 
     // FormRepository.findAll()

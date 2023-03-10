@@ -25,12 +25,11 @@ public class ProjectApplication  {
     @GetMapping("/hello")
     public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
         System.out.println("Data creation started...");
-        UserRepo.save(new User("yikiat", "yikiat", "yikiat", "yikiat@hotmail.com","Admin"));
-        UserRepo.save(new User("elmer", "elmer", "elmer", "elmer@hotmail.com","Vendor"));
-        System.out.println("Data creation complete...");
+        // UserRepo.save(new User("yikiat", "yikiat", "yikiat", "yikiat@hotmail.com","Admin"));
+        // UserRepo.save(new User("elmer", "elmer", "elmer", "elmer@hotmail.com","Vendor"));
+        // System.out.println("Data creation complete...");
       return String.format("Hello %s!", name);
     }
-    
 }
 
 
