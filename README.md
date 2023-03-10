@@ -1,6 +1,10 @@
 # IS442OOP
 
 Fontend:
+1. npm install -> npm start
+2. npm install @mui/material @emotion/react @emotion/styled
+3. npm install @mui/x-date-pickers
+4. npm install @mui/icons-material
 
 Backend:
 1. Install spring boot extension from Visual Studio
