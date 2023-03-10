@@ -1,6 +1,7 @@
 package com.java.project.controller;
 
 import java.util.Optional;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,10 +29,17 @@ public class WorkflowController {
     @PostMapping("/insertWorkflow")
     public ResponseEntity<Workflow> createForm(@RequestBody(required = false) String Workflow) {
     try {
-      // logic handling of the Form to fit object Form
+      // logic handling of the workflow json to fit object workflow
         //String[] intArray = new String[]{ "FormSection2","FormSection2" }; 
         // handle String Workflow such that it can add in List<> to constructor
-        Workflow _Workflow = WorkflowRepository.save(new Workflow(Workflow, 3, null, "Vendor Registration"));
+
+        List<String> Forms = new ArrayList<>();
+        // Forms.add();
+        long countDocuments = WorkflowRepository.count();
+        String workflowID = "workflow" + Long.toString(countDocuments+1);
+
+
+        Workflow _Workflow = WorkflowRepository.save(new Workflow(workflowID, (int)countDocuments + 1, Forms, "Vendor Registration"));
         // System.out.println(form);
         return new ResponseEntity<>(_Workflow, HttpStatus.CREATED);
     } catch (Exception e) {
@@ -39,7 +47,9 @@ public class WorkflowController {
     }
     }
 
-    @GetMapping("/allWorkflow/{id}")
+
+    // routing to get workflow by id
+    @GetMapping("/WorkflowByID/{id}")
     public ResponseEntity<?> getWorkflowById(@PathVariable("id") String id) {
       Optional<Workflow> Workflow = WorkflowRepository.findById(id);
     
@@ -50,4 +60,15 @@ public class WorkflowController {
       }
     }
 
+    // Routing to gett all workflows in the collection
+    @GetMapping("/allWorkflow")
+    public ResponseEntity<?> getAllWorkflow() {
+      List<Workflow> Workflows = WorkflowRepository.findAll();
+    
+      if (!Workflows.isEmpty()) {
+        return new ResponseEntity<>(Workflows, HttpStatus.OK);
+      } else {
+        return new ResponseEntity<>("Workflows Not Found", HttpStatus.NOT_FOUND);
+      }
+    }
 }
