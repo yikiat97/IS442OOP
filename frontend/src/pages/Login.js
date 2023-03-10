@@ -12,9 +12,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
-import { redirect, useNavigate } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -53,37 +52,34 @@ function Login(props) {
   const login = async (e) => {
     e.preventDefault();
 
-    const res = await axios
-      .post(
-        "http://localhost:8080/login/authenticate",
-        {
-          email,
-          password,
+    const res = await axios.post(
+      "http://localhost:8080/login/authenticate",
+      {
+        email,
+        password,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
-      )
-      console.log(res)
-      sessionStorage.setItem("email", email);
-      sessionStorage.setItem("role", res.data)
-      handleReroute()
+      }
+    );
+    console.log(res);
+    sessionStorage.setItem("email", email);
+    sessionStorage.setItem("user", email);
+    sessionStorage.setItem("role", res.data);
+    handleReroute();
   };
 
-  const handleReroute = () =>{
-    const role = sessionStorage.getItem("role")
-    console.log(sessionStorage.getItem("role") == "Admin")
-    props.setRole(sessionStorage.getItem("role"))
-    console.log(props.setRole)
+  const handleReroute = () => {
+    const role = sessionStorage.getItem("role");
     if (role === "Admin") {
-      window.location.replace(window.location.origin + "/WorkflowsAdmin")
+      window.location.replace(window.location.origin + "/WorkflowsAdmin");
     } else if (role === "Vendor") {
-      window.location.replace(window.location.origin + "/ViewWorkflows")
+      window.location.replace(window.location.origin + "/ViewWorkflows");
     }
-  }
+  };
 
   return (
     <ThemeProvider theme={theme}>

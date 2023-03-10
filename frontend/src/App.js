@@ -1,13 +1,10 @@
-import { React, ReactDOM, useState } from "react";
+import { React } from "react";
 import "./App.css";
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
-  useNavigate,
   Navigate,
 } from "react-router-dom";
-// import { createTheme } from '@mui/material/styles';
 import Navbar from "./components/Navbar";
 
 import CreateWorkflow from "./pages/CreateWorkflow";
@@ -22,18 +19,19 @@ import AssignWorkflow from "./pages/AssignWorkflow";
 import ViewWorkflows from "./pages/ViewWorkflowsTemplate";
 import ViewAllWorkflow from "./pages/ViewAllWorkflow";
 import Login from "./pages/Login";
+import NotAuthorized from "./pages/NotAuthorized";
+import Home from "./pages/Home";
 
 function App() {
-  const [user, setUser] = useState(null);
-  const [role, setRole] = useState(null);
-
-  const ProtectedRoute = ({ user, role, rolesAllowed = [], children }) => {
-    console.log(role)
-    if (!rolesAllowed.includes(role)) {
-      // return <Navigate to="/login" replace />;
+  const ProtectedRoute = ({ rolesAllowed = [], children }) => {
+    const role = sessionStorage.getItem("role");
+    const user = sessionStorage.getItem("user");
+    console.log(role);
+    if (user !== null && !rolesAllowed.includes(role)) {
+      return <Navigate to="/NotAuthorized" replace />;
     }
 
-    // return children;
+    return children;
   };
 
   return (
@@ -45,22 +43,31 @@ function App() {
       </header>
       <Routes>
         <Route path="/Form" element={<Form />} />
-        <Route exact path="/CreateWorkflow" element={<CreateWorkflow />} />
+        <Route path="/CreateWorkflow" element={<CreateWorkflow />} />
         <Route
           path="/WorkflowsAdmin"
           element={
-            <ProtectedRoute user={user} role={role} rolesAllowed={["Admin"]}>
-              <WorkflowsAdmin role={role} setRole={setRole} />
+            <ProtectedRoute rolesAllowed={["Admin"]}>
+              <WorkflowsAdmin />
             </ProtectedRoute>
           }
         />
-        <Route path="/Login" element={<Login role={role} setRole={setRole.bind(this)}/>} />
+        <Route path="/Login" element={<Login />} />
         <Route path="/CompletedWorkflow" element={<CompletedWorkflow />} />
         <Route path="/RejectedWorkflow" element={<RejectedWorkflow />} />
-        <Route path="/UncompletedWorkflow" element={<UncompletedWorkflow />} />
+        <Route
+          path="/UncompletedWorkflow"
+          element={
+            <ProtectedRoute rolesAllowed={["Vendor"]}>
+              <UncompletedWorkflow />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/AssignWorkflow" element={<AssignWorkflow />} />
         <Route path="/ViewWorkflows" element={<ViewWorkflows />} />
         <Route path="/ViewAllWorkflow" element={<ViewAllWorkflow />} />
+        <Route path="/NotAuthorized" element={<NotAuthorized />} />
+        <Route path="/" element={<Home />} />
       </Routes>
     </div>
   );
