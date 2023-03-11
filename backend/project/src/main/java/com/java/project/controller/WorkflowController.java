@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 import com.java.project.model.Workflow;
+import com.java.project.model.WorkflowMappingDTO;
 import com.java.project.repository.WorkflowRepository;
 
 @CrossOrigin(origins = "http://localhost:8080")
@@ -27,19 +28,21 @@ public class WorkflowController {
     WorkflowRepository WorkflowRepository;
 
     @PostMapping("/insertWorkflow")
-    public ResponseEntity<Workflow> createForm(@RequestBody(required = false) String Workflow) {
+    public ResponseEntity<Workflow> createForm(@RequestBody(required = false) WorkflowMappingDTO WorkflowDTO) {
     try {
       // logic handling of the workflow json to fit object workflow
-        //String[] intArray = new String[]{ "FormSection2","FormSection2" }; 
         // handle String Workflow such that it can add in List<> to constructor
+        // need to change the way autoincrement of documents is done, maybe via using a document
+        // can use a DTO to map forms and workflowName for creation of forms
 
-        List<String> Forms = new ArrayList<>();
+        // List<String> forms = new ArrayList<>();
         // Forms.add();
         long countDocuments = WorkflowRepository.count();
         String workflowID = "workflow" + Long.toString(countDocuments+1);
+        List<String> forms = WorkflowDTO.getForms();
+        String workflowName = WorkflowDTO.getWorkflowName();
 
-
-        Workflow _Workflow = WorkflowRepository.save(new Workflow(workflowID, (int)countDocuments + 1, Forms, "Vendor Registration"));
+        Workflow _Workflow = WorkflowRepository.save(new Workflow(workflowID, (int)countDocuments + 1, forms, workflowName));
         // System.out.println(form);
         return new ResponseEntity<>(_Workflow, HttpStatus.CREATED);
     } catch (Exception e) {
