@@ -86,11 +86,10 @@ const Navbar = () => {
           </MenuItem>
 
           <MenuItem>
-            <ListItemIcon>
-              <FeedIcon />
-            </ListItemIcon>
+          <ListItemIcon><FeedIcon/></ListItemIcon>
             <Typography variant="body2">
-              <Link to="/Form">Form management</Link>
+              <Link to="/FormHomePage">Form management</Link>
+
             </Typography>
           </MenuItem>
         </MenuList>
@@ -113,6 +112,24 @@ const Navbar = () => {
           </ListItemIcon>
         </MenuItem>
       </Box>
+
+
+    <Box sx={{background:'#C6F0FF', py:"10px"}}>
+    <MenuItem>
+      
+      <ListItemIcon> <PersonIcon/> </ListItemIcon>
+          
+          <Typography variant="body2" sx={{color:'#000000', fontWeight:700}}>
+            Admin
+          </Typography>
+
+      <ListItemIcon sx={{pl:"120px"}}> <StartIcon/> </ListItemIcon>
+
+    
+    </MenuItem>
+
+    
+    </Box>
     </AppBar>
   );
 };

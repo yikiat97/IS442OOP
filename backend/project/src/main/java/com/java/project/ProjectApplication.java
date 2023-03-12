@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.java.project.model.User;
 import com.java.project.repository.UserRepository;
 
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
