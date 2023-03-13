@@ -6,6 +6,7 @@ import com.java.project.model.User;
 import com.java.project.model.Vendor;
 import com.java.project.repository.UserRepository;
 import com.java.project.service.UserService;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,7 +34,7 @@ public class UserController {
         if (user == null) {
             return new ResponseEntity<>("User does not exist", HttpStatus.UNAUTHORIZED);
         }
-        if (!passwordEncoder.matches(userDetails.getPassword(), user.getPassword())) {
+        if (!userService.passwordCheck(userDetails.getPassword(), user.getPassword())) {
             return new ResponseEntity<>("Password does not match", HttpStatus.UNAUTHORIZED);
         }
 
@@ -76,5 +77,17 @@ public class UserController {
         }else{
             return new ResponseEntity<>("User already exists", HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @GetMapping("/numUsers")
+    public ResponseEntity numUsers(){
+        JSONObject userCount = new JSONObject();
+        int adminCount = UserRepository.findByRole("Admin").size();
+        int approverCount = UserRepository.findByRole("Approver").size();
+        int vendorCount = UserRepository.findByRole("Vendor").size();
+        userCount.put("Admin", adminCount);
+        userCount.put("Approver", approverCount);
+        userCount.put("Vendor", vendorCount);
+        return ResponseEntity.ok(userCount);
     }
 }

@@ -18,6 +18,10 @@ public class UserService {
         return passwordEncoder.encode(password);
     }
 
+    public boolean passwordCheck(String entryPassword, String savedPassword){
+        return passwordEncoder.matches(entryPassword, savedPassword);
+    }
+
     public boolean checkEmailExists(String email){
         User user = UserRepository.findUserByEmail(email);
         if (user == null){
