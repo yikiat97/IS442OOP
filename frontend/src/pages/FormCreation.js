@@ -3,7 +3,7 @@ import FormRender from 'form-render';
 import React, { useRef, useEffect } from "react";
 import { Button, Container, Grid, Typography,TextField } from '@mui/material';
 import '../components/customFields.js';
-
+import renderFormElements from "../components/FormPreview.js";
 window.jQuery = $;
 window.$ = $;
 require("jquery-ui-sortable");
@@ -35,6 +35,58 @@ const formData = [
 	}
 ];
 
+
+let fields = [
+	{
+	label: 'Signature',
+	attrs: {
+		type: 'canvas'
+	},
+	icon: '✏️'
+	}
+];
+
+let templates = {
+	canvas: function(fieldData) {
+		return {
+		field: '<canvas id="'+fieldData.name+'" width="00" height="00"></canvas>',
+		onRender: function() {
+			var canvas = document.getElementById(fieldData.name);
+			var context = canvas.getContext("2d");
+			context.fillStyle = "white";
+			context.fillRect(0, 0, canvas.width, canvas.height);
+			canvas.addEventListener("mousedown", startDrawing);
+			canvas.addEventListener("mousemove", draw);
+			canvas.addEventListener("mouseup", stopDrawing);
+			canvas.addEventListener("mouseout", stopDrawing);
+
+			var isDrawing = false;
+			var lastX, lastY;
+
+			function startDrawing(event) {
+			isDrawing = true;
+			lastX = event.offsetX;
+			lastY = event.offsetY;
+			}
+
+			function draw(event) {
+			if (isDrawing) {
+				context.beginPath();
+				context.moveTo(lastX, lastY);
+				context.lineTo(event.offsetX, event.offsetY);
+				context.stroke();
+				lastX = event.offsetX;
+				lastY = event.offsetY;
+			}
+			}
+
+			function stopDrawing() {
+			isDrawing = false;
+			}
+		}
+		};
+	}
+};
 // to be populated from users in database
 const options = {
 	
@@ -53,7 +105,13 @@ const options = {
         }
     },
 	disableFields: ['autocomplete','button','hidden','header','paragraph'],
+	disabledAttrs: [
+		'name',
+		'className'
+	],
 
+
+	
 	// To send the jsonData over to backend
 	inputSets: [
 			{
@@ -63,7 +121,8 @@ const options = {
 					type: 'header',
 					subtype: 'h2',
 					label: 'Section Name',
-					className: 'header'
+					className: 'header',
+
 					},
 
 				]
@@ -75,19 +134,7 @@ const options = {
 					type: 'header',
 					subtype: 'h1',
 					label: 'Form Name',
-					className: 'header'
-					},
-
-				]
-			},
-			{
-				label: 'Signature',
-				fields: [
-					{
-					type: 'header',
-					subtype: 'h1',
-					label: 'Signature',
-					className: 'header'
+					className: 'header',
 					},
 
 				]
@@ -199,6 +246,8 @@ const FormCreation = () => {
 			// 	  label: 'Text Field'
 			// 	}
 			//   ],
+			fields,
+			templates,
 			formData,
 			...options
 		});
