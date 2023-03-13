@@ -6,7 +6,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("Vendor")
 public class Vendor extends User{
-    private String username;
     private List<String> Answers;
     private List<String> LockedSections;
     private List<String> Workflows;
@@ -19,12 +18,10 @@ public class Vendor extends User{
 
     public Vendor(String password, String name, String email, String role, String company) {
         super(password, name, email, role, company);
-        this.username = role + "_" + email;
     }
 
     public Vendor(String password, String name, String email, String role, String company, List<String> Answers, List<String> LockedSections, List<String> Workflows, List<String> Status, List<String> Priority) {
         super(password, name, email, role, company);
-        this.username = role + "_" + email;
         this.Answers = Answers;
         this.LockedSections = LockedSections;
         this.Workflows = Workflows;

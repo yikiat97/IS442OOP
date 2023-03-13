@@ -9,6 +9,7 @@ public class User{
         private String email;
         private String role;
         private String company;
+        private String userName;
 
         public User(){
 
@@ -20,6 +21,7 @@ public class User{
             this.email = email;
             this.role = role;
             this.company = company;
+            this.userName = role + "_" + email;
         }
 
         public String getPassword() {
@@ -59,4 +61,10 @@ public class User{
         }
 
         public void setCompany(String company) { this.company = company; }
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public void setUserName(String userName) { this.userName = userName; }
 }

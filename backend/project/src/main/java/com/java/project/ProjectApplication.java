@@ -21,7 +21,6 @@ public class ProjectApplication  {
     UserRepository UserRepo;
     public static void main(String[] args) {
       SpringApplication.run(ProjectApplication.class, args);
-      
     }
     @GetMapping("/hello")
     public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
