@@ -72,7 +72,9 @@ const Navbar = () => {
               <GroupsIcon />
             </ListItemIcon>
 
-            <Typography variant="body2">User Management</Typography>
+            <Typography variant="body2">
+              <Link to="/UserManagement">User Management</Link>
+            </Typography>
           </MenuItem>
 
           <MenuItem>
