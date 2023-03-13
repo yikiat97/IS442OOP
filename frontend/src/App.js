@@ -5,7 +5,7 @@ import Navbar from "./components/Navbar";
 
 import CreateWorkflow from "./pages/CreateWorkflow";
 
-import Form from "./pages/Form";
+import Form from "./pages/FormCreation";
 
 import WorkflowsAdmin from "./pages/WorkflowsAdmin";
 import RejectedWorkflow from "./pages/RejectedWorkflow";
@@ -17,6 +17,15 @@ import ViewAllWorkflow from "./pages/ViewAllWorkflow";
 import Login from "./pages/Login";
 import NotAuthorized from "./pages/NotAuthorized";
 import Home from "./pages/Home";
+import FormHomePage from "./pages/FormHomePage";
+import FormCreation from "./pages/FormCreation";
+import ViewForms from "./pages/ViewForms";
+import UserManagement from "./pages/UserManagement";
+import CreateCompany from "./pages/CreateCompany";
+import CreateNewContact from "./pages/CreateNewContact";
+import Vendor from "./pages/Vendor";
+import Admin from "./pages/Admin";
+import Approver from "./pages/Approver";
 
 function App() {
   const ProtectedRoute = ({ rolesAllowed = [], children }) => {
@@ -51,7 +60,25 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/UserManagement"
+          element={
+            <ProtectedRoute rolesAllowed={["Admin"]}>
+              <UserManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/CreateCompany" element={<CreateCompany />} />
+        <Route path="/CreateNewContact" element={<CreateNewContact />} />
+        <Route path="/Vendor" element={<Vendor />} />
+        <Route path="/Admin" element={<Admin />} />
+        <Route path="/Approver" element={<Approver />} />
         <Route path="/Login" element={<Login />} />
+        <Route path="/FormHomePage" element={<FormHomePage />} />
+        <Route path="/FormCreation" element={<FormCreation />} /> 
+        <Route path="/ViewForms" element={<ViewForms />} /> 
+        <Route exact path="/CreateWorkflow" element={<CreateWorkflow/>}/>
+        <Route path="/WorkflowsAdmin" element={<WorkflowsAdmin />} />
         <Route path="/CompletedWorkflow" element={<CompletedWorkflow />} />
         <Route path="/RejectedWorkflow" element={<RejectedWorkflow />} />
         <Route
