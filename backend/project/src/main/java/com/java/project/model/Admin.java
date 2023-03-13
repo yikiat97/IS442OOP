@@ -4,18 +4,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("User")
 public class Admin extends User{
-    private int employeeID;
+    private String adminUsername;
 
-    public int getEmployeeID() {
-        return employeeID;
+    public Admin(String password, String name, String email, String role, String company) {
+        super(password, name, email, role, company);
+        this.adminUsername = role + "_" + email;
+    }
+    public String getAdminUsername() {
+        return adminUsername;
     }
 
-    public void setEmployeeID(int employeeID) {
-        this.employeeID = employeeID;
-    }
-
-    public Admin(String username, String password, String name, String email, String role, int employeeID) {
-        super(username, password, name, email, role);
-        this.employeeID = employeeID;
+    public void setAdminUsername(String adminUsername) {
+        this.adminUsername = adminUsername;
     }
 }

@@ -25,6 +25,5 @@ public class EmailController {
             }catch(MessagingException e){
                 return "error";
             }
-
     }
 }

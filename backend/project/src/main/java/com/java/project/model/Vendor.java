@@ -2,54 +2,34 @@ package com.java.project.model;
 
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("testingVendor")
-public class Vendor {
-    @Id
-    private String id;
-    private Integer VendorID;
-    private String CompanyName;
+@Document("Vendor")
+public class Vendor extends User{
+    private String username;
     private List<String> Answers;
     private List<String> LockedSections;
     private List<String> Workflows;
     private List<String> Status;
     private List<String> Priority;
 
-    public Vendor(String id, Integer VendorID, String CompanyName, List<String> Answers, List<String> LockedSections, List<String> Workflows, List<String> Status, List<String> Priority) {
+    public Vendor(){
         super();
-        this.id = id;
-        this.VendorID = VendorID;
-        this.CompanyName = CompanyName;
+    }
+
+    public Vendor(String password, String name, String email, String role, String company) {
+        super(password, name, email, role, company);
+        this.username = role + "_" + email;
+    }
+
+    public Vendor(String password, String name, String email, String role, String company, List<String> Answers, List<String> LockedSections, List<String> Workflows, List<String> Status, List<String> Priority) {
+        super(password, name, email, role, company);
+        this.username = role + "_" + email;
         this.Answers = Answers;
         this.LockedSections = LockedSections;
         this.Workflows = Workflows;
         this.Status = Status;
         this.Priority = Priority;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Integer getVendorID() {
-        return VendorID;
-    }
-
-    public void setVendorID(Integer vendorID) {
-        VendorID = vendorID;
-    }
-    public String getCompanyName() {
-        return CompanyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        CompanyName = companyName;
     }
 
     public List<String> getAnswers() {

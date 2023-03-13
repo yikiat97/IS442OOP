@@ -25,19 +25,19 @@ public class VendorController {
     @Autowired
     VendorRepository VendorRepository;
 
-    @PostMapping("/insertVendor")
-    public ResponseEntity<Vendor> createForm(@RequestBody(required = false) String Vendor) {
-    try {
-      // logic handling of the Form to fit object Form
-        //String[] intArray = new String[]{ "FormSection2","FormSection2" }; 
-        // handle String Vendor such that it can add in List<> to constructor
-        Vendor _Vendor = VendorRepository.save(new Vendor(Vendor, 3, "company1",null, null, null, null, null));
-        // System.out.println(form);
-        return new ResponseEntity<>(_Vendor, HttpStatus.CREATED);
-    } catch (Exception e) {
-        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR); 
-    }
-    }
+//    @PostMapping("/insertVendor")
+//    public ResponseEntity<Vendor> createForm(@RequestBody(required = false) String Vendor) {
+//    try {
+//      // logic handling of the Form to fit object Form
+//        //String[] intArray = new String[]{ "FormSection2","FormSection2" };
+//        // handle String Vendor such that it can add in List<> to constructor
+//        Vendor _Vendor = VendorRepository.save(new Vendor(Vendor, 3, null, null, null, null, null));
+//        // System.out.println(form);
+//        return new ResponseEntity<>(_Vendor, HttpStatus.CREATED);
+//    } catch (Exception e) {
+//        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
+//    }
 
     @GetMapping("/allVendor/{id}")
     public ResponseEntity<?> getVendorById(@PathVariable("id") String id) {
