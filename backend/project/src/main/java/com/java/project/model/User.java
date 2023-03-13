@@ -1,31 +1,27 @@
 package com.java.project.model;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("User") //collection point database table(document)
-public class User {
-        @Id //annotate the below is primary key 
-        private String username;
-        private String password;  
+@Document("User")
+public class User{
+        private String password;
         private String name;
         private String email;
         private String role;
+        private String company;
+        private String userName;
+
+        public User(){
+
+        }
         
-        public User(String username, String password, String name, String email, String role) {
-            super();
-            this.username = username;
+        public User(String password, String name, String email, String role, String company) {
             this.password = password;
             this.name = name;
             this.email = email;
             this.role = role;
-        }
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
+            this.company = company;
+            this.userName = role + "_" + email;
         }
 
         public String getPassword() {
@@ -60,6 +56,15 @@ public class User {
             this.role = role;
         }
 
+        public String getCompany() {
+            return company;
+        }
 
-        
+        public void setCompany(String company) { this.company = company; }
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public void setUserName(String userName) { this.userName = userName; }
 }

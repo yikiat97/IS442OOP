@@ -11,9 +11,12 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Paper from '@mui/material/Paper';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 import axios from "axios";
+import Logo from '../img/quantumvms.png';
+import background from '../img/background.jpg';
 
 function Copyright(props) {
   return (
@@ -32,7 +35,7 @@ function Copyright(props) {
   );
 }
 
-const theme = createTheme();
+
 
 function Login(props) {
   const [email, setEmail] = useState("");
@@ -90,23 +93,47 @@ function Login(props) {
     }
   };
 
+  const App={
+    width:'100%',
+  };
+
+  const loginStyle={
+    
+    width:"100%",
+    
+  }
+
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}>
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
+  
+    <div style={loginStyle} className='App'>
+      <Container sx={{display:"flex", justifyContent:"center", alignItems:"center", minHeight:"100vh"}}>
+        
+        <Paper elevation={3} sx={{pb:6, pt:3, px:6}}>
+
+          
+          <Grid container sx={{py:2, pt:2,pb:3, display:"flex", justifyContent:"center", alignItems:"center"}} spacing={1}>
+              <Grid item>
+                  <img src={Logo} width={40} height={40}/>
+              </Grid>
+              <Grid item>
+                  <Typography component="h1" variant="h5" sx={{color:"#2596BE"}}>
+                  Quantum
+                </Typography>
+              </Grid>
+              <Grid item>
+                  <Typography component="h1" variant="h5" sx={{fontWeight:"bold"}}>
+                  VMS
+                </Typography>
+              </Grid>
+          </Grid>
+          
+          <Typography component="h1" variant="h4" sx={{fontWeight:"bold"}}>
+            Hi, Welcome Back!
           </Typography>
+          <Typography sx={{pb:2}}>
+            Please enter your details.
+          </Typography>
+          
           <Box component="form" noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
@@ -130,6 +157,13 @@ function Login(props) {
               autoComplete="current-password"
               onChange={handlePasswordChange}
             />
+            <Grid container sx={{display:"flex"}}>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+            </Grid>
             <Typography sx={{color: "red"}}>
               {message}
             </Typography>
@@ -137,22 +171,18 @@ function Login(props) {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, background:"#2596BE"}}
               onClick={login}>
               Sign In
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-            </Grid>
+            
           </Box>
-        </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
-      </Container>
-    </ThemeProvider>
+
+        </Paper>
+
+        </Container>
+      </div>
+    
   );
 }
 

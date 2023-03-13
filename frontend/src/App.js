@@ -39,12 +39,15 @@ function App() {
     return children;
   };
 
+  const user = sessionStorage.getItem("user");
+  
+
   return (
     <div className="App">
       <header className="App-header">
-        <>
-          <Navbar />
-        </>
+    
+        {user && <Navbar />} 
+        
       </header>
       <Routes>
         <Route path="/Form" element={<Form />} />
