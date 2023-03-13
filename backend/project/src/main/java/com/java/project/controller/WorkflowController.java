@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 import com.java.project.model.Workflow;
 import com.java.project.model.WorkflowMappingDTO;
 import com.java.project.repository.WorkflowRepository;
+import com.java.project.service.SequenceGeneratorService;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
@@ -26,6 +27,9 @@ import com.java.project.repository.WorkflowRepository;
 public class WorkflowController {
     @Autowired
     WorkflowRepository WorkflowRepository;
+
+    @Autowired
+    private SequenceGeneratorService sequenceGeneratorService;
 
     @PostMapping("/insertWorkflow")
     public ResponseEntity<Workflow> createForm(@RequestBody(required = false) WorkflowMappingDTO WorkflowDTO) {
@@ -35,14 +39,12 @@ public class WorkflowController {
         // need to change the way autoincrement of documents is done, maybe via using a document
         // can use a DTO to map forms and workflowName for creation of forms
 
-        // List<String> forms = new ArrayList<>();
-        // Forms.add();
-        long countDocuments = WorkflowRepository.count();
-        String workflowID = "workflow" + Long.toString(countDocuments+1);
+        int nextID= sequenceGeneratorService.generateSequence("Workflow");
+        String workflowID = "workflow" + Long.toString(nextID);
         List<String> forms = WorkflowDTO.getForms();
         String workflowName = WorkflowDTO.getWorkflowName();
 
-        Workflow _Workflow = WorkflowRepository.save(new Workflow(workflowID, (int)countDocuments + 1, forms, workflowName));
+        Workflow _Workflow = WorkflowRepository.save(new Workflow(workflowID, nextID, forms, workflowName));
         // System.out.println(form);
         return new ResponseEntity<>(_Workflow, HttpStatus.CREATED);
     } catch (Exception e) {
