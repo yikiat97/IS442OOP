@@ -25,11 +25,14 @@ import {
     MenuItem
         
 } from "@mui/material";
-
-
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 
 function UserManagement(){
+    const [numVendor, setNumVendor] = useState("");
+    const [numApprover, setNumApprover] = useState("");
+    const [numAdmin, setNumAdmin] = useState("");
 
         const StyledMenu = styled((props) => (
             <Menu
@@ -102,6 +105,20 @@ function UserManagement(){
                 },
             }));
 
+            useEffect(() => {
+                getNumUsers();
+            }, []);
+
+            const getNumUsers = () => {
+                axios.get("http://localhost:8080/login/numUsers")
+                .then((response) => {
+                    setNumAdmin(response.data["Admin"]);
+                    setNumApprover(response.data["Approver"]);
+                    setNumVendor(response.data["Vendor"]);
+                })
+                .catch(error => console.error(error));
+            }
+
     function createData(Company) {
         return {Company};
     }
@@ -139,7 +156,7 @@ function UserManagement(){
                     <Card sx={{ borderRadius: '16px' }} style={{backgroundColor: "#E7F9DD"}}>
                         <CardContent align="center">
                                 <Typography variant="h2" component="div" fontWeight="Bold" color={"#054322"}>
-                                45
+                                {numVendor}
                                 </Typography>
                                 <Typography variant="body2" fontWeight="Bold" color={"#054322"}>
                                     <Grid container sx={{alignContent:"center", justifyContent:"center", pt:3}}>
@@ -161,7 +178,7 @@ function UserManagement(){
                     <Card sx={{ borderRadius: '16px' }} style={{backgroundColor: "#FEDBC2"}}>
                         <CardContent align="center">
                                 <Typography variant="h2" component="div" fontWeight="Bold" color={"#8A3C03"}>
-                                2
+                                {numAdmin}
                                 </Typography>
                                 <Typography variant="body2" fontWeight="Bold" color={"#8A3C03"}>
                                     <Grid container sx={{alignContent:"center", justifyContent:"center", pt:3}}>
@@ -183,7 +200,7 @@ function UserManagement(){
                     <Card sx={{ borderRadius: '16px' }} style={{backgroundColor: "#FFD9D9"}}>
                         <CardContent align="center">
                                 <Typography variant="h2" component="div" fontWeight="Bold" color={"#790202"}>
-                                10
+                                {numApprover}
                                 </Typography>
                                 <Typography variant="body2" fontWeight="Bold" color={"#790202"}>
                                     <Grid container sx={{alignContent:"center", justifyContent:"center", pt:3}}>

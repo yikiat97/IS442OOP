@@ -82,12 +82,12 @@ public class UserController {
     @GetMapping("/numUsers")
     public ResponseEntity numUsers(){
         JSONObject userCount = new JSONObject();
+        int vendorCount = UserRepository.findByRole("Vendor").size();
         int adminCount = UserRepository.findByRole("Admin").size();
         int approverCount = UserRepository.findByRole("Approver").size();
-        int vendorCount = UserRepository.findByRole("Vendor").size();
+        userCount.put("Vendor", vendorCount);
         userCount.put("Admin", adminCount);
         userCount.put("Approver", approverCount);
-        userCount.put("Vendor", vendorCount);
         return ResponseEntity.ok(userCount);
     }
 }
