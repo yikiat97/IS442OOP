@@ -1,65 +1,178 @@
+import React, { useState, useEffect } from "react";
+import $ from "jquery";
+import { Button } from "@mui/material";
+window.jQuery = $;
+window.$ = $;
+require("formBuilder");
+require('formBuilder/dist/form-render.min.js')
 
-function renderFormElements(formElements) {
-return (
-    <div>
-    {formElements.map((element, index) => {
-            switch (element.type) {
-            case 'header':
-                const HeaderTag = `h${element.subtype.slice(-1)}`;
-                return <HeaderTag key={index}>{element.label}</HeaderTag>;
-            case 'radio-group':
-                return (
+// const FormPreview = ({ jsonObject }) => {
+    // const [html, setHtml] = useState("");
+    // console.log(jsonObject)
+    // useEffect(() => {
+    // const formRenderOpts = {
+    //     dataType: "xml",
+    //     formData: jsonObject,
+    // };
+
+
+    
+    // const $renderContainer = $("<form/>");
+    // $renderContainer.formRender(formRenderOpts);
+    // const newHtml = `
+	// 		<!doctype html>
+	// 			<title>Form Preview</title>
+    //             <script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
+	// 			<body class="container">
+	// 				<hr>${$renderContainer.html()}
+	// 			</body>
+	// 			<footer>
+	// 				<div class="panel-footer text-right">
+	// 					<button type="button" id="btnSave" class="btn btn-default pull-right">Submit for approval</button>
+	// 				</div>
+	// 			</footer>
+	// 		</html>`;
+    // setHtml(newHtml);
+// }, [jsonObject]);
+
+//     return (
+//         <div dangerouslySetInnerHTML={{ __html: html }} />
+//     );
+// };
+
+const FormPreview = ({ formData }) => {
+    if (!formData) {
+        return null;
+    }
+    const renderField = (field) => {
+        switch (field.type) {
+        case "header":
+            return <h1>{field.label}</h1>;
+        case "checkbox-group":
+            return (
+            <div>
+                <label>{field.label}</label>
+                {field.values.map((value, index) => (
                 <div key={index}>
-                    <label>{element.label}</label>
-                    {element.values.map((value, i) => (
-                    <div key={i}>
-                        <input
-                        type="radio"
-                        name={element.name}
-                        value={value.value}
-                        checked={value.selected}
-                        disabled={element.access}
-                        />
-                        <label>{value.label}</label>
-                    </div>
-                    ))}
+                    <input
+                    type="checkbox"
+                    id={`${field.name}-${index}`}
+                    name={field.name}
+                    value={value.value}
+                    checked={value.selected}
+                    />
+                    <label htmlFor={`${field.name}-${index}`}>{value.label}</label>
                 </div>
-                );
-            case 'select':
-                return (
+                ))}
+            </div>
+            );
+        case "date":
+            return (
+            <div>
+                <label>{field.label}</label>
+                <input
+                type="date"
+                className={field.className}
+                name={field.name}
+                />
+            </div>
+            );
+        case "number":
+            return (
+            <div>
+                <label>{field.label}</label>
+                <input
+                type="number"
+                className={field.className}
+                name={field.name}
+                />
+            </div>
+            );
+        case "radio-group":
+            return (
+            <div>
+                <label>{field.label}</label>
+                {field.values.map((value, index) => (
                 <div key={index}>
-                    <label>{element.label}</label>
-                    <select
-                    name={element.name}
-                    className={element.className}
-                    multiple={element.multiple}
-                    disabled={element.access}
+                    <input
+                    type="radio"
+                    id={`${field.name}-${index}`}
+                    name={field.name}
+                    value={value.value}
+                    checked={value.selected}
+                    />
+                    <label htmlFor={`${field.name}-${index}`}>{value.label}</label>
+                </div>
+                ))}
+            </div>
+            );
+        case "select":
+            return (
+            <div>
+                <label>{field.label}</label>
+                <select
+                className={field.className}
+                name={field.name}
+                multiple={field.multiple}
+                >
+                {field.values.map((value, index) => (
+                    <option
+                    key={index}
+                    value={value.value}
+                    selected={value.selected}
                     >
-                    {element.values.map((value, i) => (
-                        <option key={i} value={value.value} selected={value.selected}>
-                        {value.label}
-                        </option>
-                    ))}
-                    </select>
-                </div>
-                );
-            case 'textarea':
-                return (
-                <div key={index}>
-                    <label>{element.label}</label>
-                    <textarea
-                    name={element.name}
-                    className={element.className}
-                    disabled={element.access}
-                    ></textarea>
-                </div>
-                );
-            default:
-                return null;
-            }
-        })}
+                    {value.label}
+                    </option>
+                ))}
+                </select>
+            </div>
+            );
+        case "text":
+            return (
+            <div>
+                <label>{field.label}</label>
+                <input
+                type="text"
+                className={field.className}
+                name={field.name}
+                />
+            </div>
+            );
+        case "textarea":
+            return (
+            <div>
+                <label>{field.label}</label>
+                <textarea
+                className={field.className}
+                name={field.name}
+                rows={field.rows}
+                cols={field.cols}
+                />
+            </div>
+            );
+        case "canvas":
+            return <canvas name={field.name}></canvas>;
+        default:
+            return null;
+        }
+    };
+
+    return (
+        <div>
+            <form>
+                {formData.map((field, index) => (
+                    <div key={index}>
+                        {field.subtype ? (
+                            renderField({ ...field, type: field.subtype })
+                        ) : (
+                            <div className={field.className}>
+                                {field.label && renderField(field)}
+                            </div>
+                        )}
+                    </div>
+                ))}
+            </form>
         </div>
     );
-}
-
-export default renderFormElements
+};
+export default FormPreview;
