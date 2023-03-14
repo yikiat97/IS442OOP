@@ -4,6 +4,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import AddAlertIcon from '@mui/icons-material/AddAlert';
 import {
 
     Grid, 
@@ -115,7 +116,10 @@ function UncompletedWorkflow(){
                         <StyledTableCell component="th" scope="row">
                             {row.Workflow}
                         </StyledTableCell>
-                        <StyledTableCell align="left">{row.DueDate}</StyledTableCell>
+                        <StyledTableCell align="left">
+                          {row.DueDate}
+                          <Button variant='contained' size='small' sx={{ml:5, background:"#90a4ae"}} endIcon={<AddAlertIcon/>}>Send</Button>
+                          </StyledTableCell>
                         <StyledTableCell align="left">{row.Assignee}</StyledTableCell>
                         <StyledTableCell align="left">{row.Company}</StyledTableCell>
                         <StyledTableCell align="left"><Chip label={row.Status} sx={{background:'#ff9800' , color:'#FFFFFF'}}></Chip></StyledTableCell>
