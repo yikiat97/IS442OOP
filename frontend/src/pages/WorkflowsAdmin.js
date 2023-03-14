@@ -7,6 +7,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import GridViewIcon from '@mui/icons-material/GridView';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import AddAlertIcon from '@mui/icons-material/AddAlert';
 import {
 
     Grid, 
@@ -115,7 +116,7 @@ function WorkflowsAdmin(){
       ];
     
     return(
-        <Grid sx={{mt:6, textAlign:'left', px:4}}>
+        <Grid sx={{mt:6, mb:6, textAlign:'left', px:4}}>
             
             <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:4}} sx={{display:"flex", justifyContent:"space-between", alignItems:"center"}}>
                 <Grid item md={2.0} sm={2.5}>
@@ -237,6 +238,7 @@ function WorkflowsAdmin(){
                     <TableRow>
                         <StyledTableCell>Workflows</StyledTableCell>
                         <StyledTableCell align="left">Due Date</StyledTableCell>
+                        
                         <StyledTableCell align="left">Assignee</StyledTableCell>
                         <StyledTableCell align="left">Company</StyledTableCell>
                         <StyledTableCell align="left"> </StyledTableCell>
@@ -248,7 +250,11 @@ function WorkflowsAdmin(){
                         <StyledTableCell component="th" scope="row">
                             {row.Workflow}
                         </StyledTableCell>
-                        <StyledTableCell align="left">{row.DueDate}</StyledTableCell>
+                        <StyledTableCell align="left">
+                            {row.DueDate}
+                            <Button variant='contained' size='small' sx={{ml:5, background:"#90a4ae"}} endIcon={<AddAlertIcon/>}>Send</Button>
+                        </StyledTableCell>
+                        
                         <StyledTableCell align="left">{row.Assignee}</StyledTableCell>
                         <StyledTableCell align="left">{row.Company}</StyledTableCell>
                         <StyledTableCell align="right"><ArrowForwardIosIcon /></StyledTableCell>
