@@ -21,6 +21,12 @@ import Home from "./pages/Home";
 import FormHomePage from "./pages/FormHomePage";
 import FormCreation from "./pages/FormCreation";
 import ViewForms from "./pages/ViewForms";
+import UserManagement from "./pages/UserManagement";
+import CreateCompany from "./pages/CreateCompany";
+import CreateNewContact from "./pages/CreateNewContact";
+import Vendor from "./pages/Vendor";
+import Admin from "./pages/Admin";
+import Approver from "./pages/Approver";
 
 
 function App() {
@@ -36,13 +42,15 @@ function App() {
   };
 
   const user = sessionStorage.getItem("user");
+  
+
   return (
 
     <div className="App">
       <header className="App-header">
-        {/* {user && <Navbar />} */}
-        <Navbar/>
-        
+    
+        {/* {user && <Navbar />}  */}
+        <Navbar />
       </header>
       <Routes>
         <Route path="/Form" element={<Form />} />
@@ -55,10 +63,23 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/UserManagement"
+          element={
+            <ProtectedRoute rolesAllowed={["Admin"]}>
+              <UserManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/CreateCompany" element={<CreateCompany />} />
+        <Route path="/CreateNewContact" element={<CreateNewContact />} />
+        <Route path="/Vendor" element={<Vendor />} />
+        <Route path="/Admin" element={<Admin />} />
+        <Route path="/Approver" element={<Approver />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/FormHomePage" element={<FormHomePage />} />
-        <Route path="/FormCreation" element={<FormCreation />} />
-        <Route path="/ViewForms" element={<ViewForms />} />
+        <Route path="/FormCreation" element={<FormCreation />} /> 
+        <Route path="/ViewForms" element={<ViewForms />} /> 
         <Route exact path="/CreateWorkflow" element={<CreateWorkflow/>}/>
         <Route path="/WorkflowsAdmin" element={<WorkflowsAdmin />} />
         <Route path="/CompletedWorkflow" element={<CompletedWorkflow />} />
