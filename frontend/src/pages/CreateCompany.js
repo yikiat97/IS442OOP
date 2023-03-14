@@ -1,34 +1,16 @@
 import * as React from 'react';
-import dayjs from 'dayjs';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import StepContent from '@mui/material/StepContent';
-import { Container, textAlign, spacing, Box } from "@mui/system";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { Box } from "@mui/system";
 import AddIcon from '@mui/icons-material/Add';
 import {
     FormControl,
     FormHelperText, 
     Grid, 
-    IconButton,
     Paper, 
     TextField, 
     Input, 
     InputLabel,
     InputAdornment, 
     OutlinedInput,
-    FormControlLabel, 
-    FormLabel,
-    Menu,
-    MenuItem,
     Button,
     Link
 } from "@mui/material";
@@ -65,13 +47,22 @@ function CreateCompany(){
                 </Grid>
     
                                 
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
                         <div>
-                            <TextField
-                            label="Company Name"
-                            id="outlined-start-adornment"
-                            sx={{ m: 1, width: '25ch' }}
-                            />
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                                <FormHelperText id="outlined-weight-helper-text">Company Name</FormHelperText>
+                                <OutlinedInput
+                                    id="outlined-adornment-weight"
+                                    aria-describedby="outlined-weight-helper-text"
+                                />
+                            </FormControl>
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                                <FormHelperText id="outlined-weight-helper-text">Country of Origin</FormHelperText>
+                                <OutlinedInput
+                                    id="outlined-adornment-weight"
+                                    aria-describedby="outlined-weight-helper-text"
+                                />
+                            </FormControl>
                         </div>
                     </Box>
                                
