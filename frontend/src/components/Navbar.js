@@ -1,19 +1,15 @@
-import {
-  AppBar,
-  Typography,
-  Box,
-  MenuItem,
-  MenuList,
-  ListItemIcon,
-  Grid,
-} from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import GroupsIcon from "@mui/icons-material/Groups";
 import FeedIcon from "@mui/icons-material/Feed";
-import PersonIcon from "@mui/icons-material/Person";
 import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
-import StartIcon from "@mui/icons-material/Start";
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+
+import PersonIcon from "@mui/icons-material/Person";
+import { Sidebar, Menu, MenuItem, SubMenu, useProSidebar, ProSidebarProvider } from "react-pro-sidebar";
+import {
+    Typography,
+  } from "@mui/material";
+
 
 const Navbar = () => {
   const role = sessionStorage.getItem("role");
@@ -28,109 +24,74 @@ const Navbar = () => {
     }
   };
 
-  return (
-    <AppBar position="static" sx={{ height: "100%" }}>
-      <Box
-        sx={{
-          py: "25px",
-          background: "#2596BE",
-          textDecoration: "none",
-          color: "white",
-        }}
-        as={Link}
-        to={"/"}>
-        <Grid container>
-          <Grid>
+  return(
+    <ProSidebarProvider>
+        <Sidebar style={{height:'100%', background:"#C6F0FF"}}>
+
+            <Menu style={{paddingBottom:'14px', paddingTop:"10px", background: "#2596BE"}}>
             <Typography
-              variant="title"
-              sx={{
-                fontSize: "32px",
-                pl: "15px",
-                pr: "10px",
-              }}>
-              Quantum
-            </Typography>
-          </Grid>
-
-          <Grid>
+                    noWrap='true'
+                    variant="title"
+                    sx={{
+                        fontSize: "24px",
+                        pr:"5px",
+                        pl:'10px',
+                        color:"#FFFFFF"
+                        
+                    }}>
+                    Quantum
+                    </Typography>
             <Typography
-              variant="title"
-              sx={{
-                fontSize: "32px",
-                fontWeight: 700,
-              }}>
-              VMS
+                
+                variant="title"
+                sx={{
+                    fontSize: "24px",
+                    fontWeight: 700,
+                    color:"#FFFFFF",
+                }}>
+                VMS
             </Typography>
-          </Grid>
-        </Grid>
-      </Box>
+            </Menu>
+            <Menu style={{textAlign:"left"}}>
 
-      <Box sx={{ background: "#C6F0FF", height: "100%", color: "#000000" }}>
-        <MenuList>
-          <MenuItem>
-            <ListItemIcon>
-              <GroupsIcon />
-            </ListItemIcon>
+                
+                <SubMenu label='User Management' icon={<GroupsIcon />}>
+                    <MenuItem >Create New User</MenuItem>
+                </SubMenu>
 
-            <Typography variant="body2">User Management</Typography>
-          </MenuItem>
+                <SubMenu label='Workflows' icon={<SettingsSuggestIcon />} component={<Link to='/WorkflowsAdmin'/>}>
+                    <MenuItem component={<Link to='/ViewAllWorkflow'/>}>View Workflows</MenuItem>
+                    <MenuItem component={<Link to='/CreateWorkflow'/>}>Create New Workflow</MenuItem>
+                    <MenuItem component={<Link to='/AssignWorkflow'/>}>Assign Workflow</MenuItem>
+                    
+                </SubMenu>
 
-          <MenuItem>
-            <ListItemIcon>
-              <SettingsSuggestIcon />
-            </ListItemIcon>
+                <SubMenu label='Form Management' icon={<FeedIcon />} component={<Link to='/FormHomePage'/>}>
+                    <MenuItem component={<Link to='/ViewForms'/>}>View Past Forms</MenuItem>
+                    <MenuItem component={<Link to='/FormCreation'/>}>Create New Form</MenuItem>
+                </SubMenu>
 
-            <Typography variant="body2">
-              <Link to="/WorkflowsAdmin">Workflows</Link>
-            </Typography>
-          </MenuItem>
+            </Menu>
 
-          <MenuItem>
-          <ListItemIcon><FeedIcon/></ListItemIcon>
-            <Typography variant="body2">
-              <Link to="/FormHomePage">Form management</Link>
+            <Menu sx={{ bottom:'10px'}} onClick={handleAuthItemClick}>
+                <MenuItem icon={<PersonIcon/>}>
+                
 
-            </Typography>
-          </MenuItem>
-        </MenuList>
-      </Box>
+                <Typography
+                    variant="body2"
+                    sx={{fontWeight: 700 }}>
+                    {roleText}
+                </Typography>
 
-      <Box sx={{ background: "#C6F0FF", py: "10px", textDecoration: "none" }} onClick={handleAuthItemClick}>
-        <MenuItem>
-          <ListItemIcon>
-            <PersonIcon />
-          </ListItemIcon>
-
-          <Typography
-            variant="body2"
-            sx={{ color: "#000000", fontWeight: 700 }}>
-            {roleText}
-          </Typography>
-
-          <ListItemIcon sx={{ pl: "120px" }} >
-            <StartIcon />
-          </ListItemIcon>
-        </MenuItem>
-      </Box>
+                {/* <ListItemIcon sx={{ pl: "120px" }} >
+                    <StartIcon />
+                </ListItemIcon> */}
+                </MenuItem>
+            </Menu>
+        </Sidebar>
+    </ProSidebarProvider>
 
 
-    <Box sx={{background:'#C6F0FF', py:"10px"}}>
-    <MenuItem>
-      
-      <ListItemIcon> <PersonIcon/> </ListItemIcon>
-          
-          <Typography variant="body2" sx={{color:'#000000', fontWeight:700}}>
-            Admin
-          </Typography>
-
-      <ListItemIcon sx={{pl:"120px"}}> <StartIcon/> </ListItemIcon>
-
-    
-    </MenuItem>
-
-    
-    </Box>
-    </AppBar>
-  );
+);
 };
 export default Navbar;

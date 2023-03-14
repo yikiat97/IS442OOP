@@ -3,6 +3,7 @@ import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 
+
 import CreateWorkflow from "./pages/CreateWorkflow";
 
 import Form from "./pages/FormCreation";
@@ -21,6 +22,7 @@ import FormHomePage from "./pages/FormHomePage";
 import FormCreation from "./pages/FormCreation";
 import ViewForms from "./pages/ViewForms";
 
+
 function App() {
   const ProtectedRoute = ({ rolesAllowed = [], children }) => {
     const role = sessionStorage.getItem("role");
@@ -33,12 +35,14 @@ function App() {
     return children;
   };
 
+  const user = sessionStorage.getItem("user");
   return (
+
     <div className="App">
       <header className="App-header">
-        <>
-          <Navbar />
-        </>
+        {/* {user && <Navbar />} */}
+        <Navbar/>
+        
       </header>
       <Routes>
         <Route path="/Form" element={<Form />} />
@@ -74,6 +78,7 @@ function App() {
         <Route path="/" element={<Home />} />
       </Routes>
     </div>
+
   );
 }
 
