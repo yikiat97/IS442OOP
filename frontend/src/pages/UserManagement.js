@@ -25,11 +25,15 @@ import {
     MenuItem
         
 } from "@mui/material";
-
-
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 
 function UserManagement(){
+    const [numVendor, setNumVendor] = useState("");
+    const [numApprover, setNumApprover] = useState("");
+    const [numAdmin, setNumAdmin] = useState("");
+    const [companies, setCompanies] = useState([]);
 
         const StyledMenu = styled((props) => (
             <Menu
@@ -83,9 +87,10 @@ function UserManagement(){
 
             const StyledTableCell = styled(TableCell)(({ theme }) => ({
                 [`&.${tableCellClasses.head}`]: {
-                backgroundColor: theme.palette.common.white,
-                color: theme.palette.common.black,
+                backgroundColor: theme.palette.info.dark,
+                color: theme.palette.common.white,
                 fontWeight: theme.typography.fontWeightBold,
+                fontSize: 14,
                 },
                 [`&.${tableCellClasses.body}`]: {
                 fontSize: 14,
@@ -102,33 +107,35 @@ function UserManagement(){
                 },
             }));
 
-    function createData(Company) {
-        return {Company};
-    }
-    
-    const rows = [
-        createData('Ever Green'),
-        createData('Sparks Analytics'),
-        createData('Ever Green'),
-        
-    ];
+            useEffect(() => {
+                getNumUsers();
+                getCompany();
+            }, []);
+
+            const getNumUsers = () => {
+                axios.get("http://localhost:8080/login/numUsers")
+                .then((response) => {
+                    setNumAdmin(response.data["Admin"]);
+                    setNumApprover(response.data["Approver"]);
+                    setNumVendor(response.data["Vendor"]);
+                })
+                .catch(error => console.error(error));
+            };
+
+            const getCompany = () => {
+                axios.get("http://localhost:8080/company")
+                .then((response) => {
+                    setCompanies(response.data);
+                })
+                .catch(error => console.error(error));
+            };
     
     return(
         <Grid sx={{mt:6, textAlign:'left', px:4}}>
             
             <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:4}} sx={{display:"flex", justifyContent:"space-between", alignItems:"center"}}>
-                <Grid item md={2.0} sm={2.5}>
+            <Grid item md={2.0} sm={2.5}>
                     <h1>User Management</h1>
-                </Grid>
-                
-                <Grid item md={2.0} sm={1} sx={{justifyContent:"flex-end", display:'flex'}}>
-                    <Link href='CreateCompany' underline='none'>
-                        <Button variant="contained" sx={{width:250, backgroundColor:"#2596BE"}}
-                                startIcon={<AddIcon/>}>
-                                Create new Company 
-                        </Button>
-                    </Link>
-                
                 </Grid>
 
             </Grid>
@@ -139,7 +146,7 @@ function UserManagement(){
                     <Card sx={{ borderRadius: '16px' }} style={{backgroundColor: "#E7F9DD"}}>
                         <CardContent align="center">
                                 <Typography variant="h2" component="div" fontWeight="Bold" color={"#054322"}>
-                                45
+                                {numVendor}
                                 </Typography>
                                 <Typography variant="body2" fontWeight="Bold" color={"#054322"}>
                                     <Grid container sx={{alignContent:"center", justifyContent:"center", pt:3}}>
@@ -161,7 +168,7 @@ function UserManagement(){
                     <Card sx={{ borderRadius: '16px' }} style={{backgroundColor: "#FEDBC2"}}>
                         <CardContent align="center">
                                 <Typography variant="h2" component="div" fontWeight="Bold" color={"#8A3C03"}>
-                                2
+                                {numAdmin}
                                 </Typography>
                                 <Typography variant="body2" fontWeight="Bold" color={"#8A3C03"}>
                                     <Grid container sx={{alignContent:"center", justifyContent:"center", pt:3}}>
@@ -183,7 +190,7 @@ function UserManagement(){
                     <Card sx={{ borderRadius: '16px' }} style={{backgroundColor: "#FFD9D9"}}>
                         <CardContent align="center">
                                 <Typography variant="h2" component="div" fontWeight="Bold" color={"#790202"}>
-                                10
+                                {numApprover}
                                 </Typography>
                                 <Typography variant="body2" fontWeight="Bold" color={"#790202"}>
                                     <Grid container sx={{alignContent:"center", justifyContent:"center", pt:3}}>
@@ -199,24 +206,46 @@ function UserManagement(){
                     </Card>
                     </Link>
                 </Grid>
+
+                <Grid item xs={12}></Grid>
                 
             </Grid>
 
-            <Grid container spacing={{ md: 12 }} columns={{xs:12, sm:3,md:3}} sx={{display:"flex", justifyContent:"space-between", alignItems:"center",pt:3,pb:2}}>
-                <Grid item md={2}>
+            <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:4}} sx={{display:"flex", justifyContent:"space-between", alignItems:"center"}}>
+                <Grid item md={2.0} sm={2.5}>
                     <h2>Company</h2>
                 </Grid>
+                
+                <Grid item md={2.0} sm={1} sx={{justifyContent:"flex-end", display:'flex'}}>
+                    <Link href='CreateCompany' underline='none'>
+                        <Button variant="contained" sx={{width:250, backgroundColor:"#2596BE"}}
+                                startIcon={<AddIcon/>}>
+                                Create New Company 
+                        </Button>
+                    </Link>
+                </Grid>
+
             </Grid>
 
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                    <TableHead>
+                    <StyledTableRow>
+                        <StyledTableCell align="left">Company Name</StyledTableCell>
+                        <StyledTableCell align="left">Country of Origin</StyledTableCell>
+                        <StyledTableCell align="right"></StyledTableCell>
+                    </StyledTableRow>
+                    </TableHead>
                     <TableBody>
-                    {rows.map((row) => (
-                        <StyledTableRow key={row.Company}>
+                    {companies.map((company) => (
+                        <StyledTableRow key={company.name}>
                         <StyledTableCell component="th" scope="row">
-                            {row.Company}
+                            {company.name}
                         </StyledTableCell>
-                        <StyledTableCell align="right"><ArrowForwardIosIcon /></StyledTableCell>
+                        <StyledTableCell align="left">{company.country}</StyledTableCell>
+                        <Link href='CompanyDetails' underline='none'>
+                            <StyledTableCell align="right"><ArrowForwardIosIcon /></StyledTableCell>
+                        </Link>
                         </StyledTableRow>
                     ))}
                     </TableBody>

@@ -3,6 +3,7 @@ import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 
+
 import CreateWorkflow from "./pages/CreateWorkflow";
 
 import Form from "./pages/FormCreation";
@@ -26,6 +27,9 @@ import CreateNewContact from "./pages/CreateNewContact";
 import Vendor from "./pages/Vendor";
 import Admin from "./pages/Admin";
 import Approver from "./pages/Approver";
+import CompanyDetails from "./pages/CompanyDetails"
+import ForgetPassword from "./pages/ForgetPassword"
+
 
 function App() {
   const ProtectedRoute = ({ rolesAllowed = [], children }) => {
@@ -39,12 +43,16 @@ function App() {
     return children;
   };
 
+  const user = sessionStorage.getItem("user");
+  
+
   return (
+
     <div className="App">
       <header className="App-header">
-        <>
-          <Navbar />
-        </>
+    
+        {/* {user && <Navbar />}  */}
+        <Navbar />
       </header>
       <Routes>
         <Route path="/Form" element={<Form />} />
@@ -66,11 +74,13 @@ function App() {
           }
         />
         <Route path="/CreateCompany" element={<CreateCompany />} />
-        <Route path="/CreateNewContact" element={<CreateNewContact />} />
+        <Route path="/CreateNewContact/:company" element={<CreateNewContact />} />
         <Route path="/Vendor" element={<Vendor />} />
         <Route path="/Admin" element={<Admin />} />
         <Route path="/Approver" element={<Approver />} />
+        <Route path="/CompanyDetails" element={<CompanyDetails />} />
         <Route path="/Login" element={<Login />} />
+        <Route path="/ForgetPassword" element={<ForgetPassword />} />
         <Route path="/FormHomePage" element={<FormHomePage />} />
         <Route path="/FormCreation" element={<FormCreation />} /> 
         <Route path="/ViewForms" element={<ViewForms />} /> 
@@ -93,6 +103,7 @@ function App() {
         <Route path="/" element={<Home />} />
       </Routes>
     </div>
+
   );
 }
 

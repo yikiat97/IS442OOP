@@ -1,42 +1,65 @@
 import * as React from 'react';
-import dayjs from 'dayjs';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import StepContent from '@mui/material/StepContent';
-import { Container, textAlign, spacing, Box } from "@mui/system";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { Box } from "@mui/system";
 import AddIcon from '@mui/icons-material/Add';
 import {
     FormControl,
     FormHelperText, 
     Grid, 
-    IconButton,
     Paper, 
     TextField, 
     Input, 
     InputLabel,
     InputAdornment, 
     OutlinedInput,
-    FormControlLabel, 
-    FormLabel,
-    Menu,
-    MenuItem,
     Button,
-    Link
+    Link,
+    Typography
 } from "@mui/material";
-
+import { useState } from "react";
+import axios from "axios";
 
 
 function CreateCompany(){
+    const [name, setName] = useState("");
+    const [country, setCountry] = useState("");
+    const [message, setMessage] = useState("");
     
+    const handleNameChange = (event) => {
+        setName(event.target.value);
+        setMessage("");
+      };
+    
+      const handleCountryChange = (event) => {
+        setCountry(event.target.value);
+        setMessage("");
+      };
+
+      const saveCompany = async (e) => {
+        e.preventDefault();
+    
+        try {
+          const res = await axios.post(
+            "http://localhost:8080/company/add",
+            {
+              name,
+              country              
+            },
+            {
+              headers: {
+                "Content-Type": "application/json"
+              },
+            }
+          );
+          console.log(res, "res");
+        } catch (error) {
+            if (error.response.status === 409) {
+                setMessage("Company already exists")
+              } else {
+                setMessage("Something went wrong")
+              }
+        }
+        
+      };
 
 
     return(
@@ -65,20 +88,29 @@ function CreateCompany(){
                 </Grid>
     
                                 
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
                         <div>
-                            <TextField
-                            label="Company Name"
-                            id="outlined-start-adornment"
-                            sx={{ m: 1, width: '25ch' }}
-                            />
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleNameChange}>
+                                <FormHelperText id="outlined-weight-helper-text">Company Name</FormHelperText>
+                                <OutlinedInput
+                                    id="outlined-adornment-weight"
+                                    aria-describedby="outlined-weight-helper-text"
+                                />
+                            </FormControl>
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleCountryChange}>
+                                <FormHelperText id="outlined-weight-helper-text">Country of Origin</FormHelperText>
+                                <OutlinedInput
+                                    id="outlined-adornment-weight"
+                                    aria-describedby="outlined-weight-helper-text"
+                                />
+                            </FormControl>
                         </div>
                     </Box>
                                
 
                 <Grid sx={{mx:2, mb:4, display:"flex", justifyContent:"flex-end"}} columns={{ xs: 12, sm: 12, md: 12}}>
                     
-                        <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success">
+                        <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success" onClick={saveCompany}>
                                 Save
                         </Button>
                     
@@ -86,7 +118,9 @@ function CreateCompany(){
                 </Grid>
             
             </Paper>
-            
+            <Typography sx={{color: "red"}}>
+              {message}
+            </Typography>
 
 
         </Grid>
