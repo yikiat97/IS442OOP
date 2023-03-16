@@ -33,6 +33,7 @@ function UserManagement(){
     const [numVendor, setNumVendor] = useState("");
     const [numApprover, setNumApprover] = useState("");
     const [numAdmin, setNumAdmin] = useState("");
+    const [companies, setCompanies] = useState([]);
 
         const StyledMenu = styled((props) => (
             <Menu
@@ -108,6 +109,7 @@ function UserManagement(){
 
             useEffect(() => {
                 getNumUsers();
+                getCompany();
             }, []);
 
             const getNumUsers = () => {
@@ -118,17 +120,15 @@ function UserManagement(){
                     setNumVendor(response.data["Vendor"]);
                 })
                 .catch(error => console.error(error));
-            }
+            };
 
-    function createData(companyName,countryOrigin) {
-        return {companyName,countryOrigin};
-    }
-    
-    const rows = [
-        createData('Company ABC', 'Singapore'),
-        createData('Company XYZ', 'Singapore'),
-        createData('Company EFG', 'Singapore'),
-    ];
+            const getCompany = () => {
+                axios.get("http://localhost:8080/company")
+                .then((response) => {
+                    setCompanies(response.data);
+                })
+                .catch(error => console.error(error));
+            };
     
     return(
         <Grid sx={{mt:6, textAlign:'left', px:4}}>
@@ -237,10 +237,10 @@ function UserManagement(){
                     </StyledTableRow>
                     </TableHead>
                     <TableBody>
-                    {rows.map((row) => (
-                        <StyledTableRow key={row.companyName}>
+                    {companies.map((company) => (
+                        <StyledTableRow key={company.name}>
                         <StyledTableCell component="th" scope="row">
-                            {row.companyName}
+                            {company.name}
                         </StyledTableCell>
                         <StyledTableCell align="left">{row.countryOrigin}</StyledTableCell>
                         <Link href='CompanyDetails' underline='none'>

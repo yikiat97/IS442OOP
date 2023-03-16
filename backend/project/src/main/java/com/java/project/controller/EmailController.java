@@ -26,4 +26,18 @@ public class EmailController {
                 return "error";
             }
     }
+
+        @PostMapping(value = "/forgetPasswordEmail", consumes = "application/json", produces = "application/json")
+        public String ForgetPasswordEmail(@RequestParam String email) {
+            try{
+                String emailBody = "";
+                String subject = "";
+                service.sendEmail(email,emailBody,subject,null);
+                return "Email sent successfully";
+            }catch (MailException e){
+                return "error";
+            }catch(MessagingException e){
+                return "error";
+            }
+        }
 }

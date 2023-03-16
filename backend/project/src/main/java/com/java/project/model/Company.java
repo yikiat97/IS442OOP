@@ -1,7 +1,10 @@
 package com.java.project.model;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.List;
 
+@Document("Company")
 public class Company {
     private String name;
     private String country;
@@ -9,6 +12,7 @@ public class Company {
 
     public Company(String name, String country, List<String> employeeUsernames) {
         this.name = name;
+        this.country = country;
         this.employeeUsernames = employeeUsernames;
     }
     public String getName() {

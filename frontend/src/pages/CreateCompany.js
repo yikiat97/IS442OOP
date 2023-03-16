@@ -12,13 +12,54 @@ import {
     InputAdornment, 
     OutlinedInput,
     Button,
-    Link
+    Link,
+    Typography
 } from "@mui/material";
-
+import { useState } from "react";
+import axios from "axios";
 
 
 function CreateCompany(){
+    const [name, setName] = useState("");
+    const [country, setCountry] = useState("");
+    const [message, setMessage] = useState("");
     
+    const handleNameChange = (event) => {
+        setName(event.target.value);
+        setMessage("");
+      };
+    
+      const handleCountryChange = (event) => {
+        setCountry(event.target.value);
+        setMessage("");
+      };
+
+      const saveCompany = async (e) => {
+        e.preventDefault();
+    
+        try {
+          const res = await axios.post(
+            "http://localhost:8080/company/add",
+            {
+              name,
+              country              
+            },
+            {
+              headers: {
+                "Content-Type": "application/json"
+              },
+            }
+          );
+          console.log(res, "res");
+        } catch (error) {
+            if (error.response.status === 409) {
+                setMessage("Company already exists")
+              } else {
+                setMessage("Something went wrong")
+              }
+        }
+        
+      };
 
 
     return(
@@ -49,14 +90,14 @@ function CreateCompany(){
                                 
                 <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
                         <div>
-                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleNameChange}>
                                 <FormHelperText id="outlined-weight-helper-text">Company Name</FormHelperText>
                                 <OutlinedInput
                                     id="outlined-adornment-weight"
                                     aria-describedby="outlined-weight-helper-text"
                                 />
                             </FormControl>
-                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleCountryChange}>
                                 <FormHelperText id="outlined-weight-helper-text">Country of Origin</FormHelperText>
                                 <OutlinedInput
                                     id="outlined-adornment-weight"
@@ -69,7 +110,7 @@ function CreateCompany(){
 
                 <Grid sx={{mx:2, mb:4, display:"flex", justifyContent:"flex-end"}} columns={{ xs: 12, sm: 12, md: 12}}>
                     
-                        <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success">
+                        <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success" onClick={saveCompany}>
                                 Save
                         </Button>
                     
@@ -77,7 +118,9 @@ function CreateCompany(){
                 </Grid>
             
             </Paper>
-            
+            <Typography sx={{color: "red"}}>
+              {message}
+            </Typography>
 
 
         </Grid>
