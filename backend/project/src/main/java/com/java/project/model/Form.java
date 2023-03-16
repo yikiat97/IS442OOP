@@ -1,6 +1,7 @@
 package com.java.project.model;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -8,49 +9,70 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document("Form")
 public class Form {
     @Id
-    private String id;
-    private Integer FormID;
-    private List<String> FormSection;
+    private String formID;
+    private String WorkflowID;
     private String FormType;
     private String FormName;
+    private List<Map<String, Object>> QuestionData;
 
-    public Form(String id, Integer FormID, List<String> FormSection, String FormType, String FormName) {
+
+    public Form(String formID, String WorkflowID,  String FormType, String FormName, List<Map<String, Object>> QuestionData) {
         super();
-        this.id = id;
-        this.FormID = FormID;
-        this.FormSection = FormSection;
+        this.formID = formID;
+        this.WorkflowID = WorkflowID;
         this.FormType = FormType;
         this.FormName = FormName;
+        this.QuestionData = QuestionData;
     }
 
-    public String getId() {
-        return id;
+
+    public String getFormID() {
+        return formID;
     }
-    public void setId(String id) {
-        this.id = id;
+
+
+    public void setFormID(String formID) {
+        formID = formID;
     }
-    public String getFormName() {
-        return FormName;
+
+
+    public String getWorkflowID() {
+        return WorkflowID;
     }
-    public void setFormName(String formName) {
-        FormName = formName;
+
+
+    public void setWorkflowID(String workflowID) {
+        WorkflowID = workflowID;
     }
-    public Integer getFormID() {
-        return FormID;
-    }
-    public void setFormID(Integer formID) {
-        FormID = formID;
-    }
-    public List<String> getFormSection() {
-        return FormSection;
-    }
-    public void setFormSection(List<String> formSection) {
-        FormSection = formSection;
-    }
+
+
     public String getFormType() {
         return FormType;
     }
+
+
     public void setFormType(String formType) {
         FormType = formType;
     }
+
+
+    public String getFormName() {
+        return FormName;
+    }
+
+
+    public void setFormName(String formName) {
+        FormName = formName;
+    }
+
+
+    public List<Map<String, Object>> getQuestionData() {
+        return QuestionData;
+    }
+
+
+    public void setQuestionData(List<Map<String, Object>> questionData) {
+        QuestionData = questionData;
+    }
+
 }

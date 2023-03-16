@@ -19,6 +19,7 @@ public class Workflow {
         this.WorkflowID = WorkflowID;
         this.Forms = Forms;
         this.WorkflowName = WorkflowName;
+        
     }
 
     public String getId() {
