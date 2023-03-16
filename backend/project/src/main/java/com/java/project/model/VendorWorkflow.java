@@ -5,18 +5,22 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("Workflow")
-public class Workflow {
+@Document("VendorWorkflow")
+public class VendorWorkflow {
     @Id
     private String id;
     private List<String> Forms;
     private String WorkflowName;
-    
-    public Workflow(String id, List<String> Forms, String WorkflowName) {
+    private String Status;
+    private String VendorID;
+
+    public VendorWorkflow(String id,List<String> Forms, String WorkflowName, String Status, String VendorID) {
         super();
         this.id = id;
         this.Forms = Forms;
         this.WorkflowName = WorkflowName;
+        this.Status = Status;
+        this.VendorID = VendorID;
     }
 
     public String getId() {
@@ -41,5 +45,21 @@ public class Workflow {
 
     public void setWorkflowName(String workflowName) {
         WorkflowName = workflowName;
+    }
+
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
+    }    
+
+    public String getVendorID() {
+        return VendorID;
+    }
+
+    public void setVendorID(String vendorID) {
+        VendorID = vendorID;
     }
 }
