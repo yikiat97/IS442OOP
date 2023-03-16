@@ -31,6 +31,11 @@ public class WorkflowController {
   @Autowired
   WorkflowRepository WorkflowRepository;
 
+  // JSON Format for creation of workflow
+  // {
+  // "forms": ["Vendor Assessment", "Pre-Evaluation Form", "Health Performance"],
+  // "workflowName": "Vendor Onboarding"
+  // }
   @PostMapping("/insertWorkflow")
   public ResponseEntity<Workflow> createWorkflow(@RequestBody(required = false) WorkflowMappingDTO WorkflowDTO) {
     try {
@@ -73,7 +78,15 @@ public class WorkflowController {
   }
 
   // Path to update workflow here
-  // forms JSON must either be null or ["", ""] format
+  // JSON format
+  // {
+  // "id" : "6412eaf10bf80f2c012bd872",
+  // "forms": ["Vendor Assessment", "Pre-Evaluation Form", "Health Performance"],
+  // "workflowName": "Vendor Onboarding",
+  // }
+  // id is the only mandatory field to input
+  // forms can be left null if not updating forms
+  // workflowName can be left "" if not updating workflowName
   @PutMapping("/updateWorkflow")
   public ResponseEntity<?> updateWorkflow(
       @RequestBody(required = false) WorkflowUpdateMappingDTO WorkflowUpdateMappingDTO) {
