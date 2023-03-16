@@ -32,8 +32,8 @@ import {
     Link,
     Select,
 } from "@mui/material";
-
-
+import { useState } from "react";
+import axios from "axios";
 
 function CreateNewContact(){
     const [showPassword, setShowPassword] = React.useState(false);
@@ -43,13 +43,54 @@ function CreateNewContact(){
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
-    
-    const [userRole, setUserRole] = React.useState('');
 
-    const handleChange = (event) => {
-        setUserRole(event.target.value);
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [role, setRole] = useState("");
+    const [message, setMessage] = useState("");
+    const company = "test";
+    const passwordtest = "";
+
+    const handleEmailChange = (event) => {
+        setEmail(event.target.value);
+        setMessage("");
     };
 
+    const handleNameChange = (event) => {
+        setName(event.target.value);
+        setMessage("");
+    };
+
+    const handleRoleChange = (event) => {
+        setRole(event.target.value);
+        setMessage("");
+    };
+
+    const createUser = async (e) => {
+        e.preventDefault();
+    
+        try {
+          const res = await axios.post(
+            "http://localhost:8080/login/create" + role,
+            {
+                email,
+                name,
+                role,
+                company,
+                passwordtest
+            },
+            {
+              headers: {
+                "Content-Type": "application/json"
+              },
+            }
+          );
+          console.log(res, "res");
+        } catch (error) {
+          setMessage("Something went wrong");
+        }
+        
+      };
 
     return(
         <Grid sx={{mt:6, textAlign:'left', px:4}}>
@@ -73,14 +114,14 @@ function CreateNewContact(){
                                 
                     <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
                         <div>
-                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleNameChange}>
                                 <FormHelperText id="outlined-weight-helper-text">Contact Name</FormHelperText>
                                 <OutlinedInput
                                     id="outlined-adornment-weight"
                                     aria-describedby="outlined-weight-helper-text"
                                 />
                             </FormControl>
-                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleEmailChange}>
                                 <FormHelperText id="outlined-weight-helper-text">Email</FormHelperText>
                                 <OutlinedInput
                                     id="outlined-adornment-weight"
@@ -92,13 +133,13 @@ function CreateNewContact(){
                                     <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
-                                    value={userRole}
+                                    value={role}
                                     label="User Role"
-                                    onChange={handleChange}
+                                    onChange={handleRoleChange}
                                     >
-                                    <MenuItem value={10}>Admin</MenuItem>
-                                    <MenuItem value={20}>Approver</MenuItem>
-                                    <MenuItem value={30}>Vendor</MenuItem>
+                                    <MenuItem value="Admin">Admin</MenuItem>
+                                    <MenuItem value="Approver">Approver</MenuItem>
+                                    <MenuItem value="Vendor">Vendor</MenuItem>
                                     </Select>
                             </FormControl>
                             <FormControl sx={{m: 2, width: '25ch' }}>
@@ -127,7 +168,7 @@ function CreateNewContact(){
 
                 <Grid sx={{mx:2, mb:4, display:"flex", justifyContent:"flex-end"}} columns={{ xs: 12, sm: 12, md: 12}}>
                     
-                        <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success">
+                        <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success" onClick={createUser}>
                                 Save
                         </Button>
                     

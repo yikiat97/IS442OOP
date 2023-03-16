@@ -37,9 +37,8 @@ function Copyright(props) {
 
 
 
-function Login(props) {
+function ForgetPassword(props) {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const handleEmailChange = (event) => {
@@ -47,51 +46,21 @@ function Login(props) {
     setMessage("");
   };
 
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-    setMessage("");
-  };
-
-  const login = async (e) => {
+  const changePassword = async (e) => {
     e.preventDefault();
 
     try {
       const res = await axios.post(
-        "http://localhost:8080/login/authenticate",
-        {
-          email,
-          password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
+        "http://localhost:8080/login/changePassword?email=" + email
       );
       console.log(res, "res");
-      sessionStorage.setItem("email", email);
-      sessionStorage.setItem("user", email);
-      sessionStorage.setItem("role", res.data);
-      handleReroute();
+      setMessage("Email has been sent.");
     } catch (error) {
-      if (error.response.status === 401) {
-        setMessage("Wrong email/password")
-      } else {
-        setMessage("Something went wrong")
-      }
+      setMessage("Something went wrong");
     }
     
   };
 
-  const handleReroute = () => {
-    const role = sessionStorage.getItem("role");
-    if (role === "Admin") {
-      window.location.replace(window.location.origin + "/WorkflowsAdmin");
-    } else if (role === "Vendor") {
-      window.location.replace(window.location.origin + "/ViewWorkflows");
-    }
-  };
 
   const App={
     width:'100%',
@@ -127,11 +96,8 @@ function Login(props) {
               </Grid>
           </Grid>
           
-          <Typography component="h1" variant="h4" sx={{fontWeight:"bold"}}>
-            Hi, Welcome Back!
-          </Typography>
           <Typography sx={{pb:2}}>
-            Please enter your details.
+          Enter the email address associated with your account and we'll send you a link to reset your password.
           </Typography>
           
           <Box component="form" noValidate sx={{ mt: 1 }}>
@@ -146,21 +112,10 @@ function Login(props) {
               autoFocus
               onChange={handleEmailChange}
             />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              onChange={handlePasswordChange}
-            />
             <Grid container sx={{display:"flex"}}>
               <Grid item xs>
-                <Link href='ForgetPassword' variant="body2">
-                  Forgot password?
+                <Link href='Login' variant="body2">
+                  Sign in instead
                 </Link>
               </Grid>
             </Grid>
@@ -172,8 +127,8 @@ function Login(props) {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2, background:"#2596BE"}}
-              onClick={login}>
-              Sign In
+              onClick={changePassword}>
+              Continue
             </Button>
             
           </Box>
@@ -186,4 +141,4 @@ function Login(props) {
   );
 }
 
-export default Login;
+export default ForgetPassword;

@@ -33,6 +33,7 @@ function UserManagement(){
     const [numVendor, setNumVendor] = useState("");
     const [numApprover, setNumApprover] = useState("");
     const [numAdmin, setNumAdmin] = useState("");
+    const [companies, setCompanies] = useState([]);
 
         const StyledMenu = styled((props) => (
             <Menu
@@ -107,6 +108,7 @@ function UserManagement(){
 
             useEffect(() => {
                 getNumUsers();
+                getCompany();
             }, []);
 
             const getNumUsers = () => {
@@ -117,18 +119,15 @@ function UserManagement(){
                     setNumVendor(response.data["Vendor"]);
                 })
                 .catch(error => console.error(error));
-            }
+            };
 
-    function createData(Company) {
-        return {Company};
-    }
-    
-    const rows = [
-        createData('Ever Green'),
-        createData('Sparks Analytics'),
-        createData('Ever Green'),
-        
-    ];
+            const getCompany = () => {
+                axios.get("http://localhost:8080/company")
+                .then((response) => {
+                    setCompanies(response.data);
+                })
+                .catch(error => console.error(error));
+            };
     
     return(
         <Grid sx={{mt:6, textAlign:'left', px:4}}>
@@ -228,10 +227,10 @@ function UserManagement(){
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableBody>
-                    {rows.map((row) => (
-                        <StyledTableRow key={row.Company}>
+                    {companies.map((company) => (
+                        <StyledTableRow key={company.name}>
                         <StyledTableCell component="th" scope="row">
-                            {row.Company}
+                            {company.name}
                         </StyledTableCell>
                         <StyledTableCell align="right"><ArrowForwardIosIcon /></StyledTableCell>
                         </StyledTableRow>
