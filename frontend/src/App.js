@@ -27,6 +27,7 @@ import CreateNewContact from "./pages/CreateNewContact";
 import Vendor from "./pages/Vendor";
 import Admin from "./pages/Admin";
 import Approver from "./pages/Approver";
+import CompanyDetails from "./pages/CompanyDetails"
 
 
 function App() {
@@ -76,6 +77,7 @@ function App() {
         <Route path="/Vendor" element={<Vendor />} />
         <Route path="/Admin" element={<Admin />} />
         <Route path="/Approver" element={<Approver />} />
+        <Route path="/CompanyDetails" element={<CompanyDetails />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/FormHomePage" element={<FormHomePage />} />
         <Route path="/FormCreation" element={<FormCreation />} /> 

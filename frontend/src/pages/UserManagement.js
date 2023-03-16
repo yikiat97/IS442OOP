@@ -86,9 +86,10 @@ function UserManagement(){
 
             const StyledTableCell = styled(TableCell)(({ theme }) => ({
                 [`&.${tableCellClasses.head}`]: {
-                backgroundColor: theme.palette.common.white,
-                color: theme.palette.common.black,
+                backgroundColor: theme.palette.info.dark,
+                color: theme.palette.common.white,
                 fontWeight: theme.typography.fontWeightBold,
+                fontSize: 14,
                 },
                 [`&.${tableCellClasses.body}`]: {
                 fontSize: 14,
@@ -119,33 +120,22 @@ function UserManagement(){
                 .catch(error => console.error(error));
             }
 
-    function createData(Company) {
-        return {Company};
+    function createData(companyName,countryOrigin) {
+        return {companyName,countryOrigin};
     }
     
     const rows = [
-        createData('Ever Green'),
-        createData('Sparks Analytics'),
-        createData('Ever Green'),
-        
+        createData('Company ABC', 'Singapore'),
+        createData('Company XYZ', 'Singapore'),
+        createData('Company EFG', 'Singapore'),
     ];
     
     return(
         <Grid sx={{mt:6, textAlign:'left', px:4}}>
             
             <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:4}} sx={{display:"flex", justifyContent:"space-between", alignItems:"center"}}>
-                <Grid item md={2.0} sm={2.5}>
+            <Grid item md={2.0} sm={2.5}>
                     <h1>User Management</h1>
-                </Grid>
-                
-                <Grid item md={2.0} sm={1} sx={{justifyContent:"flex-end", display:'flex'}}>
-                    <Link href='CreateCompany' underline='none'>
-                        <Button variant="contained" sx={{width:250, backgroundColor:"#2596BE"}}
-                                startIcon={<AddIcon/>}>
-                                Create new Company 
-                        </Button>
-                    </Link>
-                
                 </Grid>
 
             </Grid>
@@ -216,24 +206,46 @@ function UserManagement(){
                     </Card>
                     </Link>
                 </Grid>
+
+                <Grid item xs={12}></Grid>
                 
             </Grid>
 
-            <Grid container spacing={{ md: 12 }} columns={{xs:12, sm:3,md:3}} sx={{display:"flex", justifyContent:"space-between", alignItems:"center",pt:3,pb:2}}>
-                <Grid item md={2}>
+            <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:4}} sx={{display:"flex", justifyContent:"space-between", alignItems:"center"}}>
+                <Grid item md={2.0} sm={2.5}>
                     <h2>Company</h2>
                 </Grid>
+                
+                <Grid item md={2.0} sm={1} sx={{justifyContent:"flex-end", display:'flex'}}>
+                    <Link href='CreateCompany' underline='none'>
+                        <Button variant="contained" sx={{width:250, backgroundColor:"#2596BE"}}
+                                startIcon={<AddIcon/>}>
+                                Create New Company 
+                        </Button>
+                    </Link>
+                </Grid>
+
             </Grid>
 
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                    <TableHead>
+                    <StyledTableRow>
+                        <StyledTableCell align="left">Company Name</StyledTableCell>
+                        <StyledTableCell align="left">Country of Origin</StyledTableCell>
+                        <StyledTableCell align="right"></StyledTableCell>
+                    </StyledTableRow>
+                    </TableHead>
                     <TableBody>
                     {rows.map((row) => (
-                        <StyledTableRow key={row.Company}>
+                        <StyledTableRow key={row.companyName}>
                         <StyledTableCell component="th" scope="row">
-                            {row.Company}
+                            {row.companyName}
                         </StyledTableCell>
-                        <StyledTableCell align="right"><ArrowForwardIosIcon /></StyledTableCell>
+                        <StyledTableCell align="left">{row.countryOrigin}</StyledTableCell>
+                        <Link href='CompanyDetails' underline='none'>
+                            <StyledTableCell align="right"><ArrowForwardIosIcon /></StyledTableCell>
+                        </Link>
                         </StyledTableRow>
                     ))}
                     </TableBody>
