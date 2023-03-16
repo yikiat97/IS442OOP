@@ -1,44 +1,62 @@
 import React, { useState, useEffect } from "react";
 import $ from "jquery";
-import { Button } from "@mui/material";
+import {Grid,Input,Box, FormControl,FormControlLabel,FormGroup, FormLabel, RadioGroup, Radio, Checkbox, Select, MenuItem, InputLabel, TextField, TextareaAutosize } from '@mui/material';
+import Textarea from '@mui/joy/Textarea';
+import Paper from '@mui/material/Paper';
+
+// import DateField from '@mui/x-data-pickers/DateField';
+import { styled } from '@mui/material/styles';
+
+// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+// import { Unstable_DateField as DateField } from '@mui/x-date-pickers';
+import "../styles/formPreview.css" 
+import Canvas from "./canvas";
+import { Typography } from "antd";
 window.jQuery = $;
 window.$ = $;
 require("formBuilder");
 require('formBuilder/dist/form-render.min.js')
 
 // const FormPreview = ({ jsonObject }) => {
-    // const [html, setHtml] = useState("");
-    // console.log(jsonObject)
-    // useEffect(() => {
-    // const formRenderOpts = {
-    //     dataType: "xml",
-    //     formData: jsonObject,
-    // };
+//     const [html, setHtml] = useState("");
+//     console.log(jsonObject)
+//     useEffect(() => {
+//     const formRenderOpts = {
+//         dataType: "xml",
+//         formData: jsonObject,
+//     };
 
 
     
-    // const $renderContainer = $("<form/>");
-    // $renderContainer.formRender(formRenderOpts);
-    // const newHtml = `
-	// 		<!doctype html>
-	// 			<title>Form Preview</title>
-    //             <script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
-	// 			<body class="container">
-	// 				<hr>${$renderContainer.html()}
-	// 			</body>
-	// 			<footer>
-	// 				<div class="panel-footer text-right">
-	// 					<button type="button" id="btnSave" class="btn btn-default pull-right">Submit for approval</button>
-	// 				</div>
-	// 			</footer>
-	// 		</html>`;
-    // setHtml(newHtml);
+//     const $renderContainer = $("<form/>");
+//     $renderContainer.formRender(formRenderOpts);
+//     const newHtml = `
+// 			<!doctype html>
+// 				<title>Form Preview</title>
+//                 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"></script>
+//                 <script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
+// 				<body class="container">
+// 					<hr>${$renderContainer.html()}
+// 				</body>
+// 				<footer>
+// 					<div class="panel-footer text-right">
+// 						<button type="button" id="btnSave" class="btn btn-default float-right">Submit for approval</button>
+// 					</div>
+// 				</footer>
+// 			</html>`;
+//     setHtml(newHtml);
 // }, [jsonObject]);
 
 //     return (
 //         <div dangerouslySetInnerHTML={{ __html: html }} />
 //     );
 // };
+const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    color: theme.palette.text.secondary,
+}));
 
 const FormPreview = ({ formData }) => {
     if (!formData) {
@@ -50,108 +68,108 @@ const FormPreview = ({ formData }) => {
             return <h1>{field.label}</h1>;
         case "checkbox-group":
             return (
-            <div>
-                <label>{field.label}</label>
-                {field.values.map((value, index) => (
-                <div key={index}>
-                    <input
-                    type="checkbox"
-                    id={`${field.name}-${index}`}
-                    name={field.name}
-                    value={value.value}
-                    checked={value.selected}
-                    />
-                    <label htmlFor={`${field.name}-${index}`}>{value.label}</label>
-                </div>
-                ))}
-            </div>
+            <Grid container sx={{ m: 2 }} class="formbuilder-checkbox">
+                <Typography>{field.label}</Typography>
+                <FormGroup>
+
+                    {field.values.map((value, index) => (
+
+                        <FormControlLabel value={value.value} control={<Checkbox defaultChecked />} label={value.label} />
+                    ))}
+                </FormGroup>
+            </Grid>
             );
         case "date":
             return (
-            <div>
-                <label>{field.label}</label>
-                <input
-                type="date"
-                className={field.className}
-                name={field.name}
-                />
-            </div>
+            <Grid container sx={{ m: 2 }} >
+                {/* <DateField disableFuture /> */}
+
+            </Grid>
             );
         case "number":
             return (
-            <div>
-                <label>{field.label}</label>
-                <input
-                type="number"
-                className={field.className}
-                name={field.name}
-                />
-            </div>
+                <Grid container sx={{ m: 2 }}>
+                <Typography sx={{ display: 'block' }}>{field.label}</Typography>
+                <FormGroup>
+                    <br></br>
+                    <input
+                        id="standard-number"
+                        label="Number"
+                        type="number"
+                        class="formbuilder-number"
+                        InputLabelProps={{
+                        shrink: true,
+                        }}
+                        variant="standard"
+                        sx={{ display: 'block' }}
+                    />                    
+                </FormGroup>
+ 
+                </Grid>
+                    // <input type="number"></input>
             );
         case "radio-group":
             return (
-            <div>
-                <label>{field.label}</label>
-                {field.values.map((value, index) => (
-                <div key={index}>
-                    <input
-                    type="radio"
-                    id={`${field.name}-${index}`}
-                    name={field.name}
-                    value={value.value}
-                    checked={value.selected}
-                    />
-                    <label htmlFor={`${field.name}-${index}`}>{value.label}</label>
-                </div>
-                ))}
-            </div>
+            <Grid container sx={{ m: 2 }}  class="formbuilder-radio">
+                <Typography>{field.label}</Typography>
+                <RadioGroup aria-labelledby="demo-radio-buttons-group-label" name="radio-buttons-group">
+                    {field.values.map((value, index) => (
+                    <div key={index}>
+
+                        <FormControlLabel value={value.value} control={<Radio />} label={value.label} />
+
+                    </div>
+                    ))}
+                </RadioGroup>
+
+            </Grid>
             );
         case "select":
             return (
-            <div>
-                <label>{field.label}</label>
-                <select
-                className={field.className}
-                name={field.name}
-                multiple={field.multiple}
-                >
-                {field.values.map((value, index) => (
-                    <option
-                    key={index}
-                    value={value.value}
-                    selected={value.selected}
-                    >
-                    {value.label}
-                    </option>
-                ))}
-                </select>
-            </div>
+            <Grid container >
+                <FormControl>
+                        <label class="field-label">{field.label}</label>
+                        <select
+                        className={field.className}
+                        name={field.name}
+                        multiple={field.multiple}
+                        sx={{ width: '200px' }}
+
+                        >
+                            {field.values.map((value, index) => (
+                                <option value={value.value}>{value.label}</option>
+                            ))}
+                        </select>
+                </FormControl>
+            </Grid>
             );
         case "text":
             return (
-            <div>
-                <label>{field.label}</label>
-                <input
-                type="text"
-                className={field.className}
-                name={field.name}
-                />
-            </div>
+            <Grid container sx={{ m: 2 }} >
+                <Typography>{field.label}</Typography>
+                <TextField id="outlined-basic" className={field.className} name={field.name} />
+
+            </Grid>
             );
         case "textarea":
             return (
-            <div>
-                <label>{field.label}</label>
-                <textarea
+            <Grid container sx={{ m: 2 }} >
+                <Typography>{field.label}</Typography>
+                <Textarea
                 className={field.className}
                 name={field.name}
                 rows={field.rows}
                 cols={field.cols}
                 />
-            </div>
+            </Grid>
             );
         case "canvas":
-            return <canvas name={field.name}></canvas>;
+            return (
+                <Grid container   >
+                    <Typography>{field.label}</Typography><br></br>
+                    <Canvas sx={{ m: 2, float: 'left',display:'block'  }}/>
+                </Grid>
+            );
         default:
             return null;
         }
@@ -159,20 +177,24 @@ const FormPreview = ({ formData }) => {
 
     return (
         <div>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+            <link href="https://cdn.muicss.com/mui-0.10.3/css/mui.min.css" rel="stylesheet" type="text/css" />
             <form>
                 {formData.map((field, index) => (
-                    <div key={index}>
-                        {field.subtype ? (
-                            renderField({ ...field, type: field.subtype })
-                        ) : (
-                            <div className={field.className}>
-                                {field.label && renderField(field)}
-                            </div>
-                        )}
-                    </div>
+                    <Grid key={index} id='test'>
+                    {field.subtype ? (
+                        renderField({ ...field, type: field.subtype })
+                    ) : (
+                        renderField(field)
+                    )}
+                    </Grid>
                 ))}
             </form>
+
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+            <script src="https://cdn.muicss.com/mui-0.10.3/js/mui.min.js"></script>
         </div>
+
     );
 };
 export default FormPreview;

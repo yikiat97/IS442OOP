@@ -1,11 +1,10 @@
 import $ from "jquery";
 import FormRender from 'form-render';
 import React, { useRef, useEffect,useState } from "react";
-import { Button, Container, Grid, Typography,TextField } from '@mui/material';
-import '../components/customFields.js';
+import { Button, Container, Grid, Typography,TextField ,Box,Modal} from '@mui/material';
 import "../styles/formCreation.css";
 import FormPreview from "../components/FormPreview.js";
-import ReactDOMServer from 'react-dom/server'
+import "../styles/formPreview.css"
 window.jQuery = $;
 window.$ = $;
 require("jquery-ui-sortable");
@@ -16,6 +15,7 @@ require('formBuilder/dist/form-render.min.js')
 const FormCreation = () => {
 	const fb = useRef(null);
 	const [jsonObject, setJsonObject] = useState(null);
+	const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
 
 
@@ -133,21 +133,24 @@ const FormCreation = () => {
 			],
 		
 		onSave: function(evt,formData){
-			const formBuilder = $('#fb-editor').formBuilder('instance');
-			const jsonObject = JSON.parse(formData.replace(/\\/g, ''));
-			console.log(formData)
-			setJsonObject(jsonObject);
-			const html = ReactDOMServer.renderToString(<FormPreview jsonObject={jsonObject} />);
-			console.log(html)
-			var formPreviewWindow = window.open('', 'formPreview', 'height=480,width=640,toolbar=no,scrollbars=yes');
-			formPreviewWindow.document.write(html);
-			var style = document.createElement('link');
-			style.setAttribute('href', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css');
-			style.setAttribute('rel', 'stylesheet');
-			style.setAttribute('type', 'text/css');
-			console.log(formPreviewWindow)
-			console.log(style)
-			formPreviewWindow.document.head.appendChild(style);
+				const formBuilder = $('#fb-editor').formBuilder('instance');
+				const jsonObject = JSON.parse(formData.replace(/\\/g, ''));
+				console.log(formData)
+				setJsonObject(jsonObject);
+				setIsPreviewOpen(true);
+
+				// console.log(ReactDOMServer.renderToString(<FormPreview jsonObject={jsonObject} />))
+				// const html = ReactDOMServer.renderToString(<FormPreview jsonObject={jsonObject} />);
+				// console.log(html)
+				// var formPreviewWindow = window.open('', 'formPreview', 'height=480,width=640,toolbar=no,scrollbars=yes');
+				// formPreviewWindow.document.write(html);
+				// var style = document.createElement('link');
+				// style.setAttribute('href', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css');
+				// style.setAttribute('rel', 'stylesheet');
+				// style.setAttribute('type', 'text/css');
+				// console.log(formPreviewWindow)
+				// console.log(style)
+				// formPreviewWindow.document.head.appendChild(style);
 			}
 		};
 	useEffect(() => {
@@ -164,8 +167,12 @@ const FormCreation = () => {
 	return (
 		<Container maxWidth="md">
 				<div id="fb-editor" ref={fb} />	
-				<div id="previewForm">
-				</div>		
+				{/* <Modal open={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}> */}
+					<Box sx={{ border: 1, borderRadius: 1 }}>
+						<FormPreview formData={jsonObject} />
+					</Box>
+				{/* </Modal> */}
+					
 		</Container>
 	);
 }
