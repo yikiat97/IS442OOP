@@ -32,7 +32,7 @@ public class WorkflowController {
   WorkflowRepository WorkflowRepository;
 
   @PostMapping("/insertWorkflow")
-  public ResponseEntity<Workflow> createForm(@RequestBody(required = false) WorkflowMappingDTO WorkflowDTO) {
+  public ResponseEntity<Workflow> createWorkflow(@RequestBody(required = false) WorkflowMappingDTO WorkflowDTO) {
     try {
       // logic handling of the workflow json to fit object workflow
       // Use a DTO to map forms and workflowName for creation of forms
