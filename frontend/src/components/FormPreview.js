@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import $ from "jquery";
 import {Grid,Input,Box, FormControl,FormControlLabel,FormGroup, FormLabel, RadioGroup, Radio, Checkbox, Select, MenuItem, InputLabel, TextField, TextareaAutosize } from '@mui/material';
-import Textarea from '@mui/joy/Textarea';
 import Paper from '@mui/material/Paper';
 
-// import DateField from '@mui/x-data-pickers/DateField';
+// import Unstable_DateField from '@mui/x-date-pickers/DateField';
 import { styled } from '@mui/material/styles';
 
 // import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -82,8 +81,8 @@ const FormPreview = ({ formData }) => {
         case "date":
             return (
             <Grid container sx={{ m: 2 }} >
-                {/* <DateField disableFuture /> */}
-
+                {/* <Unstable_DateField
+                /> */}
             </Grid>
             );
         case "number":
@@ -143,19 +142,11 @@ const FormPreview = ({ formData }) => {
                 </FormControl>
             </Grid>
             );
-        case "text":
-            return (
-            <Grid container sx={{ m: 2 }} >
-                <Typography>{field.label}</Typography>
-                <TextField id="outlined-basic" className={field.className} name={field.name} />
-
-            </Grid>
-            );
         case "textarea":
             return (
             <Grid container sx={{ m: 2 }} >
                 <Typography>{field.label}</Typography>
-                <Textarea
+                <TextareaAutosize
                 className={field.className}
                 name={field.name}
                 rows={field.rows}

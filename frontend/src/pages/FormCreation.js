@@ -5,6 +5,7 @@ import { Button, Container, Grid, Typography,TextField ,Box,Modal} from '@mui/ma
 import "../styles/formCreation.css";
 import FormPreview from "../components/FormPreview.js";
 import "../styles/formPreview.css"
+import { DateField } from '@mui/x-date-pickers';
 window.jQuery = $;
 window.$ = $;
 require("jquery-ui-sortable");
@@ -95,7 +96,7 @@ const FormCreation = () => {
 				left: 'auto'
 			}
 		},
-		disableFields: ['autocomplete','button','hidden','header','paragraph','file'],
+		disableFields: ['autocomplete','button','hidden','header','paragraph','file','text'],
 		disabledAttrs: [
 			'name',
 			'className'
