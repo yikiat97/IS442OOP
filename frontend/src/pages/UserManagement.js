@@ -242,7 +242,7 @@ function UserManagement(){
                         <StyledTableCell component="th" scope="row">
                             {company.name}
                         </StyledTableCell>
-                        <StyledTableCell align="left">{row.countryOrigin}</StyledTableCell>
+                        <StyledTableCell align="left">{company.country}</StyledTableCell>
                         <Link href='CompanyDetails' underline='none'>
                             <StyledTableCell align="right"><ArrowForwardIosIcon /></StyledTableCell>
                         </Link>

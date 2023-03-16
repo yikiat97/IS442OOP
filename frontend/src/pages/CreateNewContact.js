@@ -34,8 +34,10 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
+import { useParams } from 'react-router-dom';
 
 function CreateNewContact(){
+    const company = useParams();
     const [showPassword, setShowPassword] = React.useState(false);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -48,12 +50,12 @@ function CreateNewContact(){
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("");
     const [message, setMessage] = useState("");
-    const company = "test";
     const passwordtest = "";
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
         setMessage("");
+        console.log(company);
     };
 
     const handleNameChange = (event) => {
@@ -108,7 +110,7 @@ function CreateNewContact(){
 
             <Paper elevation={1} sx={{height:"100%", pt:1,pl:2,pb:2, my:3}} md={{}}>
                 <Grid sx={{mx:2, mb:4}} columns={{ xs: 12, sm: 12, md: 12 }}>
-                    <h3>Company Name</h3>
+                    <h3>{company.company}</h3>
                 </Grid>
     
                                 

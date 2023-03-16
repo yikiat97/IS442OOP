@@ -74,7 +74,7 @@ function App() {
           }
         />
         <Route path="/CreateCompany" element={<CreateCompany />} />
-        <Route path="/CreateNewContact" element={<CreateNewContact />} />
+        <Route path="/CreateNewContact/:company" element={<CreateNewContact />} />
         <Route path="/Vendor" element={<Vendor />} />
         <Route path="/Admin" element={<Admin />} />
         <Route path="/Approver" element={<Approver />} />
