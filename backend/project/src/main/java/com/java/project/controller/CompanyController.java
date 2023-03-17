@@ -34,4 +34,15 @@ public class CompanyController {
             return new ResponseEntity<>("Company already exists", HttpStatus.CONFLICT);
         }
     }
+
+    @GetMapping(value = "/country")
+    public ResponseEntity getCompanyCountry(@RequestParam String name){
+        Company company = CompanyRepository.findCompanyByName(name);
+        if(company != null){
+            return ResponseEntity.ok(company.getCountry());
+        }else{
+            return new ResponseEntity<>("Company does not exist", HttpStatus.UNAUTHORIZED);
+        }
+
+    }
 }

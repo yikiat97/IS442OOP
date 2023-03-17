@@ -1,9 +1,7 @@
 package com.java.project.controller;
 
-import com.java.project.model.Admin;
-import com.java.project.model.Approver;
-import com.java.project.model.User;
-import com.java.project.model.Vendor;
+import com.java.project.model.*;
+import com.java.project.repository.CompanyRepository;
 import com.java.project.repository.UserRepository;
 import com.java.project.service.EmailSenderService;
 import com.java.project.service.UserService;
@@ -15,6 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
@@ -29,6 +31,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    CompanyRepository CompanyRepository;
 
     @PostMapping(value = "/authenticate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> authenticateUser(@RequestBody User userDetails) {
@@ -50,6 +55,12 @@ public class UserController {
             String encodedPassword = userService.encryptPassword(rawPassword);
             newAdmin.setPassword(encodedPassword);
             Admin admin = UserRepository.save(newAdmin);
+
+            Company company = CompanyRepository.findCompanyByName(newAdmin.getCompany());
+            company.addUser(newAdmin.getUserName());
+            CompanyRepository.deleteByName(newAdmin.getCompany());
+            Company newCompany = CompanyRepository.save(company);
+
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
             try{
                 EmailService.sendEmail(admin.getEmail(),emailBody,"Account created for Quantum VMS","");
@@ -73,6 +84,12 @@ public class UserController {
             String encodedPassword = userService.encryptPassword(rawPassword);
             newApprover.setPassword(encodedPassword);
             Approver approver = UserRepository.save(newApprover);
+
+            Company company = CompanyRepository.findCompanyByName(newApprover.getCompany());
+            company.addUser(newApprover.getUserName());
+            CompanyRepository.deleteByName(newApprover.getCompany());
+            Company newCompany = CompanyRepository.save(company);
+
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
             try{
                 EmailService.sendEmail(approver.getEmail(),emailBody,"Account created for Quantum VMS","");
@@ -94,6 +111,12 @@ public class UserController {
             String encodedPassword = userService.encryptPassword(rawPassword);
             newVendor.setPassword(encodedPassword);
             Vendor vendor = UserRepository.save(newVendor);
+
+            Company company = CompanyRepository.findCompanyByName(newVendor.getCompany());
+            company.addUser(newVendor.getUserName());
+            CompanyRepository.deleteByName(vendor.getCompany());
+            Company newCompany = CompanyRepository.save(company);
+
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
             try{
                 EmailService.sendEmail(vendor.getEmail(),emailBody,"Account created for Quantum VMS","");
@@ -147,8 +170,29 @@ public class UserController {
             UserRepository.deleteByEmail(email);
             return ResponseEntity.ok("ok");
         }else{
-            return new ResponseEntity<>("User does not exist", HttpStatus.CONFLICT);
+            return new ResponseEntity<>("User does not exist", HttpStatus.UNAUTHORIZED);
         }
 
+    }
+
+    @GetMapping("/getVendors")
+    public ResponseEntity getVendors(){
+        List<User> Vendors = UserRepository.findByRole("Vendor");
+        Map<String, List<User>> vendorMap = Vendors.stream().collect(Collectors.groupingBy(User::getCompany));
+        return ResponseEntity.ok(vendorMap);
+    }
+
+    @GetMapping("/getAdmins")
+    public ResponseEntity getAdmins(){
+        List<User> Vendors = UserRepository.findByRole("Admin");
+        Map<String, List<User>> vendorMap = Vendors.stream().collect(Collectors.groupingBy(User::getCompany));
+        return ResponseEntity.ok(vendorMap);
+    }
+
+    @GetMapping("/getApprovers")
+    public ResponseEntity getApprovers(){
+        List<User> Vendors = UserRepository.findByRole("Approver");
+        Map<String, List<User>> vendorMap = Vendors.stream().collect(Collectors.groupingBy(User::getCompany));
+        return ResponseEntity.ok(vendorMap);
     }
 }

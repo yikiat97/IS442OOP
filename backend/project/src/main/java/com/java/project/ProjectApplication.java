@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.java.project.repository.UserRepository;
 
+import java.util.Arrays;
+
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 @RestController
 @EnableMongoRepositories
@@ -38,13 +40,13 @@ public class ProjectApplication  {
 
     @GetMapping("/createTestCompany")
     public String createCompany() {
-        CompanyRepo.save(new Company("Quantum", "Singapore", null));
-        CompanyRepo.save(new Company("Company1", "Singapore", null));
-        CompanyRepo.save(new Company("Company2", "China", null));
-        CompanyRepo.save(new Company("Company3", "Australia", null));
-        CompanyRepo.save(new Company("Company4", "Singapore", null));
-        CompanyRepo.save(new Company("Company5", "Singapore", null));
-        CompanyRepo.save(new Company("Company6", "Australia", null));
+        CompanyRepo.save(new Company("Quantum", "Singapore", Arrays.asList("Approver_Quantum_Approver@hotmail.com", "Admin_Quantum_Admin1@hotmail.com", "Admin_Quantum_Admin2@hotmail.com")));
+        CompanyRepo.save(new Company("Company1", "Singapore", Arrays.asList("Vendor_yikiat@hotmail.com")));
+        CompanyRepo.save(new Company("Company2", "China", Arrays.asList("Vendor_elmer@hotmail.com")));
+        CompanyRepo.save(new Company("Company3", "Australia", Arrays.asList("Vendor_diyanahjamal@gmail.com")));
+        CompanyRepo.save(new Company("Company4", "Singapore", Arrays.asList("Vendor_ch@gmail.com", "Vendor_hl@gmail.com")));
+        CompanyRepo.save(new Company("Company5", "Singapore", Arrays.asList("Vendor_syafinaz@gmail.com")));
+        CompanyRepo.save(new Company("Company6", "Australia", Arrays.asList("Vendor_hello@gmail.com")));
         return "Data creation company completed";
     }
 
@@ -59,6 +61,7 @@ public class ProjectApplication  {
         UserRepo.save(new Vendor(userService.encryptPassword("password"), "ch", "ch@gmail.com","Vendor", "Company4"));
         UserRepo.save(new Vendor(userService.encryptPassword("password"), "hl", "hl@gmail.com","Vendor", "Company4"));
         UserRepo.save(new Vendor(userService.encryptPassword("password"), "syafinaz", "syafinaz@gmail.com","Vendor", "Company5"));
+        UserRepo.save(new Vendor(userService.encryptPassword("password"), "hello", "hello@gmail.com","Vendor", "Company6"));
         return "Data creation user completed";
     }
     
