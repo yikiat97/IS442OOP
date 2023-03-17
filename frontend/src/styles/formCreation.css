@@ -1,0 +1,3 @@
+.form-wrap:not(:first-child) {
+    display: none;
+}
