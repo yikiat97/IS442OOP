@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import $ from "jquery";
-import {Grid,Input,Box, FormControl,FormControlLabel,FormGroup, FormLabel, RadioGroup, Radio, Checkbox, Select, MenuItem, InputLabel, TextField, TextareaAutosize } from '@mui/material';
+import {Grid,Input,Box,Button, FormControl,FormControlLabel,FormGroup, FormLabel, RadioGroup, Radio, Checkbox, Select, MenuItem, InputLabel, TextField, TextareaAutosize } from '@mui/material';
 import Paper from '@mui/material/Paper';
 
 // import Unstable_DateField from '@mui/x-date-pickers/DateField';
@@ -16,53 +16,20 @@ window.$ = $;
 require("formBuilder");
 require('formBuilder/dist/form-render.min.js')
 
-// const FormPreview = ({ jsonObject }) => {
-//     const [html, setHtml] = useState("");
-//     console.log(jsonObject)
-//     useEffect(() => {
-//     const formRenderOpts = {
-//         dataType: "xml",
-//         formData: jsonObject,
-//     };
 
 
-    
-//     const $renderContainer = $("<form/>");
-//     $renderContainer.formRender(formRenderOpts);
-//     const newHtml = `
-// 			<!doctype html>
-// 				<title>Form Preview</title>
-//                 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"></script>
-//                 <script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
-// 				<body class="container">
-// 					<hr>${$renderContainer.html()}
-// 				</body>
-// 				<footer>
-// 					<div class="panel-footer text-right">
-// 						<button type="button" id="btnSave" class="btn btn-default float-right">Submit for approval</button>
-// 					</div>
-// 				</footer>
-// 			</html>`;
-//     setHtml(newHtml);
-// }, [jsonObject]);
 
-//     return (
-//         <div dangerouslySetInnerHTML={{ __html: html }} />
-//     );
-// };
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    color: theme.palette.text.secondary,
-}));
-
-const FormPreview = ({ formData }) => {
+const FormPreview = ({ formData}) => {
     if (!formData) {
         return null;
     }
+    console.log(formData)
     const renderField = (field) => {
+        
+        console.log(field)
         switch (field.type) {
+        case "h2":
+            return <h2>{field.label}</h2>;
         case "header":
             return <h1>{field.label}</h1>;
         case "checkbox-group":
@@ -167,25 +134,21 @@ const FormPreview = ({ formData }) => {
     };
 
     return (
-        <div>
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-            <link href="https://cdn.muicss.com/mui-0.10.3/css/mui.min.css" rel="stylesheet" type="text/css" />
-            <form>
-                {formData.map((field, index) => (
-                    <Grid key={index} id='test'>
-                    {field.subtype ? (
-                        renderField({ ...field, type: field.subtype })
-                    ) : (
-                        renderField(field)
-                    )}
-                    </Grid>
-                ))}
-            </form>
+        <Box>
 
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-            <script src="https://cdn.muicss.com/mui-0.10.3/js/mui.min.js"></script>
-        </div>
+            {formData.QuestionData.map((field, index) => (
+                <Grid key={index} id='test'>
+                {field.subtype ? (
+                    renderField({ ...field, type: field.subtype })
+                ) : (
+                    renderField(field)
+                )}
+                </Grid>
+            ))}
+        </Box>
 
     );
+
+
 };
 export default FormPreview;

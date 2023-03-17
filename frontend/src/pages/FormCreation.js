@@ -1,11 +1,10 @@
 import $ from "jquery";
 import FormRender from 'form-render';
 import React, { useRef, useEffect,useState } from "react";
-import { Button, Container, Grid, Typography,TextField ,Box,Modal} from '@mui/material';
+import { Button, Container,FormControl, Grid, Typography,TextField ,Box,Modal,Input} from '@mui/material';
 import "../styles/formCreation.css";
 import FormPreview from "../components/FormPreview.js";
 import "../styles/formPreview.css"
-import { DateField } from '@mui/x-date-pickers';
 window.jQuery = $;
 window.$ = $;
 require("jquery-ui-sortable");
@@ -15,17 +14,19 @@ require('formBuilder/dist/form-render.min.js')
 
 const FormCreation = () => {
 	const fb = useRef(null);
-	const [jsonObject, setJsonObject] = useState(null);
+	const [formJsonObject, setFormJsonObject] = useState(null);
+	const [jsonObjectToReturn, setJsonObjectToReturn] = useState(null);
 	const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+	const [formName, setFormName] = useState(null);
 
 
 
 	const formData = [
-		{
-			type: "header",
-			subtype: "h1",
-			label: "Form Name",
-		}
+		// {
+		// 	type: "header",
+		// 	subtype: "h1",
+		// 	label: "Form Name",
+		// }
 	];
 	
 	
@@ -38,7 +39,24 @@ const FormCreation = () => {
 		icon: '✏️'
 		}
 	];
-	
+	const handleSubmit = (event) => {
+		event.preventDefault(); // Prevent the default form submission behavior
+		console.log(formJsonObject)
+		fetch('http://localhost:8080/Form/insertForm', {
+			method: 'POST',
+			body: JSON.stringify(formJsonObject),
+			headers: {
+			'Content-Type': 'application/json'
+			}
+		})
+		.then(response => response.json())
+		.then(data => {
+			console.log(data); // Handle the response data
+		})
+		.catch(error => {
+			console.error('Error:', error);
+		});
+	};
 	let templates = {
 		canvas: function(fieldData) {
 			return {
@@ -118,43 +136,29 @@ const FormCreation = () => {
 						},
 	
 					]
-				},
-				{
-					label: 'Form Name',
-					fields: [
-						{
-						type: 'header',
-						subtype: 'h1',
-						label: 'Form Name',
-						className: 'header',
-						},
-	
-					]
 				}
 			],
 		
 		onSave: function(evt,formData){
 				const formBuilder = $('#fb-editor').formBuilder('instance');
 				const jsonObject = JSON.parse(formData.replace(/\\/g, ''));
-				console.log(formData)
-				setJsonObject(jsonObject);
-				setIsPreviewOpen(true);
-
-				// console.log(ReactDOMServer.renderToString(<FormPreview jsonObject={jsonObject} />))
-				// const html = ReactDOMServer.renderToString(<FormPreview jsonObject={jsonObject} />);
-				// console.log(html)
-				// var formPreviewWindow = window.open('', 'formPreview', 'height=480,width=640,toolbar=no,scrollbars=yes');
-				// formPreviewWindow.document.write(html);
-				// var style = document.createElement('link');
-				// style.setAttribute('href', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css');
-				// style.setAttribute('rel', 'stylesheet');
-				// style.setAttribute('type', 'text/css');
-				// console.log(formPreviewWindow)
-				// console.log(style)
-				// formPreviewWindow.document.head.appendChild(style);
+				// setJsonObjectToReturn(jsonObject)
+				const testJson = {};
+				console.log(formName)
+				testJson["FormName"] = formName
+				testJson["FormType"]=""
+				testJson["QuestionData"] = jsonObject
+				
+				setFormJsonObject(testJson)
+				
+				// setIsPreviewOpen(true);
+				
 			}
 		};
+		
+
 	useEffect(() => {
+
 		$(fb.current).formBuilder({
 
 			fields,
@@ -167,11 +171,19 @@ const FormCreation = () => {
 
 	return (
 		<Container maxWidth="md">
-				<div id="fb-editor" ref={fb} />	
+			
+			<TextField id="formName" label="Form Name" variant="outlined" onChange={(event) => setFormName(event.target.value)}
+/>				<div id="fb-editor" ref={fb} />	
 				{/* <Modal open={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}> */}
-					<Box sx={{ border: 1, borderRadius: 1 }}>
-						<FormPreview formData={jsonObject} />
-					</Box>
+				<form onSubmit={handleSubmit}>
+					<FormControl>
+						<Box sx={{ border: 1, borderRadius: 1 }}>
+							<FormPreview formData={formJsonObject} />
+						</Box>
+					</FormControl>
+					<Button type="submit">Submit</Button> {/* Add submit button */}
+				</form>
+
 				{/* </Modal> */}
 					
 		</Container>
