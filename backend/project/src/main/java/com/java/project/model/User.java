@@ -12,6 +12,7 @@ public class User{
         private String password;
         private String name;
         private String email;
+        private String contactNumber;
         private String role;
         private String company;
         private String userName;
@@ -20,10 +21,11 @@ public class User{
 
         }
 
-        public User(String password, String name, String email, String role, String company) {
+        public User(String password, String name, String email, String contactNumber, String role, String company) {
             this.password = password;
             this.name = name;
             this.email = email;
+            this.contactNumber = contactNumber;
             this.role = role;
             this.company = company;
             this.userName = role + "_" + email;
@@ -51,6 +53,13 @@ public class User{
 
         public void setEmail(String email) {
             this.email = email;
+        }
+        public String getContactNumber() {
+            return contactNumber;
+        }
+
+        public void setContactNumber(String contactNumber) {
+            this.contactNumber = contactNumber;
         }
 
         public String getRole() {

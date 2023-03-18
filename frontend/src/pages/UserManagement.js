@@ -243,7 +243,7 @@ function UserManagement(){
                             {company.name}
                         </StyledTableCell>
                         <StyledTableCell align="left">{company.country}</StyledTableCell>
-                        <Link href='CompanyDetails' underline='none'>
+                        <Link href={'CompanyDetails/' + company.name} underline='none'>
                             <StyledTableCell align="right"><ArrowForwardIosIcon /></StyledTableCell>
                         </Link>
                         </StyledTableRow>

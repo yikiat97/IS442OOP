@@ -78,7 +78,7 @@ function App() {
         <Route path="/Vendor" element={<Vendor />} />
         <Route path="/Admin" element={<Admin />} />
         <Route path="/Approver" element={<Approver />} />
-        <Route path="/CompanyDetails" element={<CompanyDetails />} />
+        <Route path="/CompanyDetails/:company" element={<CompanyDetails />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/ForgetPassword" element={<ForgetPassword />} />
         <Route path="/FormHomePage" element={<FormHomePage />} />
