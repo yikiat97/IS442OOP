@@ -51,10 +51,12 @@ const FormCreation = () => {
 		})
 		.then(response => response.json())
 		.then(data => {
+			alert("submitted")
 			console.log(data); // Handle the response data
 		})
 		.catch(error => {
 			console.error('Error:', error);
+			alert("failed")
 		});
 	};
 	let templates = {
@@ -144,11 +146,11 @@ const FormCreation = () => {
 				const jsonObject = JSON.parse(formData.replace(/\\/g, ''));
 				// setJsonObjectToReturn(jsonObject)
 				const testJson = {};
-				console.log(formName)
+				
 				testJson["FormName"] = formName
 				testJson["FormType"]=""
-				testJson["QuestionData"] = jsonObject
-				
+				testJson["questionData"] = jsonObject
+				console.log(testJson)
 				setFormJsonObject(testJson)
 				
 				// setIsPreviewOpen(true);

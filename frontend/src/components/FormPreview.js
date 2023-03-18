@@ -13,18 +13,21 @@ import Canvas from "./canvas";
 import { Typography } from "antd";
 window.jQuery = $;
 window.$ = $;
-require("formBuilder");
+require("formBuilder"); 
 require('formBuilder/dist/form-render.min.js')
 
 
 
 
 const FormPreview = ({ formData}) => {
+   
     if (!formData) {
         return null;
     }
     console.log(formData)
     const renderField = (field) => {
+
+   
         
         console.log(field)
         switch (field.type) {
@@ -136,7 +139,7 @@ const FormPreview = ({ formData}) => {
     return (
         <Box>
 
-            {formData.QuestionData.map((field, index) => (
+            {formData.questionData.map((field, index) => (
                 <Grid key={index} id='test'>
                 {field.subtype ? (
                     renderField({ ...field, type: field.subtype })
@@ -152,3 +155,4 @@ const FormPreview = ({ formData}) => {
 
 };
 export default FormPreview;
+

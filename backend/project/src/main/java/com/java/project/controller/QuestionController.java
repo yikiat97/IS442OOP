@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,7 +62,7 @@ public class QuestionController {
       }
       //================================== Json Structure for above ===================================
       //http://localhost:8080/Question/insertQuestion
-      // {"questionID":4,
+      // {
       //   "QuestionData": {
       //           "field1": "value1",
       //           "field2": 123,
@@ -71,6 +72,23 @@ public class QuestionController {
       //               }
       //   }}
 
+
+      @PutMapping("/Question/updateQuestion/{id}")
+      public ResponseEntity<Question> updateQuestionById(@PathVariable(value = "id") String questionId,
+                                                    @RequestBody Question questionData) {
+      Optional<Question> optionalQuestion = QuestionRepository.findById(questionId);
+
+      if (optionalQuestion.isPresent()) {
+          Question question = optionalQuestion.get();
+          question.setQuestionData(questionData.getQuestionData());
+
+          QuestionRepository.save(question);
+          System.out.println("========= UPDATE DATA SUCCESSFUL ===========");
+          return new ResponseEntity<>(question, HttpStatus.OK);
+      } else {
+          return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      }
+}
 
 
     }
