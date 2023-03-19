@@ -29,6 +29,7 @@ import Admin from "./pages/Admin";
 import Approver from "./pages/Approver";
 import CompanyDetails from "./pages/CompanyDetails"
 import ForgetPassword from "./pages/ForgetPassword"
+import EditUser from "./pages/EditUser"
 
 
 function App() {
@@ -79,6 +80,7 @@ function App() {
         <Route path="/Admin" element={<Admin />} />
         <Route path="/Approver" element={<Approver />} />
         <Route path="/CompanyDetails" element={<CompanyDetails />} />
+        <Route path="/EditUser/:company" element={<EditUser />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/ForgetPassword" element={<ForgetPassword />} />
         <Route path="/FormHomePage" element={<FormHomePage />} />

@@ -132,7 +132,9 @@ function Row(props) {
                       <StyledTableCell align="left">{contactsRow.contactNumber}</StyledTableCell>
                       <StyledTableCell align="left">{contactsRow.userRole}</StyledTableCell>
                       <StyledTableCell align="right"><DeleteOutlineIcon sx={{color:'#c62828'}}/></StyledTableCell>
-                      <StyledTableCell align="left"><EditIcon sx={{color:'#1565c0'}} /></StyledTableCell>
+                      <Link href='EditUser' underline='none'>
+                          <StyledTableCell align="left"><EditIcon sx={{color:'#1565c0'}} /></StyledTableCell>
+                      </Link>
                     </StyledTableRow>
                   ))}
                 </TableBody>

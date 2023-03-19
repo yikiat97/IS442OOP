@@ -133,7 +133,9 @@ function CompanyDetails(){
                             <StyledTableCell align="left">{row.contactNumber}</StyledTableCell>
                             <StyledTableCell align="left">{row.userRole}</StyledTableCell>
                             <StyledTableCell align="right"><DeleteOutlineIcon sx={{color:'#c62828'}}/></StyledTableCell>
-                            <StyledTableCell align="left"><EditIcon sx={{color:'#1565c0'}} /></StyledTableCell>
+                            <Link href='EditUser' underline='none'>
+                                <StyledTableCell align="left"><EditIcon sx={{color:'#1565c0'}} /></StyledTableCell>
+                            </Link>
                             </StyledTableRow>
                             ))}
                         </TableBody>
