@@ -16,12 +16,12 @@ public class Vendor extends User{
         super();
     }
 
-    public Vendor(String password, String name, String email, String role, String company) {
-        super(password, name, email, role, company);
+    public Vendor(String password, String name, String email, String contactNumber, String role, String company) {
+        super(password, name, email, contactNumber, role, company);
     }
 
-    public Vendor(String password, String name, String email, String role, String company, List<String> Answers, List<String> LockedSections, List<String> Workflows, List<String> Status, List<String> Priority) {
-        super(password, name, email, role, company);
+    public Vendor(String password, String name, String email, String contactNumber, String role, String company, List<String> Answers, List<String> LockedSections, List<String> Workflows, List<String> Status, List<String> Priority) {
+        super(password, name, email, contactNumber, role, company);
         this.Answers = Answers;
         this.LockedSections = LockedSections;
         this.Workflows = Workflows;

@@ -44,7 +44,9 @@ import {
     Link,
     Select,
 } from "@mui/material";
-
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams } from 'react-router-dom';
 
 
 function CompanyDetails(){
@@ -70,18 +72,21 @@ function CompanyDetails(){
           border: 0,
         },
       }));
-
-
-    function createData(companyName,countryOrigin,contactName,email,password,contactNumber,userRole) {
-        return {companyName,countryOrigin,contactName,email,password,contactNumber,userRole};
-    }
     
-    const rows = [
-        createData('Company ABC', 'Singapore','Carol Chua', 'carolchua@evergreen.co','password','000','Vendor'),
-        createData('Company ABC', 'Singapore','Carol Chua', 'carolchua@evergreen.co','password','000','Admin'),
-        createData('Company ABC', 'Singapore','Carol Chua', 'carolchua@evergreen.co','password','000','Approver'),
-    ];
+    const company = useParams().company;
+    const [users, setUsers] = useState([]);
 
+    useEffect(() => {
+        getUsers();
+      }, []);
+
+    const getUsers = () => {
+    axios.get("http://localhost:8080/company/getUsers?name=" + company)
+    .then((response) => {
+        setUsers(response.data);
+    })
+    .catch(error => console.error(error));
+    };
 
     return(
         <Grid sx={{mt:6, textAlign:'left', px:4}}>
@@ -105,7 +110,7 @@ function CompanyDetails(){
 
             <Paper elevation={1} sx={{height:"100%", pt:1,pl:2,pb:2, my:3}} md={{}}>
                 <Grid sx={{mx:2, mb:4}} columns={{ xs: 12, sm: 12, md: 12 }}>
-                    <h2>Company Name</h2>
+                    <h2>{company}</h2>
                 </Grid>
 
 
@@ -115,7 +120,6 @@ function CompanyDetails(){
                         <StyledTableRow>
                             <StyledTableCell align="left">Contact Name</StyledTableCell>
                             <StyledTableCell align="left">Email</StyledTableCell>
-                            <StyledTableCell align="left">Password</StyledTableCell>
                             <StyledTableCell align="left">Contact Number</StyledTableCell>
                             <StyledTableCell align="left">User Role</StyledTableCell>
                             <StyledTableCell />
@@ -123,19 +127,16 @@ function CompanyDetails(){
                         </StyledTableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row) => (
-                                <StyledTableRow key={row.contactName}>
+                            {users.map((user) => (
+                                <StyledTableRow key={user.name}>
                                 <StyledTableCell component="th" scope="row">
-                                    {row.contactName}
+                                    {user.name}
                                 </StyledTableCell>
-                                <StyledTableCell align="left">{row.email}</StyledTableCell>
-                            <StyledTableCell align="left">{row.password}</StyledTableCell>
-                            <StyledTableCell align="left">{row.contactNumber}</StyledTableCell>
-                            <StyledTableCell align="left">{row.userRole}</StyledTableCell>
-                            <StyledTableCell align="right"><DeleteOutlineIcon sx={{color:'#c62828'}}/></StyledTableCell>
-                            <Link href='EditUser' underline='none'>
+                                <StyledTableCell align="left">{user.email}</StyledTableCell>
+                                <StyledTableCell align="left">{user.contactNumber == null ? "Not available" : user.contactNumber}</StyledTableCell>
+                                <StyledTableCell align="left">{user.role}</StyledTableCell>
+                                <StyledTableCell align="right"><DeleteOutlineIcon sx={{color:'#c62828'}}/></StyledTableCell>
                                 <StyledTableCell align="left"><EditIcon sx={{color:'#1565c0'}} /></StyledTableCell>
-                            </Link>
                             </StyledTableRow>
                             ))}
                         </TableBody>

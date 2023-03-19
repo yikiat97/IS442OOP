@@ -30,6 +30,7 @@ import Approver from "./pages/Approver";
 import CompanyDetails from "./pages/CompanyDetails"
 import ForgetPassword from "./pages/ForgetPassword"
 import EditUser from "./pages/EditUser"
+import VendorViewForm from "./pages/VendorViewForm"
 
 
 function App() {
@@ -56,6 +57,8 @@ function App() {
         <Navbar />
       </header>
       <Routes>
+      
+        <Route path="/VendorViewForm" element={<VendorViewForm />} />
         <Route path="/Form" element={<Form />} />
         <Route path="/CreateWorkflow" element={<CreateWorkflow />} />
         <Route

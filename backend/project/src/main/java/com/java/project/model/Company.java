@@ -8,12 +8,12 @@ import java.util.List;
 public class Company {
     private String name;
     private String country;
-    private List<String> employeeUsernames;
+    private List<String> userEmail;
 
-    public Company(String name, String country, List<String> employeeUsernames) {
+    public Company(String name, String country, List<String> userEmail) {
         this.name = name;
         this.country = country;
-        this.employeeUsernames = employeeUsernames;
+        this.userEmail = userEmail;
     }
     public String getName() {
         return name;
@@ -31,12 +31,21 @@ public class Company {
         this.country = country;
     }
 
-    public List<String> getEmployeeUsernames() {
-        return employeeUsernames;
+    public List<String> getUserEmail() {
+        return userEmail;
     }
 
-    public void setEmployeeUsernames(List<String> employeeUsernames) {
-        this.employeeUsernames = employeeUsernames;
+    public void setUserEmail(List<String> userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public List<String> addUser(String email) {
+        if(this.userEmail == null || this.userEmail.isEmpty()){
+            this.userEmail = List.of(email);
+        }else{
+            this.userEmail.add(email);
+        }
+        return userEmail;
     }
 
 }

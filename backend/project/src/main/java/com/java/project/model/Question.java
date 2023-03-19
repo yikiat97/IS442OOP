@@ -1,4 +1,5 @@
 package com.java.project.model;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.annotation.Id;
@@ -6,7 +7,7 @@ import org.springframework.data.annotation.Id;
 public class Question {
     @Id
     private String questionID;
-    private Map<String, Object> QuestionData;
+    private List<Map<String, Object>> QuestionData;
     
 
     public String getQuestionID() {
@@ -19,17 +20,17 @@ public class Question {
     }
 
 
-    public Map<String, Object> getQuestionData() {
+    public List<Map<String, Object>> getQuestionData() {
         return QuestionData;
     }
 
 
-    public void setQuestionData(Map<String, Object> questionData) {
+    public void setQuestionData(List<Map<String, Object>> questionData) {
         QuestionData = questionData;
     }
 
 
-    public Question( String questionID, Map<String, Object> QuestionData){
+    public Question( String questionID,List<Map<String, Object>> QuestionData){
         //super();
         this.questionID = questionID;
         this.QuestionData = QuestionData;

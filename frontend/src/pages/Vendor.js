@@ -33,36 +33,13 @@ import {
     Link
         
 } from "@mui/material";
-
-function createData(companyName,countryOrigin,contacts) {
-  return {
-    companyName,
-    countryOrigin,
-    contacts: [
-    {
-        contactName: 'Carol Chua',
-        Email: 'carolchua@evergreen.co',
-        contactNumber: 0,
-        userRole:'Vendor',
-    },
-    {
-        contactName: 'Timothy Low',
-        Email: 'timlow@sparksanlytics.com',
-        contactNumber: 3,
-        userRole:'Vendor',
-    },
-    {
-        contactName: 'Carol Chua',
-        Email: 'carolchua@evergreen.co',
-        contactNumber: 0,
-        userRole:'Vendor',
-    },
-  ]};
-}
+import { useState, useEffect, useParams } from "react";
+import axios from "axios";
 
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
+  
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -85,6 +62,20 @@ function Row(props) {
     },
   }));
 
+  const [country, setCountry] = useState("");
+
+  useEffect(() => {
+    getCountry();
+  }, []);
+  
+  const getCountry = () => {
+      axios.get("http://localhost:8080/company/country?name=" + row[0])
+      .then((response) => {
+        setCountry(response.data);
+      })
+      .catch(error => console.error(error));
+  };
+
   return (
     <React.Fragment>
       <StyledTableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -98,10 +89,10 @@ function Row(props) {
           </IconButton>
         </StyledTableCell>
         <StyledTableCell component="th" scope="row" >
-            <Typography sx={{fontWeight: 'bold'}}>{row.companyName}</Typography>
+            <Typography sx={{fontWeight: 'bold'}}>{row[0]}</Typography>
         </StyledTableCell>
         <StyledTableCell component="th" scope="row" >
-            <Typography sx={{fontWeight: 'bold'}}>{row.countryOrigin}</Typography>
+            <Typography sx={{fontWeight: 'bold'}}>{country}</Typography>
         </StyledTableCell>
         <StyledTableCell align="left">
             <Link href='CreateNewContact' underline='none'>
@@ -123,14 +114,14 @@ function Row(props) {
                   </StyledTableRow>
                 </TableHead>
                 <TableBody>
-                  {row.contacts.map((contactsRow) => (
-                    <StyledTableRow key={contactsRow.contactName}>
+                  {row[1].map((contactsRow) => (
+                    <StyledTableRow key={contactsRow.name}>
                       <StyledTableCell component="th" scope="row">
-                        {contactsRow.contactName}
+                        {contactsRow.name}
                       </StyledTableCell>
-                      <StyledTableCell align="left">{contactsRow.Email}</StyledTableCell>
-                      <StyledTableCell align="left">{contactsRow.contactNumber}</StyledTableCell>
-                      <StyledTableCell align="left">{contactsRow.userRole}</StyledTableCell>
+                      <StyledTableCell align="left">{contactsRow.email}</StyledTableCell>
+                      <StyledTableCell align="left">{contactsRow.email}</StyledTableCell>
+                      <StyledTableCell align="left">{contactsRow.role}</StyledTableCell>
                       <StyledTableCell align="right"><DeleteOutlineIcon sx={{color:'#c62828'}}/></StyledTableCell>
                       <Link href='EditUser' underline='none'>
                           <StyledTableCell align="left"><EditIcon sx={{color:'#1565c0'}} /></StyledTableCell>
@@ -147,26 +138,6 @@ function Row(props) {
   );
 }
 
-Row.propTypes = {
-  row: PropTypes.shape({
-    companyName: PropTypes.string.isRequired,
-    countryOrigin: PropTypes.string.isRequired,
-    contacts: PropTypes.arrayOf(
-      PropTypes.shape({
-        contactName: PropTypes.string.isRequired,
-        Email: PropTypes.string.isRequired,
-        contactNumber: PropTypes.string.isRequired,
-        userRole: PropTypes.string.isRequired,
-      }),
-    ).isRequired,
-  }).isRequired,
-};
-
-const rows = [
-  createData('Company ABC', 'Singapore'),
-  createData('Company XYZ', 'Singapore'),
-  createData('Company EFG', 'Singapore'),
-];
 function Vendor() {
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
@@ -189,7 +160,20 @@ function Vendor() {
           border: 0,
         },
       }));
+    
+      const [companies, setCompanies] = useState([]);
 
+      useEffect(() => {
+          getCompany();
+      }, []);
+  
+      const getCompany = () => {
+          axios.get("http://localhost:8080/login/getVendors")
+          .then((response) => {
+              setCompanies(Object.entries(response.data));
+          })
+          .catch(error => console.error(error));
+      };
     return(
         <Grid sx={{mt:6, textAlign:'left', px:4}}>
             
@@ -240,8 +224,8 @@ function Vendor() {
                     </StyledTableRow>
                     </TableHead>
                     <TableBody>
-                    {rows.map((row) => (
-                        <Row key={row.companyName} row={row} />
+                    {companies.map((company) => (
+                        <Row key={company[0]} row={company} />
                     ))}
                     </TableBody>
                 </Table>

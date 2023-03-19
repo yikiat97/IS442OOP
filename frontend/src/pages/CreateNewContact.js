@@ -32,13 +32,20 @@ import {
     Link,
     Select,
 } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import axios from "axios";
 import { useParams } from 'react-router-dom';
 
 function CreateNewContact(){
-    const company = useParams();
-    
+    const company = useParams().company;
+    const [showPassword, setShowPassword] = React.useState(false);
+
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -46,6 +53,7 @@ function CreateNewContact(){
     const [message, setMessage] = useState("");
     const passwordtest = "";
     const [error, setError] = useState(false);
+    const contactNumber = "";
 
     const handleEmailChange = (event) => {
         const value = event.target.value;
@@ -58,7 +66,6 @@ function CreateNewContact(){
           }
           setEmail(value);
         setMessage("");
-        console.log(company);
     };
 
     const handleNameChange = (event) => {
@@ -80,6 +87,7 @@ function CreateNewContact(){
             {
                 email,
                 name,
+                contactNumber,
                 role,
                 company,
                 passwordtest
@@ -113,7 +121,7 @@ function CreateNewContact(){
 
             <Paper elevation={1} sx={{height:"100%", pt:1,pl:2,pb:2, my:3}} md={{}}>
                 <Grid sx={{mx:2, mb:4}} columns={{ xs: 12, sm: 12, md: 12 }}>
-                    <h3>{company.company}</h3>
+                    <h3>{company}</h3>
                 </Grid>
     
                                 
@@ -161,9 +169,10 @@ function CreateNewContact(){
                         <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success" onClick={createUser}>
                                 Save
                         </Button>
-                    
-                        
                 </Grid>
+                <Typography sx={{color: "red"}}>
+                    {message}
+                </Typography>
             
             </Paper>
             
