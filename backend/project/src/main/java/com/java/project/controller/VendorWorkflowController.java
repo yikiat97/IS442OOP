@@ -39,6 +39,9 @@ public class VendorWorkflowController {
     //     "vendorWorkflowName": "Vendor Onboarding",
     //     "status": "Pending",
     //     "email": "elmer@gmail.com"
+    //     "company": "ek bank"
+    //     "date": "DD/MM/YYYY"
+    //     "name": "elmer"
     // }
     @PostMapping("/insertVendorWorkflow")
     public ResponseEntity<VendorWorkflow> createVendorWorkflow(
@@ -51,9 +54,12 @@ public class VendorWorkflowController {
             String vendorWorkflowName = VendorWorkflowDTO.getVendorWorkflowName();
             String status = VendorWorkflowDTO.getStatus();
             String email = VendorWorkflowDTO.getEmail();
+            String company = VendorWorkflowDTO.getCompany();
+            String date = VendorWorkflowDTO.getDate();
+            String name = VendorWorkflowDTO.getName();
 
             VendorWorkflow _VendorWorkflow = VendorWorkflowRepository
-                    .save(new VendorWorkflow(null, forms, vendorWorkflowName, status, email));
+                    .save(new VendorWorkflow(null, forms, vendorWorkflowName, status, email, company, date, name));
             // System.out.println(form);
             return new ResponseEntity<>(_VendorWorkflow, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -104,17 +110,21 @@ public class VendorWorkflowController {
         String id = VendorWorkflowUpdateMappingDTO.getId();
         List<String> forms = VendorWorkflowUpdateMappingDTO.getForms();
         String vendorWorkflowName = VendorWorkflowUpdateMappingDTO.getVendorWorkflowName();
-        Optional<VendorWorkflow> VendorWorkflow = VendorWorkflowRepository.findById(id);
         String status = VendorWorkflowUpdateMappingDTO.getStatus();
+        String date = VendorWorkflowUpdateMappingDTO.getDate();
+
+        Optional<VendorWorkflow> VendorWorkflow = VendorWorkflowRepository.findById(id);
 
         if (VendorWorkflow.isPresent()) {
             List<String> newForms = (forms == null) ? VendorWorkflow.get().getForms() : forms;
             String newStatus = (status == "") ? VendorWorkflow.get().getStatus() : status;
             String newVendorWorkflowName = (vendorWorkflowName == "") ? VendorWorkflow.get().getWorkflowName()
                     : vendorWorkflowName;
+            String newDate = (date == "") ? VendorWorkflow.get().getDate()
+                    : date;
             VendorWorkflow _VendorWorkflow = VendorWorkflowRepository
                     .save(new VendorWorkflow(VendorWorkflow.get().getId(), newForms, newVendorWorkflowName, newStatus,
-                            VendorWorkflow.get().getEmail()));
+                            VendorWorkflow.get().getEmail(), VendorWorkflow.get().getCompany(), newDate, VendorWorkflow.get().getName()));
             return new ResponseEntity<>(_VendorWorkflow, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Workflow Not Found", HttpStatus.NOT_FOUND);

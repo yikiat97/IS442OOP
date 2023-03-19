@@ -7,8 +7,14 @@ public class VendorWorkflowMappingDTO {
     private String vendorWorkflowName;
 
     private String status;
-
+    
     private String email;
+    
+    private String company;
+    
+    private String date;
+    
+    private String name;
 
     // Getters and settersw
     public List<String> getForms() {
@@ -25,6 +31,18 @@ public class VendorWorkflowMappingDTO {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getName() {
+        return name;
     }
 
 }

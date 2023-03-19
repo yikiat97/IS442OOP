@@ -9,6 +9,8 @@ public class VendorWorkflowUpdateMappingDTO {
     private String vendorWorkflowName;
 
     private String status;
+
+    private String date;
     
     // Getters and setters
     public String getId() {
@@ -25,6 +27,10 @@ public class VendorWorkflowUpdateMappingDTO {
 
     public String getStatus() {
         return status;
+    }
+
+    public String getDate() {
+        return date;
     }
 
 }
