@@ -13,7 +13,9 @@ import {
     OutlinedInput,
     Button,
     Link,
-    Typography
+    Typography,
+    MenuItem,
+    Select,
 } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
@@ -23,6 +25,8 @@ function CreateCompany(){
     const [name, setName] = useState("");
     const [country, setCountry] = useState("");
     const [message, setMessage] = useState("");
+
+    
     
     const handleNameChange = (event) => {
         setName(event.target.value);
@@ -33,6 +37,50 @@ function CreateCompany(){
         setCountry(event.target.value);
         setMessage("");
       };
+
+      const [addContact, setAddContact] = useState([]);
+
+      const handleClick = () => {
+        setAddContact([...addContact, <form key={addContact.length}>{
+          <Paper elevation={1} sx={{height:"100%", pt:1,pl:2,pb:2, my:3}} md={{}}>
+            <Grid sx={{mx:2, mb:4}} columns={{ xs: 12, sm: 12, md: 12 }}>
+                <h3>New Contact</h3>
+            </Grid>
+
+                            
+            <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                <div>
+                    <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                        <FormHelperText id="outlined-weight-helper-text">Contact Name</FormHelperText>
+                        <OutlinedInput
+                            id="outlined-adornment-weight"
+                            aria-describedby="outlined-weight-helper-text"
+                        />
+                    </FormControl>
+                    <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                        <FormHelperText id="outlined-weight-helper-text">Email</FormHelperText>
+                        <OutlinedInput
+                            id="outlined-adornment-weight"
+                            aria-describedby="outlined-weight-helper-text"
+                        />
+                    </FormControl>
+                    <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                        <FormHelperText id="outlined-weight-helper-text">User Role</FormHelperText>
+                            <Select>
+                            <MenuItem value="Admin">Admin</MenuItem>
+                            <MenuItem value="Approver">Approver</MenuItem>
+                            <MenuItem value="Vendor">Vendor</MenuItem>
+                            </Select>
+                    </FormControl>
+                </div>
+            </Box>
+          </Paper>
+          }</form>]);
+      };
+
+
+
+
 
       const saveCompany = async (e) => {
         e.preventDefault();
@@ -69,15 +117,12 @@ function CreateCompany(){
                 <Grid item md={2.0} sm={2.5}>
                     <h1>User Management</h1>
                 </Grid>
-                
+
                 <Grid item md={2.0} sm={1} sx={{justifyContent:"flex-end", display:'flex'}}>
-                    <Link href='CreateNewContact' underline='none'>
-                        <Button variant="contained" sx={{width:250, backgroundColor:"#2596BE"}}
-                                startIcon={<AddIcon/>}>
-                                Create New Contact 
+                        <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success">
+                                Finish
                         </Button>
-                    </Link>
-                
+                        <Button onClick={handleClick}>Add Contact</Button>
                 </Grid>
 
             </Grid>
@@ -106,18 +151,45 @@ function CreateCompany(){
                             </FormControl>
                         </div>
                     </Box>
-                               
-
-                <Grid sx={{mx:2, mb:4, display:"flex", justifyContent:"flex-end"}} columns={{ xs: 12, sm: 12, md: 12}}>
-                    
-                        <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success" onClick={saveCompany}>
-                                Save
-                        </Button>
-                    
-                        
-                </Grid>
             
             </Paper>
+
+            <Paper elevation={1} sx={{height:"100%", pt:1,pl:2,pb:2, my:3}} md={{}}>
+                <Grid sx={{mx:2, mb:4}} columns={{ xs: 12, sm: 12, md: 12 }}>
+                    <h3>New Contact</h3>
+                </Grid>
+    
+                                
+                <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                    <div>
+                        <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                            <FormHelperText id="outlined-weight-helper-text">Contact Name</FormHelperText>
+                            <OutlinedInput
+                                id="outlined-adornment-weight"
+                                aria-describedby="outlined-weight-helper-text"
+                            />
+                        </FormControl>
+                        <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                            <FormHelperText id="outlined-weight-helper-text">Email</FormHelperText>
+                            <OutlinedInput
+                                id="outlined-adornment-weight"
+                                aria-describedby="outlined-weight-helper-text"
+                            />
+                        </FormControl>
+                        <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                            <FormHelperText id="outlined-weight-helper-text">User Role</FormHelperText>
+                                <Select>
+                                <MenuItem value="Admin">Admin</MenuItem>
+                                <MenuItem value="Approver">Approver</MenuItem>
+                                <MenuItem value="Vendor">Vendor</MenuItem>
+                                </Select>
+                        </FormControl>
+                    </div>
+                </Box>
+            </Paper>
+
+            {addContact.map((form) => form)}
+            
             <Typography sx={{color: "red"}}>
               {message}
             </Typography>
