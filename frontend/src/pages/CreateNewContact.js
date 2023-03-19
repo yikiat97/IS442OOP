@@ -38,22 +38,25 @@ import { useParams } from 'react-router-dom';
 
 function CreateNewContact(){
     const company = useParams();
-    const [showPassword, setShowPassword] = React.useState(false);
-
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault();
-    };
+    
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("");
     const [message, setMessage] = useState("");
     const passwordtest = "";
+    const [error, setError] = useState(false);
 
     const handleEmailChange = (event) => {
-        setEmail(event.target.value);
+        const value = event.target.value;
+        // validate email input using regex
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (value !== '' && !regex.test(value)) {
+            setError(true);
+          } else {
+            setError(false);
+          }
+          setEmail(value);
         setMessage("");
         console.log(company);
     };
@@ -116,20 +119,25 @@ function CreateNewContact(){
                                 
                     <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
                         <div>
-                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleNameChange}>
+
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
                                 <FormHelperText id="outlined-weight-helper-text">Contact Name</FormHelperText>
-                                <OutlinedInput
-                                    id="outlined-adornment-weight"
-                                    aria-describedby="outlined-weight-helper-text"
+                                <TextField
+                                    value={name}
+                                    onChange={handleNameChange}
                                 />
                             </FormControl>
-                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleEmailChange}>
+
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
                                 <FormHelperText id="outlined-weight-helper-text">Email</FormHelperText>
-                                <OutlinedInput
-                                    id="outlined-adornment-weight"
-                                    aria-describedby="outlined-weight-helper-text"
-                                />
+                                <TextField
+                                    value={email}
+                                    onChange={handleEmailChange}
+                                    error={error}
+                                    helperText={error && email !== '' ? 'Please enter a valid email address' : null}
+                                    />
                             </FormControl>
+                        
                             <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
                                 <FormHelperText id="outlined-weight-helper-text">User Role</FormHelperText>
                                     <Select
@@ -143,26 +151,6 @@ function CreateNewContact(){
                                     <MenuItem value="Approver">Approver</MenuItem>
                                     <MenuItem value="Vendor">Vendor</MenuItem>
                                     </Select>
-                            </FormControl>
-                            <FormControl sx={{m: 2, width: '25ch' }}>
-                                <FormHelperText id="outlined-weight-helper-text">Password</FormHelperText>
-                                <OutlinedInput
-                                    id="outlined-adornment-password"
-                                    type={showPassword ? 'text' : 'password'}
-                                    endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={handleClickShowPassword}
-                                        onMouseDown={handleMouseDownPassword}
-                                        edge="end"
-                                        >
-                                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                    }
-                                    label="Password"
-                                />
                             </FormControl>
                         </div>
                     </Box>
