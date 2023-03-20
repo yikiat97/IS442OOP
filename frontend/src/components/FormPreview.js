@@ -20,11 +20,17 @@ require('formBuilder/dist/form-render.min.js')
 
 
 const FormPreview = ({ formData}) => {
-   
+    const [formFields, setFormFields] = useState([]);
+    console.log('form preview rendering')
+    useEffect(() => {
+        if (formData && formData.jsonObject) {
+            setFormFields(formData.jsonObject.fields);
+        }
+    }, [formData]);
     if (!formData) {
         return null;
     }
-    console.log(formData)
+
     const renderField = (field) => {
 
    
