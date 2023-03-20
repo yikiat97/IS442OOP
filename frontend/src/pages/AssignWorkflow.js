@@ -1,15 +1,13 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import StepContent from '@mui/material/StepContent';
-import { Container, textAlign, spacing, Box } from "@mui/system";
+
+import {Box } from "@mui/system";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import axios from "axios";
+import { useEffect, useState } from "react";
 import {
     FormControl, 
     Grid, 
@@ -29,36 +27,137 @@ import {
 
 
 function AssignWorkflow(){
-    //create new workflow
+    
 
 
     //set form values
-    const workflows = ['Vendor Assessment', 'Pre-Evaluation Form','Health Performance'];
-    const [assignWorkflow, AssignWorkflow] = React.useState(null);
+    useEffect(() => {
+        getWorkflows();
+        getCompanies();
+        getAssignees();
+    }, []);
 
 
+    const [vendorWorkflowName, AssignWorkflow] = React.useState(null);
+    const[workflows, setWorkflows] = React.useState([]);
+    const getWorkflows = () =>{
+        axios.get("http://localhost:8080/workflow/allWorkflow")
+        .then((response) => {
+            const iniWorkflow={}
+            const workflowData=response.data
+            
+            for(let i=0; i<workflowData.length; i++){
+                iniWorkflow[workflowData[i].workflowName]= [workflowData[i].forms]
+            }
+            setWorkflows(iniWorkflow)
+            // console.log(ini)
+            
+        })
+        .catch(error => console.error(error.response));
+    }
 
-    const [value, setValue] = React.useState(dayjs('2022-04-07'));
-    const status = [
+
+    const [dueDate, setDueDate] = React.useState(dayjs('07-04-2023'));
+
+    const[status, setStatus]= React.useState(null);
+    const statuses = [
         "Workflow Created",
         "Awaiting Approver",
         "Awaiting Admin",
         "Rejected"
     ]
-    
+
     const [companyValue, setCompanyValue] = React.useState(null);
-    const companyList = [
-        {name:"Ever Green", id: 1},
-        {name:"Sparks Analytics", id:2},
-        {name:"Little Asia", id:3}
-    ];
+    const[companies, setCompanies]= React.useState([]);
+    const getCompanies = () =>{
+        axios.get("http://localhost:8080/company")
+        .then((response) => {
+            const ini={}
+            const companyData=response.data
+           
+            for(let comp of companyData){
+                ini[comp.name]=comp.userEmail
+            }
 
-    const [assigneeValue, setAssigneeValue] = React.useState(null);
-    const assigneeList=['Carol Chua','Charlie Tan','Emmanuel Kant','Jack Liu'];
+            
+            setCompanies(ini)
+            // console.log(ini)
+        })
+        .catch(error => console.error(error));
+    }
+
+    const [name, setAssigneeValue] = React.useState(null);
+    const[assignees, setAssignees] = React.useState({});
+    const getAssignees = () =>{
+        axios.get("http://localhost:8080/login/getVendors")
+        .then((response) => {
+            const ini={}
+            const companyData=response.data
+            
+            for(const [key, value] of Object.entries(companyData)){
+                
+                for(let user of value){
+                    ini[user.name]={userEmail: user.email,
+                                    comp:user.company}
+                }
+                
+            }
+            setAssignees(ini);
+            // console.log(ini)
+            
+            
+            
+        })
+        .catch(error => console.error(error));
+    }
+    // const assigneeEmail = Object.keys(assignees).find(key => assignees[key] === assigneeValue);
 
 
+    const handleSubmit= async (e) =>{
+        e.preventDefault();
+        let assignee = assignees[name]
+        const email= assignee.userEmail
+        const company= assignee.comp
+        const forms = workflows[vendorWorkflowName];
+        const date = dueDate.$D + "/" + dueDate.$M + "/" + dueDate.$y
+        console.log(name)
+        // const workflow ={
+        //     forms: forms,
+        //     vendorWorkflowName: vendorWorkflowName,
+        //     status: status,
+        //     email: email,
+        //     company:company,
+        //     date:date,
+        //     name:name
+        // }
+        // console.log(workflow)
+
+        try {
+            const res = await axios.post(
+                "http://localhost:8080/vendorWorkflow/insertVendorWorkflow",
+                {forms,
+                vendorWorkflowName,
+                status,
+                email,
+                company,
+                date,
+                name},
+                
+                {headers: {
+                    "Content-Type": "application/json"
+                },
+                }
+            );
+            console.log(res, "res");
+            } catch (error) {
+                console.log( error.response);
+            }
+    };
+
+    
     return(
         <Grid sx={{mt:6, textAlign:'left', px:4}}>
+            
             
             <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:3}}>
 
@@ -69,7 +168,8 @@ function AssignWorkflow(){
                 <Grid item md={1}></Grid>
 
                 <Grid item md={0.25} sm={6} sx={{alignItems:"center", justifyContent:"flex-end", display:'flex'}}>
-                    <Button variant="contained" sx={{width:100, backgroundColor:"#2596BE"}}>Save</Button>
+                    <Button variant="contained" sx={{width:100, backgroundColor:"#2596BE"}}
+                    onClick={handleSubmit}>Save</Button>
                 </Grid>
 
                 <Grid item sx={{alignItems:"center", justifyContent:"flex-end", display:'flex'}} md={0.25} sm={6}>
@@ -88,10 +188,10 @@ function AssignWorkflow(){
                             <FormLabel htmlFor="WorkflowName" sx={{}}>Choose Workflow</FormLabel>
                                     <Autocomplete
                                     id="grouped-demo"
-                                    options={workflows}
+                                    options={Object.keys(workflows)}
                                     sx={{width:200}}
                                     renderInput={(params) => <TextField {...params} />}
-                                    onChange={(newValue) => {
+                                    onChange={(event,newValue) => {
                                         AssignWorkflow(newValue);
                                         }}
                                     /> 
@@ -108,10 +208,10 @@ function AssignWorkflow(){
                             
                                     <Autocomplete
                                     id="grouped-demo"
-                                    options={assigneeList}
+                                    options={Object.keys(assignees)}
                                     sx={{width:200}}
                                     renderInput={(params) => <TextField {...params} />}
-                                    onChange={(newValue) => {
+                                    onChange={(event, newValue) => {
                                         setAssigneeValue(newValue);
                                         }}
                                     /> 
@@ -119,22 +219,22 @@ function AssignWorkflow(){
                             </FormControl>
                         </Grid>
 
-                        <Grid item>
+                        {/* <Grid item>
                             <FormControl>
                                 <FormLabel htmlFor="Company-helper">Company</FormLabel>
                                     
                                 <Autocomplete
                                     id="country-select-demo"
                                     sx={{width:200}}
-                                    options={companyList}
+                                    options={Object.keys(companies)}
                                     autoHighlight
-                                    onChange={(newValue) => {
+                                    onChange={(event, newValue) => {
                                         setCompanyValue(newValue);
                                         }}
-                                    getOptionLabel={(option) => option.name}
+                                    
                                     renderOption={(props, option) => (
                                         <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                        {option.name}
+                                        {option}
                                         </Box>
                                     )}
                                     renderInput={(params) => (
@@ -149,7 +249,7 @@ function AssignWorkflow(){
 
                             </FormControl>
                             
-                        </Grid>
+                        </Grid> */}
 
                         <Grid item>
                             <FormControl>
@@ -157,9 +257,10 @@ function AssignWorkflow(){
                                 
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                                         <DatePicker   
-                                            value={value}
+                                            value={dueDate}
+                                            format="DD-MM-YYYY"
                                             onChange={(newValue) => {
-                                            setValue(newValue);
+                                            setDueDate(newValue);
                                             }}
                                             renderInput={(params) => <TextField {...params} />}
                                         />
@@ -176,13 +277,16 @@ function AssignWorkflow(){
                     <FormControl>
                             <FormLabel htmlFor="WorkflowName" sx={{}}>Status</FormLabel>
                                 <TextField
+                                sx={{width:200}}
                                 id="WorkflowName"
-                                defaultValue="Workflow Created"
                                 aria-describedby="WorkflowName-text"
+                                onChange={(event, newValue) => {
+                                    setStatus(newValue.props.value);
+                                    }}
                                 select
                                 >
 
-                                {status.map((status) => (
+                                {statuses.map((status) => (
                                             <MenuItem key={status} value={status}>
                                             {status}
                                             </MenuItem>
