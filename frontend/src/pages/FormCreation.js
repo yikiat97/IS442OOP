@@ -145,9 +145,9 @@ const FormCreation = () => {
 				// setJsonObjectToReturn(jsonObject)
 				const testJson = {};
 				console.log(formName)
-				testJson["FormName"] = formName
-				testJson["FormType"]=""
-				testJson["QuestionData"] = jsonObject
+				testJson["formName"] = formName
+				testJson["formType"]=""
+				testJson["questionData"] = jsonObject
 				
 				setFormJsonObject(testJson)
 				

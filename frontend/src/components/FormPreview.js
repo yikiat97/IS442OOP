@@ -20,10 +20,17 @@ require('formBuilder/dist/form-render.min.js')
 
 
 const FormPreview = ({ formData}) => {
+    const [formFields, setFormFields] = useState([]);
+    console.log('form preview rendering')
+    useEffect(() => {
+        if (formData && formData.jsonObject) {
+            setFormFields(formData.jsonObject.fields);
+        }
+    }, [formData]);
     if (!formData) {
         return null;
     }
-    console.log(formData)
+
     const renderField = (field) => {
         
         console.log(field)
@@ -136,7 +143,7 @@ const FormPreview = ({ formData}) => {
     return (
         <Box>
 
-            {formData.QuestionData.map((field, index) => (
+            {formData.questionData.map((field, index) => (
                 <Grid key={index} id='test'>
                 {field.subtype ? (
                     renderField({ ...field, type: field.subtype })
