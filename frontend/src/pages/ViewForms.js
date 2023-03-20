@@ -1,12 +1,13 @@
 // Main component
 import { useState, useEffect } from 'react';
-import { Grid } from '@mui/material';
+import { Grid,Container } from '@mui/material';
 import FormSelect from '../components/FormSelection';
 import FormPreview from '../components/FormPreview';
 
 function ViewForms() {
   const [forms, setForms] = useState([]);
   const [selectedForm, setSelectedForm] = useState({});
+
 
   useEffect(() => {
     fetch("http://localhost:8080/getForm/All")
@@ -22,14 +23,14 @@ function ViewForms() {
   };
 
   return (
-    <Grid sx={{ mt: 6, textAlign: "left", px: 4 }}>
+		<Container maxWidth="md" sx={{ textAlign: 'left' }}>
       <FormSelect forms={forms} handleFormSelect={handleFormSelect} selectedForm={selectedForm} setSelectedForm={setSelectedForm} />
       {selectedForm.formName ? (
         <FormPreview formData={selectedForm} />
       ) : (
         <p>No form selected</p>
       )}
-    </Grid>
+		</Container>
   );
 }
 

@@ -172,19 +172,19 @@ const FormCreation = () => {
 
 
 	return (
-		<Container maxWidth="md">
+		<Container maxWidth="lg" sx={{ textAlign: 'left' }}>
 			
 			<TextField id="formName" label="Form Name" variant="outlined" onChange={(event) => setFormName(event.target.value)}
 />				<div id="fb-editor" ref={fb} />	
-				{/* <Modal open={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}> */}
-				<form onSubmit={handleSubmit}>
-					<FormControl>
-						<Box sx={{ border: 1, borderRadius: 1 }}>
+				{/* <Modal open={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}> sx={{textAlign:center}}*/}
+					<FormControl onSubmit={handleSubmit}sx={{ width: "100%" }}>
+						<Box sx={{ border: 1, borderRadius: 1,padding:"15px" }}>
 							<FormPreview formData={formJsonObject} />
 						</Box>
+					
+					<br></br>
+					<Button type="submit" sx={{float:'right'}}>Submit</Button> {/* Add submit button */}
 					</FormControl>
-					<Button type="submit">Submit</Button> {/* Add submit button */}
-				</form>
 
 				{/* </Modal> */}
 					

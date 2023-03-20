@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import $ from "jquery";
-import {Grid,Input,Box,Button, FormControl,FormControlLabel,FormGroup, FormLabel, RadioGroup, Radio, Checkbox, Select, MenuItem, InputLabel, TextField, TextareaAutosize } from '@mui/material';
+import {Grid,Input,Box,Button,Container, FormControl,FormControlLabel,FormGroup, FormLabel, RadioGroup, Radio, Checkbox, Select, MenuItem, InputLabel, TextField, TextareaAutosize } from '@mui/material';
 import Paper from '@mui/material/Paper';
 
 // import Unstable_DateField from '@mui/x-date-pickers/DateField';
@@ -22,6 +22,7 @@ require('formBuilder/dist/form-render.min.js')
 const FormPreview = ({ formData}) => {
     const [formFields, setFormFields] = useState([]);
     console.log('form preview rendering')
+    console.log(formData)
     useEffect(() => {
         if (formData && formData.jsonObject) {
             setFormFields(formData.jsonObject.fields);
@@ -38,12 +39,22 @@ const FormPreview = ({ formData}) => {
         console.log(field)
         switch (field.type) {
         case "h2":
-            return <h2>{field.label}</h2>;
+            return(
+                <Typography variant="h2" component="h2">
+                    {field.label}
+                    <br></br>
+                </Typography>
+            );
         case "header":
-            return <h1>{field.label}</h1>;
+            return(
+                <Typography variant="h1" component="h1">
+                    {field.label}
+                    <br></br>
+                </Typography>
+            );
         case "checkbox-group":
             return (
-            <Grid container sx={{ m: 2 }} class="formbuilder-checkbox">
+            <Grid container sx={{ m: 2,display:"block" }} class="formbuilder-checkbox">
                 <Typography>{field.label}</Typography>
                 <FormGroup>
 
@@ -52,21 +63,22 @@ const FormPreview = ({ formData}) => {
                         <FormControlLabel value={value.value} control={<Checkbox defaultChecked />} label={value.label} />
                     ))}
                 </FormGroup>
+                <br></br>
+
             </Grid>
             );
         case "date":
             return (
             <Grid container sx={{ m: 2 }} >
-                {/* <Unstable_DateField
-                /> */}
+                <Typography>{field.label}</Typography>
+                <br></br>
+                <input class="form-control" type="date" id={field.label}></input>
             </Grid>
             );
         case "number":
             return (
-                <Grid container sx={{ m: 2 }}>
+                <Grid container sx={{ m: 2, }}>
                 <Typography sx={{ display: 'block' }}>{field.label}</Typography>
-                <FormGroup>
-                    <br></br>
                     <input
                         id="standard-number"
                         label="Number"
@@ -78,14 +90,11 @@ const FormPreview = ({ formData}) => {
                         variant="standard"
                         sx={{ display: 'block' }}
                     />                    
-                </FormGroup>
- 
                 </Grid>
-                    // <input type="number"></input>
             );
         case "radio-group":
             return (
-            <Grid container sx={{ m: 2 }}  class="formbuilder-radio">
+            <Grid container sx={{ m: 2 ,display:"block"}}  class="formbuilder-radio">
                 <Typography>{field.label}</Typography>
                 <RadioGroup aria-labelledby="demo-radio-buttons-group-label" name="radio-buttons-group">
                     {field.values.map((value, index) => (
@@ -96,14 +105,23 @@ const FormPreview = ({ formData}) => {
                     </div>
                     ))}
                 </RadioGroup>
-
+                <br></br>
             </Grid>
             );
         case "select":
             return (
             <Grid container >
-                <FormControl>
-                        <label class="field-label">{field.label}</label>
+                <FormControl fullWidth>
+                <Typography>{field.label}</Typography>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id={field.label}
+                >
+                    {field.values.map((value, index) => (
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
+                    ))}
+                </Select>
+                        {/* <label class="field-label">{field.label}</label>
                         <select
                         className={field.className}
                         name={field.name}
@@ -114,27 +132,31 @@ const FormPreview = ({ formData}) => {
                             {field.values.map((value, index) => (
                                 <option value={value.value}>{value.label}</option>
                             ))}
-                        </select>
+                        </select> */}
                 </FormControl>
+                <br></br>
             </Grid>
             );
         case "textarea":
             return (
-            <Grid container sx={{ m: 2 }} >
+            <Grid container sx={{ m: 2 ,display:"block"}} >
                 <Typography>{field.label}</Typography>
+                <br></br>
                 <TextareaAutosize
                 className={field.className}
                 name={field.name}
                 rows={field.rows}
                 cols={field.cols}
                 />
+                <br></br>
             </Grid>
             );
         case "canvas":
             return (
-                <Grid container   >
-                    <Typography>{field.label}</Typography><br></br>
+                <Grid container   sx={{ display:"block"}} >
+                    <Typography>{field.label}</Typography>
                     <Canvas sx={{ m: 2, float: 'left',display:'block'  }}/>
+                    <br></br>
                 </Grid>
             );
         default:
@@ -143,10 +165,13 @@ const FormPreview = ({ formData}) => {
     };
 
     return (
-        <Box>
-
+        <Container maxWidth="xl">
+            <Typography variant="h1" component="h1">
+                {formData.formName}
+                <br />
+            </Typography>
             {formData.questionData.map((field, index) => (
-                <Grid key={index} id='test'>
+                <Grid key={index} id="test" sx={{display:"block"}}>
                 {field.subtype ? (
                     renderField({ ...field, type: field.subtype })
                 ) : (
@@ -154,7 +179,7 @@ const FormPreview = ({ formData}) => {
                 )}
                 </Grid>
             ))}
-        </Box>
+        </Container>
 
     );
 

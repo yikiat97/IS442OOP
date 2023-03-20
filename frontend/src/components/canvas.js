@@ -50,6 +50,7 @@ const Canvas = () => {
     return (
         <div>
             <canvas style={{ border: "1px solid black" }}  ref={canvasRef} />
+            <br></br>
             <Button onClick={clearCanvas} variant="outlined" color="error" startIcon={<DeleteIcon />}>
                 Clear Canvas
             </Button>
