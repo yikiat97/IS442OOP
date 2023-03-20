@@ -1,5 +1,5 @@
 // Main component
-import { useState,useEffect } from 'react';
+import { useState,useEffect, useRef } from 'react';
 import { Grid } from '@mui/material';
 import FormSelect from '../components/FormSelection';
 import VendorFormPreview from '../components/VendorFormPreview';
@@ -8,133 +8,133 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 
 
-// const testjson = {"questionID":"6414368009c2b82277d41e08",
-// "questionData": [
-//   {
-//     "type": "header",
-//     "subtype": "h1",
-//     "label": "HEADING",
-//     "className": "header",
-//     "access": true,
-//     "role": "Test"
-//   },
-//   {
-//     "type": "checkbox-group",
-//     "required": true,
-//     "label": "Checkbox Group",
-//     "toggle": false,
-//     "inline": false,
-//     "name": "checkbox-group-1679119721976-0",
-//     "access": false,
-//     "other": false,
-//     "values": [
-//       {
-//         "label": "java",
-//         "value": "java",
-//         "selected": true
-//       },
-//       {
-//         "label": "python",
-//         "value": "python",
-//         "selected": false
-//       },
-//       {
-//         "label": "js",
-//         "value": "js",
-//         "selected": false
-//       }
-//     ]
-//   },
-//   {
-//     "type": "date",
-//     "required": false,
-//     "label": "Date Field",
-//     "className": "form-control",
-//     "name": "date-1679119725153-0",
-//     "access": false
-//   },
-//   {
-//     "type": "number",
-//     "required": false,
-//     "label": "Number",
-//     "className": "form-control",
-//     "name": "number-1679119725972-0",
-//     "access": false,
-//     "value": "123"
-//   },
-//   {
-//     "type": "number",
-//     "required": false,
-//     "label": "Number",
-//     "className": "form-control",
-//     "name": "number-1679119725972-1",
-//     "access": false,
-//     "value": "123"
-//   },
-//   {
-//     "type": "radio-group",
-//     "required": false,
-//     "label": "Gender",
-//     "inline": false,
-//     "name": "radio-group-1679119726671-0",
-//     "access": false,
-//     "other": false,
-//     "values": [
-//       {
-//         "label": "Male",
-//         "value": "Male",
-//         "selected": false
-//       },
-//       {
-//         "label": "Female",
-//         "value": "Female",
-//         "selected": false
-//       }
-//     ]
-//   },
-//   {
-//     "type": "select",
-//     "required": false,
-//     "label": "Drinks",
-//     "className": "form-control",
-//     "name": "select-1679119729874-0",
-//     "access": false,
-//     "multiple": false,
-//     "values": [
-//       {
-//         "label": "coffeee",
-//         "value": "coffeee",
-//         "selected": true
-//       },
-//       {
-//         "label": "tea",
-//         "value": "tea",
-//         "selected": false
-//       },
-//       {
-//         "label": "Milo",
-//         "value": "Milo",
-//         "selected": false
-//       }
-//     ]
-//   },
-//   {
-//     "type": "textarea",
-//     "required": false,
-//     "label": "Text Area",
-//     "className": "form-control",
-//     "name": "textarea-1679119731045-0",
-//     "access": false,
-//     "subtype": "textarea"
-//   },
-//   {
-//     "type": "canvas",
-//     "required": false,
-//     "label": "Signature",
-//     "name": "canvas-1679119735970-0",
-//     "access": false
-//   }
-// ]}
+const testjson = {"questionID":"6414368009c2b82277d41e08",
+"questionData": [
+  {
+    "type": "header",
+    "subtype": "h1",
+    "label": "HEADING",
+    "className": "header",
+    "access": true,
+    "role": "Test"
+  },
+  {
+    "type": "checkbox-group",
+    "required": true,
+    "label": "Skill set CheckBox",
+    "toggle": false,
+    "inline": false,
+    "name": "checkbox-group-1679119721976-0",
+    "access": false,
+    "other": false,
+    "values": [
+      {
+        "label": "java",
+        "value": "java",
+        "selected": true
+      },
+      {
+        "label": "python",
+        "value": "python",
+        "selected": false
+      },
+      {
+        "label": "js",
+        "value": "js",
+        "selected": false
+      }
+    ]
+  },
+  {
+    "type": "date",
+    "required": true,
+    "label": "Date Field",
+    "className": "form-control",
+    "name": "date-1679119725153-0",
+    "access": false
+  },
+  {
+    "type": "number",
+    "required": false,
+    "label": "Number",
+    "className": "form-control",
+    "name": "number-1679119725972-0",
+    "access": false,
+    "value": "123"
+  },
+  {
+    "type": "number",
+    "required": false,
+    "label": "Number",
+    "className": "form-control",
+    "name": "number-1679119725972-1",
+    "access": false,
+    "value": "123"
+  },
+  {
+    "type": "radio-group",
+    "required": true,
+    "label": "Gender",
+    "inline": false,
+    "name": "radio-group-1679119726671-0",
+    "access": false,
+    "other": false,
+    "values": [
+      {
+        "label": "Male",
+        "value": "Male",
+        "selected": false
+      },
+      {
+        "label": "Female",
+        "value": "Female",
+        "selected": false
+      }
+    ]
+  },
+  {
+    "type": "select",
+    "required": false,
+    "label": "Drinks",
+    "className": "form-control",
+    "name": "select-1679119729874-0",
+    "access": false,
+    "multiple": false,
+    "values": [
+      {
+        "label": "coffeee",
+        "value": "coffeee",
+        "selected": true
+      },
+      {
+        "label": "tea",
+        "value": "tea",
+        "selected": false
+      },
+      {
+        "label": "Milo",
+        "value": "Milo",
+        "selected": false
+      }
+    ]
+  },
+  {
+    "type": "textarea",
+    "required": false,
+    "label": "Wrtie smth here",
+    "className": "form-control",
+    "name": "textarea-1679119731045-0",
+    "access": false,
+    "subtype": "textarea"
+  },
+  {
+    "type": "canvas",
+    "required": false,
+    "label": "Signature",
+    "name": "canvas-1679119735970-0",
+    "access": false
+  }
+]}
    // {"questionID":"6414368009c2b82277d41e08","questionData":[{"type":"header","subtype":"h2","label":"like","className":"header","access":false},{"type":"textarea","required":false,"label":"trxt lor:","className":"form-control","name":"textarea-1679045646826-0","access":false,"subtype":"textarea"},{"type":"canvas","required":false,"label":"Signature OBss","name":"canvas-1679045658018-0","access":false}]}
 
    function ViewForms() {
@@ -151,7 +151,7 @@ import MenuItem from '@material-ui/core/MenuItem';
         .then(data => {
             console.log(data); // Handle the response data
             //console.log(testjson)
-            setformJsonObject(data)
+            setformJsonObject(testjson)
         })
         .then((data) => setForms(data));
     }, []);

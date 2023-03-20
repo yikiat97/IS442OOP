@@ -16,13 +16,45 @@ import {
 import Canvas from "./canvas";
 
 const VendorFormPreview = ({ formData, fakeID }) => {
+  //console.log(formData)
   const [updatedStructure, setUpdatedStructure] = useState(formData.questionData);
-
-  if (!formData) {
-    return null;
+  const [invalidFields, setInvalidFields] = useState([]);
+console.log(formData)
+  if (formData == undefined) {
+    return (
+      
+        <p>
+          Please await admin to assign form to you
+        </p>
+  
+    );
   }
 
   const submit = (data) => {
+  // Check for invalid fields
+  const invalidFields = data
+    .filter((field) => {
+      if (field.required) {
+        const isValuePresent =
+          field.type === "radio-group" || field.type === "checkbox-group"
+            ? field.values.some((option) => option.selected)
+            : field.value && field.value.trim() !== "";
+        return !isValuePresent;
+      }
+      return false;
+    })
+    .map((field) => field.name);
+
+  // If any required field is not filled, display an alert and update the invalidFields state
+  if (invalidFields.length > 0) {
+    alert("Please fill all required fields.");
+    setInvalidFields(invalidFields);
+    return;
+  }
+  }
+
+  const save = (data) => {
+ 
     alert(fakeID);
     console.log(data);
     let formJsonObject = { questionData: data };
@@ -45,6 +77,16 @@ const VendorFormPreview = ({ formData, fakeID }) => {
   };
 
   const renderField = (field) => {
+
+    // Add this function to get the styles for a field based on its validity
+    const getStylesForField = (fieldName) => {
+      if (invalidFields.includes(fieldName)) {
+        return { borderColor: "red", borderWidth: 2, borderStyle: "solid" };
+      }
+      return {};
+    };
+
+
     // Add and update the field handling functions here
     const handleTextareaChange = (fieldId, newValue) => {
       // Clone the updatedStructure array to avoid modifying the original state
@@ -136,17 +178,19 @@ const VendorFormPreview = ({ formData, fakeID }) => {
           return <h1>{field.label}</h1>;
       case "checkbox-group":
         return (
-          <Grid container sx={{ m: 2 }} class="formbuilder-checkbox">
+          <Grid style={getStylesForField(field.name)} container sx={{ m: 2 }} class="formbuilder-checkbox">
             <Typography>{field.label}</Typography>
             <FormGroup>
               {field.values.map((option, index) => (
                 <FormControlLabel
                   key={index}
                   value={option.value}
+                  
                   control={
                     <Checkbox
                       checked={option.selected}
                       onChange={() => handleCheckboxChange(field, option)}
+                      
                     />
                   }
                   label={option.label}
@@ -156,12 +200,26 @@ const VendorFormPreview = ({ formData, fakeID }) => {
           </Grid>
         );
       case "date":
-          return (
-          <Grid container sx={{ m: 2 }} >
-              {/* <Unstable_DateField
-              /> */}
+        return (
+          <Grid container sx={{ m: 2 }}>
+            <TextField
+              label={field.label}
+              style={getStylesForField(field.name)}
+              type="date"
+              className={field.className}
+              required={field.required}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              inputProps={{
+                min: "1900-01-01",
+                max: "2099-12-31",
+              }}
+              value={field.value || ""}
+              onChange={(e) => handleFieldChange(field.name, e.target.value)}
+            />
           </Grid>
-          );
+        );
       case "number":
           return (
               <Grid container sx={{ m: 2 }}>
@@ -172,6 +230,7 @@ const VendorFormPreview = ({ formData, fakeID }) => {
                       id="standard-number"
                       label="Number"
                       type="number"
+                      style={getStylesForField(field.name)}
                       class="formbuilder-number"
                       value={field.value}
                       InputLabelProps={{
@@ -193,6 +252,7 @@ const VendorFormPreview = ({ formData, fakeID }) => {
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
               name={field.name}
+              style={getStylesForField(field.name)}
               value={field.values.find((option) => option.selected)?.value || ""}
               onChange={(e) => handleRadioChange(field.name, e.target.value)}
             >
@@ -210,11 +270,14 @@ const VendorFormPreview = ({ formData, fakeID }) => {
         );
       case "select":
         return (
-          <Grid container sx={{ m: 2 }}>
-            <InputLabel htmlFor={field.name}>{field.label}</InputLabel>
+          <div style={{backgroundColor: "white", borderRadius: "10px"}}>
+          <Grid style={{padding:"50px",}}container sx={{ }}>
+            <InputLabel style={{paddingRight:"10px",}} htmlFor={field.name}>{field.label}</InputLabel>
+ 
             <Select
               labelId={field.name}
               id={field.name}
+              style={getStylesForField(field.name)}
               className={field.className}
               required={field.required}
               multiple={field.multiple}
@@ -228,19 +291,23 @@ const VendorFormPreview = ({ formData, fakeID }) => {
               ))}
             </Select>
           </Grid>
+          </div>
         );
       case "textarea":
         return (
-          <Grid container sx={{ m: 2 }}>
+          <div style={{backgroundColor: "white", borderRadius: "10px"}}>
+          <Grid style={{padding:"50px",}}container sx={{ }}>
             <TextField
               label={field.label}
               multiline
               fullWidth
               required={field.required}
-              value={field.value || ""}
+              style={getStylesForField(field.name)}
+              value={field.value}
               onChange={(e) => handleTextareaChange(field.name, e.target.value)}
             />
           </Grid>
+          </div>
         );
 
       case "canvas":
@@ -252,27 +319,31 @@ const VendorFormPreview = ({ formData, fakeID }) => {
           );
       default:
           return (
-              <Grid container   >
-                  <Typography>{field.label}</Typography><br></br>
-                  <Canvas sx={{ m: 2, float: 'left',display:'block'  }}/>
-              </Grid>
+            <p>
+            Please await admin to assign form to you
+          </p>
           );;
       }
   };
 
   return (
-    <Grid container spacing={2}>
+    <div style={{backgroundColor: "lightBlue"}}>
+    <Grid style={{ width:"70%", margin:"auto"}} container spacing={2}>
       {formData.questionData.map((field, index) => (
         <Grid key={index} item xs={12}>
           {field.subtype ? renderField({ ...field, type: field.subtype }) : renderField(field)}
         </Grid>
       ))}
       <Grid item xs={12}>
-        <Button variant="contained" color="primary" onClick={() => submit(updatedStructure)}>
+        <Button variant="contained" color="primary" onClick={() => save(updatedStructure)}>
           Save
+        </Button>
+        <Button variant="contained" color="primary" onClick={() => submit(updatedStructure)}>
+          Submit
         </Button>
       </Grid>
     </Grid>
+    </div>
   );
 };
 
