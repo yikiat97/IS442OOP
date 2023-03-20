@@ -10,6 +10,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import axios from "axios";
+import { useEffect, useState } from "react";
 import {
     FormControl, 
     Grid, 
@@ -23,26 +25,36 @@ import {
     Menu,
     MenuItem,
     Button,
-    Link
+    Link,
+    formControlClasses
 } from "@mui/material";
 
 
 
 function CreateWorkflow(){
-    //create new workflow
-    const [workflow, setWorkflow] = React.useState([]);
+    
 
     //set steps
-    const [stepValue, setSteps] = React.useState([{id:1, label:'Select form'}]);
-    function onAddBtnClick() {
+    let nextId=0;
+    const [formName, setFormName]=React.useState('');
+    const [stepValue, setSteps] = React.useState([
+        {id:0,
+        formName: 'Safety Pre-Check Form 1'}]);
+
+    const onAddBtnClick = (event) => {
+        const step ={
+            label:"Select form",
+            form: ""
+        }
         setSteps([
             ...stepValue,
-            {label:"Select form"} 
+            step
         ]);
 
         setWorkflow([...workflow])
     }
 
+    //stepper handle next and back button
     const [activeStep, setActiveStep] = React.useState(0);
 
     const handleNext = () => {
@@ -60,20 +72,60 @@ function CreateWorkflow(){
         })
         }    
 
-    //set form values
-    const forms = [{form:'Vendor Assessment'}, {form:'Pre-Evaluation Form'}, {form:'Health Performance'}];
-    const [formValue, setFormValue] = React.useState(null);
-    const filter = createFilterOptions();
+    
+    useEffect(() => {
+        getForms();
+    }, []);
+
+
+    //retrieve form values
+    const [forms, setForms] = React.useState([]);
+    const getForms = () => {
+        
+
+        axios.get("http://localhost:8080/getForm/All")
+        .then((response) => {
+            const ini=[]
+            const data=response.data
+            
+            for(let i=0; i<data.length; i++){
+                ini.push(data[i].formName)
+            }
+            // console.log(ini)
+            setForms(ini)
+        })
+        .catch(error => console.error(error));
+    };
+    
+    
+    // const filter = createFilterOptions();
+
+    //submit workflow and set form steps
+    const [workflowName, setWorkflowName] = React.useState('New Workflow');
+    const [workflow, setWorkflow] = React.useState({});
+    const [formSteps, setFormStep]= React.useState([]);
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        
+        axios.post("https://localhost:8080/insertWorkflow", workflow).then((response) => {
+            console.log(response.status, response.data.token);
+        });
+    };
 
 
 
     return(
+        
         <Grid sx={{mt:6, textAlign:'left', px:4}}>
+        
             
             <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:3}}>
 
                 <Grid item md={1.5}>
-                    <TextField variant='standard' defaultValue='New Workflow' fullWidth hiddenLabel></TextField>
+                    <TextField variant='standard' value={workflowName} onChange={(e) => {
+                                                                setWorkflowName(e.target.value);
+                                                                }}
+                                fullWidth hiddenLabel></TextField>
                 </Grid>
 
                 <Grid item md={1}></Grid>
@@ -98,10 +150,10 @@ function CreateWorkflow(){
     
                 <Stepper activeStep={activeStep} orientation="vertical">
                                 {stepValue.map((step, index) => ( 
-                                <Step key={step.label}>
+                                <Step key={step.id}>
                                 
                                 <StepLabel>
-                                    {step.label} 
+                                    Select form
                                 </StepLabel>
                                 <StepContent>
                                 
@@ -111,15 +163,16 @@ function CreateWorkflow(){
                                         <Grid item sx={{}}>
                                         
                                             
-                                                <TextField 
-                                                            // value={{formValue}}
-                                                            // // onChange={(formValue) => {
-                                                            // //     setFormValue(formValue);
-                                                            // //     }}
+                                                <TextField  
+                                                            name='form'
+                                                            value={step.formName}
+                                                            onChange={(e) => {
+                                                                setFormName(e.target.value);
+                                                                }}
                                                             size="medium" select sx={{width:300}}>
                                                     <Button><Link underline="none" href='Form'>Create New Form</Link><AddCircleIcon color='success' sx={{pl:1}}/></Button>
-                                                    {forms.map((option) => (
-                                                        <MenuItem key={option.form} value={option.form}>{option.form}</MenuItem>
+                                                    {forms.map((option, index) => (
+                                                        <MenuItem key={index} value={option}>{option}</MenuItem>
                                                     ))}
                                                 </TextField>
                                         
@@ -131,8 +184,13 @@ function CreateWorkflow(){
                                                 variant="contained"
                                                 onClick={()=> {
                                                     handleNext();
-                                                    onAddBtnClick();
-                                                    workflow.push(formValue)
+                                                    setSteps([
+                                                        ...stepValue,
+                                                        {id:nextId++,
+                                                        formName: formName}
+                                                    ]);
+                                                    console.log(stepValue)
+                                                    
                                                 }}
                                                 sx={{ mt: 1, mr: 1 }}>
                                                 Add Step
@@ -153,7 +211,6 @@ function CreateWorkflow(){
 
                                         
                                     </Grid>
-
                                         <Grid item>  
                                             <Button columns={{ xs: 12, sm: 12, md: 12 }} 
                                                 variant="outlined"
@@ -180,19 +237,11 @@ function CreateWorkflow(){
                     
                         <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success">
                                 Finish
-                        </Button>
-                    
-                        
-                </Grid>
-            
+                        </Button>              
+                </Grid> 
             </Paper>
-            
-
-
         </Grid>
-        
     )
-    
 }
 
 export default CreateWorkflow;
