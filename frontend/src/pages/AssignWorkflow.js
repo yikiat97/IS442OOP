@@ -25,21 +25,35 @@ import {
 } from "@mui/material";
 
 
-
 function AssignWorkflow(){
-    
+    const [vendorWorkflowName, AssignWorkflow] = useState(null);
+    const[workflows, setWorkflows] = useState([]);
+    const [dueDate, setDueDate] = useState(dayjs('07-04-2023'));
+    const [date, setDate] = useState("");
 
+    const[status, setStatus]= useState(null);
+    const statuses = [
+        "Workflow Created",
+        "Awaiting Approver",
+        "Awaiting Admin",
+        "Rejected"
+    ]
+    
+    const[companies, setCompanies]= useState([]);
+    const[assignees, setAssignees] = useState({});
+    const[forms, setForms] = useState([]);
+    const [name, setAssigneeName] = useState("");
+    const [email, setAssigneeEmail] = useState("");
+    const [company, setAssigneeCompany] = useState("");
 
     //set form values
     useEffect(() => {
         getWorkflows();
         getCompanies();
         getAssignees();
+        setDate(dueDate.$D + "/" + (dueDate.$M+1) + "/" + dueDate.$y);
     }, []);
 
-
-    const [vendorWorkflowName, AssignWorkflow] = React.useState(null);
-    const[workflows, setWorkflows] = React.useState([]);
     const getWorkflows = () =>{
         axios.get("http://localhost:8080/workflow/allWorkflow")
         .then((response) => {
@@ -56,19 +70,6 @@ function AssignWorkflow(){
         .catch(error => console.error(error.response));
     }
 
-
-    const [dueDate, setDueDate] = React.useState(dayjs('07-04-2023'));
-
-    const[status, setStatus]= React.useState(null);
-    const statuses = [
-        "Workflow Created",
-        "Awaiting Approver",
-        "Awaiting Admin",
-        "Rejected"
-    ]
-
-    const [companyValue, setCompanyValue] = React.useState(null);
-    const[companies, setCompanies]= React.useState([]);
     const getCompanies = () =>{
         axios.get("http://localhost:8080/company")
         .then((response) => {
@@ -80,14 +81,12 @@ function AssignWorkflow(){
             }
 
             
-            setCompanies(ini)
-            // console.log(ini)
+            setCompanies(ini);
         })
         .catch(error => console.error(error));
     }
 
-    const [name, setAssigneeValue] = React.useState(null);
-    const[assignees, setAssignees] = React.useState({});
+
     const getAssignees = () =>{
         axios.get("http://localhost:8080/login/getVendors")
         .then((response) => {
@@ -110,28 +109,12 @@ function AssignWorkflow(){
         })
         .catch(error => console.error(error));
     }
-    // const assigneeEmail = Object.keys(assignees).find(key => assignees[key] === assigneeValue);
+    
 
 
     const handleSubmit= async (e) =>{
         e.preventDefault();
-        let assignee = assignees[name]
-        const email= assignee.userEmail
-        const company= assignee.comp
-        const forms = workflows[vendorWorkflowName];
-        const date = dueDate.$D + "/" + dueDate.$M + "/" + dueDate.$y
-        console.log(name)
-        // const workflow ={
-        //     forms: forms,
-        //     vendorWorkflowName: vendorWorkflowName,
-        //     status: status,
-        //     email: email,
-        //     company:company,
-        //     date:date,
-        //     name:name
-        // }
-        // console.log(workflow)
-
+        
         try {
             const res = await axios.post(
                 "http://localhost:8080/vendorWorkflow/insertVendorWorkflow",
@@ -193,6 +176,7 @@ function AssignWorkflow(){
                                     renderInput={(params) => <TextField {...params} />}
                                     onChange={(event,newValue) => {
                                         AssignWorkflow(newValue);
+                                        setForms(workflows[newValue][0]);
                                         }}
                                     /> 
                     </FormControl>
@@ -212,7 +196,9 @@ function AssignWorkflow(){
                                     sx={{width:200}}
                                     renderInput={(params) => <TextField {...params} />}
                                     onChange={(event, newValue) => {
-                                        setAssigneeValue(newValue);
+                                        setAssigneeName(newValue);
+                                        setAssigneeCompany(assignees[newValue].comp);
+                                        setAssigneeEmail(assignees[newValue].userEmail);
                                         }}
                                     /> 
                                                         
@@ -261,6 +247,7 @@ function AssignWorkflow(){
                                             format="DD-MM-YYYY"
                                             onChange={(newValue) => {
                                             setDueDate(newValue);
+                                            setDate(dueDate.$D + "/" + (dueDate.$M+1) + "/" + dueDate.$y);
                                             }}
                                             renderInput={(params) => <TextField {...params} />}
                                         />
