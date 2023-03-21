@@ -67,7 +67,7 @@ function WorkflowTable({props}){
             Search
             </Button>
             
-            <Button
+            {/* <Button
             onClick={() => clearFilters && handleReset(clearFilters)}
             size="small"
             variant="contained"
@@ -77,7 +77,7 @@ function WorkflowTable({props}){
             }}
             >
             Reset
-            </Button>
+            </Button> */}
         </Space>
         </div>
     ),

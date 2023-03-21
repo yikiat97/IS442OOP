@@ -36,6 +36,7 @@ function RejectedWorkflow(){
             if(workflow.status=='Rejected'){
               vendorWorkflows.push(workflow)
             }
+            
           }
 
           // console.log(vendorWorkflows)

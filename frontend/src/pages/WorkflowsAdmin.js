@@ -73,14 +73,14 @@ function WorkflowsAdmin(){
             },
         }));
 
-            const [anchorEl, setAnchorEl] = React.useState(null);
-            const open = Boolean(anchorEl);
-            const handleClick = (event) => {
-            setAnchorEl(event.currentTarget);
-            };
-            const handleClose = () => {
-            setAnchorEl(null);
-            };
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+    setAnchorEl(null);
+    };
 
 
 
@@ -89,13 +89,36 @@ function WorkflowsAdmin(){
         ;
     }, []);
     const[vendorWorkflows, setVendorWorkflows]= React.useState([]);
+    const [completedWorkflow, setCompletedWorkflow]=React.useState([])
+    const [uncompletedWorkflow, setUncompletedWorkflow]=React.useState([])
+    const [rejectedWorkflow, setRejectedWorkflow]=React.useState([])
     const getVendorWorkflows = () =>{
         axios.get("http://localhost:8080/vendorWorkflow/allVendorWorkflow")
         .then((response) => {
-            // const vendorWorkflows=[]
-            console.log(response.data)
-            setVendorWorkflows(response.data)
             
+            
+            
+
+            const completedWorkflows=[]
+            const uncompletedWorkflows=[]
+            const rejectedWorkflows=[]
+
+            for(let workflow of response.data){
+                if(workflow.status=='Approved'){
+                    completedWorkflows.push(workflow)
+                }
+                else if(!(workflow.status=='Approved' || workflow.status=='Rejected' || workflow.status=='Deleted') ){
+                    uncompletedWorkflows.push(workflow)
+                }  
+                else if(workflow.status=='Rejected'){
+                    rejectedWorkflows.push(workflow)
+                }
+            }
+
+            setVendorWorkflows(response.data)
+            setCompletedWorkflow(completedWorkflows)
+            setUncompletedWorkflow(uncompletedWorkflows)
+            setRejectedWorkflow(rejectedWorkflows)
             
         })
         .catch(error => console.error(error.response));
@@ -149,7 +172,7 @@ function WorkflowsAdmin(){
                 Search
                 </Button>
                 
-                <Button
+                {/* <Button
                 onClick={() => clearFilters && handleReset(clearFilters)}
                 size="small"
                 variant="contained"
@@ -159,7 +182,7 @@ function WorkflowsAdmin(){
                 }}
                 >
                 Reset
-                </Button>
+                </Button> */}
             </Space>
             </div>
         ),
@@ -274,7 +297,7 @@ function WorkflowsAdmin(){
                     <Card sx={{ borderRadius: '16px' }} style={{backgroundColor: "#E7F9DD"}}>
                         <CardContent align="center">
                                 <Typography variant="h2" component="div" fontWeight="Bold" color={"#054322"}>
-                                300
+                                {completedWorkflow.length}
                                 </Typography>
                                 <Typography variant="body2" fontWeight="Bold" color={"#054322"}>
                                     <Grid container sx={{alignContent:"center", justifyContent:"center", pt:3}}>
@@ -296,7 +319,7 @@ function WorkflowsAdmin(){
                     <Card sx={{ borderRadius: '16px' }} style={{backgroundColor: "#FEDBC2"}}>
                         <CardContent align="center">
                                 <Typography variant="h2" component="div" fontWeight="Bold" color={"#8A3C03"}>
-                                34
+                                {uncompletedWorkflow.length}
                                 </Typography>
                                 <Typography variant="body2" fontWeight="Bold" color={"#8A3C03"}>
                                     <Grid container sx={{alignContent:"center", justifyContent:"center", pt:3}}>
@@ -318,7 +341,7 @@ function WorkflowsAdmin(){
                     <Card sx={{ borderRadius: '16px' }} style={{backgroundColor: "#FFD9D9"}}>
                         <CardContent align="center">
                                 <Typography variant="h2" component="div" fontWeight="Bold" color={"#790202"}>
-                                14
+                                {rejectedWorkflow.length}
                                 </Typography>
                                 <Typography variant="body2" fontWeight="Bold" color={"#790202"}>
                                     <Grid container sx={{alignContent:"center", justifyContent:"center", pt:3}}>
@@ -348,35 +371,6 @@ function WorkflowsAdmin(){
             </Grid>
 
             <TableContainer component={Paper}>
-                {/* <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                    <TableHead>
-                    <TableRow>
-                        <StyledTableCell>Workflows</StyledTableCell>
-                        <StyledTableCell align="left">Due Date</StyledTableCell>
-                        
-                        <StyledTableCell align="left">Assignee</StyledTableCell>
-                        <StyledTableCell align="left">Company</StyledTableCell>
-                        <StyledTableCell align="left"> </StyledTableCell>
-                    </TableRow>
-                    </TableHead>
-                    <TableBody>
-                    {vendorWorkflows.map((row) => (
-                        <StyledTableRow key={row.id}>
-                        <StyledTableCell component="th" scope="row">
-                            {row.workflowName}
-                        </StyledTableCell>
-                        <StyledTableCell align="left">
-                            {row.date}
-                            <Button variant='contained' size='small' sx={{ml:5, background:"#90a4ae"}} endIcon={<AddAlertIcon/>}>Send</Button>
-                        </StyledTableCell>
-                        
-                        <StyledTableCell align="left">{row.name}</StyledTableCell>
-                        <StyledTableCell align="left">{row.company}</StyledTableCell>
-                        <StyledTableCell align="right"><ArrowForwardIosIcon /></StyledTableCell>
-                        </StyledTableRow>
-                    ))}
-                    </TableBody>
-                </Table> */}
                 <Table columns={columns} dataSource={vendorWorkflows} onChange={onChange} />;
             </TableContainer>
 
@@ -390,5 +384,3 @@ function WorkflowsAdmin(){
 
 export default WorkflowsAdmin;
 
-
-  
