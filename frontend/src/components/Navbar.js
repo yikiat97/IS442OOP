@@ -61,8 +61,8 @@ const Navbar = () => {
 
                 <SubMenu label='Workflows' icon={<SettingsSuggestIcon />} component={<Link to='/WorkflowsAdmin'/>}>
                     <MenuItem component={<Link to='/ViewWorkflowsTemplate'/>}>View Templates</MenuItem>
+                    <MenuItem component={<Link to='/CreateWorkflow'/>}>Create New Template</MenuItem>
                     <MenuItem component={<Link to='/ViewAllWorkflow'/>}>View Workflows</MenuItem>
-                    <MenuItem component={<Link to='/CreateWorkflow'/>}>Create New Workflow</MenuItem>
                     <MenuItem component={<Link to='/AssignWorkflow'/>}>Assign Workflow</MenuItem>
                     
                 </SubMenu>
