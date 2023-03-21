@@ -13,7 +13,7 @@ import RejectedWorkflow from "./pages/RejectedWorkflow";
 import CompletedWorkflow from "./pages/CompletedWorkflow";
 import UncompletedWorkflow from "./pages/UncompletedWorkflow";
 import AssignWorkflow from "./pages/AssignWorkflow";
-import ViewWorkflows from "./pages/ViewWorkflowsTemplate";
+import ViewWorkflowsTemplate from "./pages/ViewWorkflowsTemplate";
 import ViewAllWorkflow from "./pages/ViewAllWorkflow";
 import Login from "./pages/Login";
 import NotAuthorized from "./pages/NotAuthorized";
@@ -102,7 +102,7 @@ function App() {
           }
         />
         <Route path="/AssignWorkflow" element={<AssignWorkflow />} />
-        <Route path="/ViewWorkflows" element={<ViewWorkflows />} />
+        <Route path="/ViewWorkflowsTemplate" element={<ViewWorkflowsTemplate />} />
         <Route path="/ViewAllWorkflow" element={<ViewAllWorkflow />} />
         <Route path="/NotAuthorized" element={<NotAuthorized />} />
         <Route path="/" element={<Home />} />

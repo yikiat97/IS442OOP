@@ -259,7 +259,7 @@ function WorkflowsAdmin(){
                         onClose={handleClose}
                     >
                             <Link href='AssignWorkflow' underline='none' color="#616161"><MenuItem onClick={handleClose} color="#616161"><AssignmentIndIcon/>Assign Workflow</MenuItem></Link>
-                            <Link href='ViewWorkflows' underline='none' color="#616161"><MenuItem onClick={handleClose} color="#616161"><GridViewIcon/>View Templates</MenuItem></Link>
+                            <Link href='ViewWorkflowsTemplate' underline='none' color="#616161"><MenuItem onClick={handleClose} color="#616161"><GridViewIcon/>View Templates</MenuItem></Link>
                             <Link href='CreateWorkflow' underline='none' color="#616161"><MenuItem onClick={handleClose} ><AddIcon/>Create Template</MenuItem></Link>
 
                     </StyledMenu>
