@@ -4,7 +4,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-
+import WorkflowTable from "../components/WorkflowTable"
 import {
 
     Grid, 
@@ -24,46 +24,37 @@ import {
     Link
         
 } from "@mui/material";
-
-
+import axios from "axios";
+import { useEffect, useState, useRef } from "react";
 
 
 function CompletedWorkflow(){
 
 
-    const StyledTableCell = styled(TableCell)(({ theme }) => ({
-        [`&.${tableCellClasses.head}`]: {
-          backgroundColor: theme.palette.common.white,
-          color: theme.palette.common.black,
-          fontWeight: theme.typography.fontWeightBold,
-        },
-        [`&.${tableCellClasses.body}`]: {
-          fontSize: 14,
-        },
-      }));
-      
-      const StyledTableRow = styled(TableRow)(({ theme }) => ({
-        '&:nth-of-type(odd)': {
-          backgroundColor: theme.palette.action.hover,
-        },
-        // hide last border
-        '&:last-child td, &:last-child th': {
-          border: 0,
-        },
-      }));
+      useEffect(() => {
+        getVendorWorkflows();
+        ;
+      }, []);
+      const[vendorWorkflows, setVendorWorkflows]= React.useState([]);
+      const getVendorWorkflows = () =>{
+          axios.get("http://localhost:8080/vendorWorkflow/allVendorWorkflow")
+          .then((response) => {
+              const vendorWorkflows=[]
+              
+              for(let workflow of response.data){
+                if(workflow.status=='Approved'){
+                  vendorWorkflows.push(workflow)
+                }
+              }
 
-    function createData(Workflow, DueDate, Assignee, Company, Status) {
-        return { Workflow, DueDate, Assignee, Company, Status};
+              // console.log(vendorWorkflows)
+              setVendorWorkflows(vendorWorkflows)
+              
+              
+          })
+          .catch(error => console.error(error.response));
       }
       
-      const rows = [
-        createData('Health Evaluation', '12 Feb 2023', 'Carol Chua', 'Ever Green','Approved'),
-        createData('Health Evaluation', '12 Feb 2023', 'Carol Chua', 'Ever Green','Approved'),
-        createData('Health Evaluation', '12 Feb 2023', 'Carol Chua', 'Ever Green','Approved'),
-        createData('Health Evaluation', '12 Feb 2023', 'Carol Chua', 'Ever Green','Approved'),
-        createData('Health Evaluation', '12 Feb 2023', 'Carol Chua', 'Ever Green','Approved'),
-      ];
-    
     return(
         <Grid sx={{mt:6, textAlign:'left', px:4, mb:6}}>
             
@@ -84,7 +75,7 @@ function CompletedWorkflow(){
                 </Grid>
 
                 <Grid item md={0.5} sm={6} sx={{mb:5}}>
-
+{/* 
                     <TextField
                         sx={{background:"#eeeeee"}}
                         size='small'
@@ -94,38 +85,11 @@ function CompletedWorkflow(){
                           <SearchIcon/>
                         </InputAdornment>)}}>
                     
-                      </TextField>
+                      </TextField> */}
                 </Grid>
             </Grid>
 
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                    <TableHead>
-                    <TableRow>
-                        <StyledTableCell>Workflows</StyledTableCell>
-                        <StyledTableCell align="left">Due Date</StyledTableCell>
-                        <StyledTableCell align="left">Assignee</StyledTableCell>
-                        <StyledTableCell align="left">Company</StyledTableCell>
-                        <StyledTableCell align="left">Status</StyledTableCell>
-                        <StyledTableCell align="left"> </StyledTableCell>
-                    </TableRow>
-                    </TableHead>
-                    <TableBody>
-                    {rows.map((row) => (
-                        <StyledTableRow key={row.Workflow}>
-                        <StyledTableCell component="th" scope="row">
-                            {row.Workflow}
-                        </StyledTableCell>
-                        <StyledTableCell align="left">{row.DueDate}</StyledTableCell>
-                        <StyledTableCell align="left">{row.Assignee}</StyledTableCell>
-                        <StyledTableCell align="left">{row.Company}</StyledTableCell>
-                        <StyledTableCell align="left"><Chip label={row.Status} color='success'></Chip></StyledTableCell>
-                        <StyledTableCell align="right"><ArrowForwardIosIcon /></StyledTableCell>
-                        </StyledTableRow>
-                    ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+            <WorkflowTable props={vendorWorkflows}/>
 
 
                 
