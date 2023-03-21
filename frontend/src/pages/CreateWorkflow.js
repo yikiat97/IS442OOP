@@ -32,33 +32,37 @@ import {
 
 
 function CreateWorkflow(){
-    
+      //submit workflow and set form steps
+      const [workflowName, setWorkflowName] = React.useState('New Workflow');
+      const [workflow, setWorkflow] = React.useState({});
+      const [formSteps, setFormStep]= React.useState([]);  
 
     //set steps
-    let nextId=0;
+    const [nextId, setNextId]=React.useState(1);
+    const [formStored, setFormStored]=React.useState([]);
     const [formName, setFormName]=React.useState('');
     const [stepValue, setSteps] = React.useState([
         {id:0,
         formName: 'Safety Pre-Check Form 1'}]);
 
-    const onAddBtnClick = (event) => {
-        const step ={
-            label:"Select form",
-            form: ""
-        }
-        setSteps([
-            ...stepValue,
-            step
-        ]);
-
-        setWorkflow([...workflow])
-    }
+    // const onAddBtnClick = (event) => {
+    //     const step ={
+    //         label:"Select form",
+    //         form: ""
+    //     }
+    //     setSteps([
+    //         ...stepValue,
+    //         step
+    //     ]);
+    //     setWorkflow([...workflow])
+    //     .then(() => console.log(workflow));    }
 
     //stepper handle next and back button
     const [activeStep, setActiveStep] = React.useState(0);
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
+
     };
 
     const handleBack = () => {
@@ -66,11 +70,13 @@ function CreateWorkflow(){
     };
 
     //not working
-    const deleteStep = index =>{
+    const deleteStep = (index) => {
         setSteps(current => {
-            return current.filter(step => {return step.id !=index+1})
-        })
-        }    
+          const newSteps = [...current];
+          newSteps.splice(index, 1);
+          return newSteps;
+        });
+      };
 
     
     useEffect(() => {
@@ -91,7 +97,7 @@ function CreateWorkflow(){
             for(let i=0; i<data.length; i++){
                 ini.push(data[i].formName)
             }
-            // console.log(ini)
+            // console.log(ini)f
             setForms(ini)
         })
         .catch(error => console.error(error));
@@ -100,18 +106,35 @@ function CreateWorkflow(){
     
     // const filter = createFilterOptions();
 
-    //submit workflow and set form steps
-    const [workflowName, setWorkflowName] = React.useState('New Workflow');
-    const [workflow, setWorkflow] = React.useState({});
-    const [formSteps, setFormStep]= React.useState([]);
+    // const addFormToWorkflow = ()=>{
+    //     console.log(formName)
+    // }
     const handleSubmit = (e) => {
-        e.preventDefault();
-        
-        axios.post("https://localhost:8080/insertWorkflow", workflow).then((response) => {
+        // e.preventDefault();
+        console.log(stepValue);
+        console.log(workflowName);
+        const formNames = stepValue.map((form) => form.formName);
+        setFormStored(formNames);
+        console.log(formStored);
+        const workflow = {
+            forms: formNames,
+            workflowName: workflowName,
+        };
+        console.log(workflow);
+        axios.post("http://localhost:8080/workflow/insertWorkflow", workflow).then((response) => {
             console.log(response.status, response.data.token);
         });
     };
+    
 
+    const handleFormNameChange = (e) => {
+        const newValue = e.target.value;
+        setSteps((prevSteps) => {
+          const updatedSteps = [...prevSteps];
+          updatedSteps[activeStep].formName = newValue;
+          return updatedSteps;
+        });
+      };
 
 
     return(
@@ -163,11 +186,13 @@ function CreateWorkflow(){
                                         <Grid item sx={{}}>
                                         
                                             
-                                                <TextField  
+                                                <TextField
                                                             name='form'
                                                             value={step.formName}
                                                             onChange={(e) => {
-                                                                setFormName(e.target.value);
+                                                                handleFormNameChange(e);
+                                                                // addFormToWorkflow();
+                                                                console.log(stepValue);
                                                                 }}
                                                             size="medium" select sx={{width:300}}>
                                                     <Button><Link underline="none" href='Form'>Create New Form</Link><AddCircleIcon color='success' sx={{pl:1}}/></Button>
@@ -184,12 +209,15 @@ function CreateWorkflow(){
                                                 variant="contained"
                                                 onClick={()=> {
                                                     handleNext();
+                                                    // setFormName(formName)
+                                                    // addFormToWorkflow();
+                                                    setNextId(nextId + 1);
                                                     setSteps([
                                                         ...stepValue,
-                                                        {id:nextId++,
+                                                        {id: nextId,
                                                         formName: formName}
                                                     ]);
-                                                    console.log(stepValue)
+                                                    console.log(nextId)
                                                     
                                                 }}
                                                 sx={{ mt: 1, mr: 1 }}>
@@ -202,7 +230,7 @@ function CreateWorkflow(){
                                             <Button columns={{ xs: 12, sm: 12, md: 12 }}
                                                 variant="contained" color="error"
                                                 disabled={index === 0}
-                                                // onClick={deleteStep(1)}
+                                                onClick={() => deleteStep(index)}
                                                 sx={{ mt: 1, mr: 1 }}
                                             >
                                                 Delete
@@ -235,7 +263,9 @@ function CreateWorkflow(){
 
                 <Grid sx={{mx:2, mb:4, display:"flex", justifyContent:"flex-end"}} columns={{ xs: 12, sm: 12, md: 12}}>
                     
-                        <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success">
+                        <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success"
+                        onClick = {()=>handleSubmit()}
+                        >
                                 Finish
                         </Button>              
                 </Grid> 
