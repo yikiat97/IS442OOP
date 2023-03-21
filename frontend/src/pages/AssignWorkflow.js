@@ -6,8 +6,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import axios from "axios";
 import { useEffect, useState } from "react";
+import {useNavigate} from 'react-router-dom';
+
 import {
     FormControl, 
     Grid, 
@@ -21,23 +25,30 @@ import {
     Menu,
     MenuItem,
     Button,
-    Link
+    Link,
+    ListItem,
+    FormHelperText 
 } from "@mui/material";
 
 
 function AssignWorkflow(){
     const [vendorWorkflowName, AssignWorkflow] = useState(null);
     const[workflows, setWorkflows] = useState([]);
-    const [dueDate, setDueDate] = useState(dayjs('07-04-2023'));
-    const [date, setDate] = useState("");
+    const [dueDate, setDueDate] = useState(dayjs());
+    const [date, setDate] = useState(null);
 
     const[status, setStatus]= useState(null);
     const statuses = [
+        "Draft",
         "Workflow Created",
         "Awaiting Approver",
         "Awaiting Admin",
+        "Deleted",
+        "Approved",
         "Rejected"
     ]
+
+    const [error, setError] = useState([]);
     
     const[companies, setCompanies]= useState([]);
     const[assignees, setAssignees] = useState({});
@@ -51,7 +62,7 @@ function AssignWorkflow(){
         getWorkflows();
         getCompanies();
         getAssignees();
-        setDate(dueDate.$D + "/" + (dueDate.$M+1) + "/" + dueDate.$y);
+        
     }, []);
 
     const getWorkflows = () =>{
@@ -79,7 +90,7 @@ function AssignWorkflow(){
             for(let comp of companyData){
                 ini[comp.name]=comp.userEmail
             }
-
+            // console.log(response.data)
             
             setCompanies(ini);
         })
@@ -90,32 +101,65 @@ function AssignWorkflow(){
     const getAssignees = () =>{
         axios.get("http://localhost:8080/login/getVendors")
         .then((response) => {
-            const ini={}
-            const companyData=response.data
+            // const main={}
             
+            const companyData=response.data
+            // console.log(response.data)
+            // for(const [key, value] of Object.entries(companyData)){
+            //     let ini={}
+            //     for(let user of value){
+                    
+            //         ini[user.name]={userEmail: user.email,
+            //                         comp:user.company}
+            //         main[key]=ini
+            //     }
+                
+            // }
+            const ini ={}
             for(const [key, value] of Object.entries(companyData)){
                 
                 for(let user of value){
+                    
                     ini[user.name]={userEmail: user.email,
                                     comp:user.company}
+                    
                 }
                 
             }
+            
             setAssignees(ini);
-            // console.log(ini)
-            
-            
-            
+            // console.log(main)     
         })
         .catch(error => console.error(error));
     }
-    
+    // console.log(assignees)
+    // const options = assignees.map((option)=>{
+    //     const company = Object.keys(option);
+    //     return{
+    //         company: Object.entries(option)
+    //     }
+    // })
 
 
+    const navigate= useNavigate();
     const handleSubmit= async (e) =>{
         e.preventDefault();
+        // console.log(dueDate)
+        // console.log(dueDate.$D + "/" + (dueDate.$M+1) + "/" + dueDate.$y)
+        // console.log(date)
+
         
         try {
+
+            if(name===""){
+                console.log("No assignee")
+            } else if(status==null){
+                console.log("No status")
+            } else if(vendorWorkflowName==null){
+                console.log(vendorWorkflowName)
+                console.log("No workflow")
+                
+            } else{
             const res = await axios.post(
                 "http://localhost:8080/vendorWorkflow/insertVendorWorkflow",
                 {forms,
@@ -130,11 +174,16 @@ function AssignWorkflow(){
                     "Content-Type": "application/json"
                 },
                 }
+
+                
             );
+                navigate("../ViewAllWorkflow");
+            
             console.log(res, "res");
-            } catch (error) {
-                console.log( error.response);
             }
+                } catch (error) {
+                    console.log( error);
+                }
     };
 
     
@@ -156,29 +205,28 @@ function AssignWorkflow(){
                 </Grid>
 
                 <Grid item sx={{alignItems:"center", justifyContent:"flex-end", display:'flex'}} md={0.25} sm={6}>
-                    <Button sx={{bgcolor:"#D3D3D3", color:"#000000", width:100}}>Cancel</Button>
+                    <Button sx={{bgcolor:"#D3D3D3", color:"#000000", width:100}} href="WorkflowsAdmin" >Cancel</Button>
                 </Grid>
 
             </Grid>
             
-
-            
-            <Paper elevation={1} sx={{height:350,pt:3}}>
+            <Paper elevation={1} sx={{height:350,pt:3, pb:4}}>
 
                 <Grid sx={{mx:2, mb:4}} columns={{ xs: 12, sm: 12, md: 12 }}>
-
+                    
                     <FormControl>
                             <FormLabel htmlFor="WorkflowName" sx={{}}>Choose Workflow</FormLabel>
                                     <Autocomplete
                                     id="grouped-demo"
                                     options={Object.keys(workflows)}
-                                    sx={{width:200}}
+                                    sx={{width:"500px"}}
                                     renderInput={(params) => <TextField {...params} />}
                                     onChange={(event,newValue) => {
                                         AssignWorkflow(newValue);
                                         setForms(workflows[newValue][0]);
                                         }}
                                     /> 
+                                    {vendorWorkflowName==null? <FormHelperText sx={{color:"#dd3c32"}}>Please select a workflow</FormHelperText> : <></>}
                     </FormControl>
 
                 </Grid>
@@ -201,6 +249,8 @@ function AssignWorkflow(){
                                         setAssigneeEmail(assignees[newValue].userEmail);
                                         }}
                                     /> 
+
+                                    {name==="" ? <FormHelperText sx={{color:"#dd3c32"}}>Please select an Assignee</FormHelperText> : <></>}
                                                         
                             </FormControl>
                         </Grid>
@@ -245,9 +295,11 @@ function AssignWorkflow(){
                                         <DatePicker   
                                             value={dueDate}
                                             format="DD-MM-YYYY"
+                                            disablePast
                                             onChange={(newValue) => {
                                             setDueDate(newValue);
                                             setDate(dueDate.$D + "/" + (dueDate.$M+1) + "/" + dueDate.$y);
+                                            // setDate(dueDate.$d);
                                             }}
                                             renderInput={(params) => <TextField {...params} />}
                                         />
@@ -279,6 +331,8 @@ function AssignWorkflow(){
                                             </MenuItem>
                                         ))}
                                 </TextField>
+
+                                {status==null ? <FormHelperText sx={{color:"#dd3c32"}}>Please select a Status</FormHelperText> : <></>}
                     </FormControl>
 
                 </Grid>

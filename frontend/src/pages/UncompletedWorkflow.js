@@ -26,26 +26,26 @@ function UncompletedWorkflow(){
     getVendorWorkflows();
     ;
   }, []);
-  const[vendorWorkflows, setVendorWorkflows]= React.useState([]);
-  const getVendorWorkflows = () =>{
-      axios.get("http://localhost:8080/vendorWorkflow/allVendorWorkflow")
-      .then((response) => {
-          const vendorWorkflows=[]
-          
-          for(let workflow of response.data){
-            if(!(workflow.status=='Approved' || workflow.status=='Rejected' || workflow.status=='Deleted') ){
-              vendorWorkflows.push(workflow)
+    const[vendorWorkflows, setVendorWorkflows]= React.useState([]);
+    const getVendorWorkflows = () =>{
+        axios.get("http://localhost:8080/vendorWorkflow/allVendorWorkflow")
+        .then((response) => {
+            const vendorWorkflows=[]
+            
+            for(let workflow of response.data){
+              if(!(workflow.status=='Approved' || workflow.status=='Rejected' || workflow.status=='Deleted') ){
+                vendorWorkflows.push(workflow)
+              }
             }
-          }
 
-          // console.log(vendorWorkflows)
-          setVendorWorkflows(vendorWorkflows)
-          
-          
-      })
-      .catch(error => console.error(error.response));
-  }
-  
+            // console.log(vendorWorkflows)
+            setVendorWorkflows(vendorWorkflows)
+            
+            
+        })
+        .catch(error => console.error(error.response));
+      }
+    
     
     return(
         <Grid sx={{mt:6, textAlign:'left', px:4, mb:6}}>

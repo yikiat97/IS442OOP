@@ -161,8 +161,7 @@ function WorkflowTable({props}){
     
     },
 
-    {
-        
+    {   
         render: () => (
                             <ArrowForwardIosIcon />  
             ),
@@ -175,7 +174,7 @@ function WorkflowTable({props}){
 
     
 
-    
+
     return(
         
 
