@@ -35,7 +35,6 @@ function AssignWorkflow(){
     const [vendorWorkflowName, AssignWorkflow] = useState(null);
     const[workflows, setWorkflows] = useState([]);
     const [dueDate, setDueDate] = useState(dayjs());
-    const [date, setDate] = useState(null);
 
     const[status, setStatus]= useState(null);
     const statuses = [
@@ -144,13 +143,10 @@ function AssignWorkflow(){
     const navigate= useNavigate();
     const handleSubmit= async (e) =>{
         e.preventDefault();
-        // console.log(dueDate)
-        // console.log(dueDate.$D + "/" + (dueDate.$M+1) + "/" + dueDate.$y)
-        // console.log(date)
 
-        
+        // do logic handling for dueDate here to map to date since date always lags behind if done on change itself
+        const formattedDate = dueDate.format("DD/MM/YYYY");
         try {
-
             if(name===""){
                 console.log("No assignee")
             } else if(status==null){
@@ -160,26 +156,27 @@ function AssignWorkflow(){
                 console.log("No workflow")
                 
             } else{
-            const res = await axios.post(
-                "http://localhost:8080/vendorWorkflow/insertVendorWorkflow",
-                {forms,
-                vendorWorkflowName,
-                status,
-                email,
-                company,
-                date,
-                name},
-                
-                {headers: {
-                    "Content-Type": "application/json"
-                },
-                }
+                const res = await axios.post(
+                    "http://localhost:8080/vendorWorkflow/insertVendorWorkflow",
+                    {forms,
+                    vendorWorkflowName,
+                    status,
+                    email,
+                    company,
+                    date: formattedDate,
+                    name},
+                    
+                    {headers: {
+                        "Content-Type": "application/json"
+                    },
+                    }
 
-                
-            );
+                    
+                );
+
                 navigate("../ViewAllWorkflow");
             
-            console.log(res, "res");
+                console.log(res, "res");
             }
                 } catch (error) {
                     console.log( error);
@@ -298,8 +295,6 @@ function AssignWorkflow(){
                                             disablePast
                                             onChange={(newValue) => {
                                             setDueDate(newValue);
-                                            setDate(dueDate.$D + "/" + (dueDate.$M+1) + "/" + dueDate.$y);
-                                            // setDate(dueDate.$d);
                                             }}
                                             renderInput={(params) => <TextField {...params} />}
                                         />
