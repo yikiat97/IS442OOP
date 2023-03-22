@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,6 +35,30 @@ public class UserController {
 
     @Autowired
     CompanyRepository CompanyRepository;
+
+    @GetMapping("/getUser")
+    public ResponseEntity getUserByEmail(@RequestParam String email){
+        User user = UserRepository.findUserByEmail(email);
+        if(user!=null){
+            List<String> userInfoList = new ArrayList<>();
+            userInfoList.add(user.getName());
+            userInfoList.add(user.getContactNumber());
+            userInfoList.add(user.getRole());
+            userInfoList.add(user.getCompany());
+            return ResponseEntity.ok(userInfoList);
+        }else {
+            return new ResponseEntity<>("User does not exist", HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @PutMapping("/editUser")
+    public ResponseEntity editUser(@RequestBody User editUser){
+        User user = UserRepository.findUserByEmail(editUser.getEmail());
+        user.setName(editUser.getName());
+        user.setContactNumber(editUser.getContactNumber());
+        UserRepository.save(user);
+        return ResponseEntity.ok(user);
+    }
 
     @PostMapping(value = "/authenticate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> authenticateUser(@RequestBody User userDetails) {
@@ -62,14 +87,14 @@ public class UserController {
             Company newCompany = CompanyRepository.save(company);
 
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
-            try{
-                EmailService.sendEmail(admin.getEmail(),emailBody,"Account created for Quantum VMS","");
+//            try{
+//                EmailService.sendEmail(admin.getEmail(),emailBody,"Account created for Quantum VMS","");
                 return ResponseEntity.ok(admin);
-            }catch (MailException e){
-                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
-            }catch(MessagingException e) {
-                return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
-            }
+//            }catch (MailException e){
+//                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
+//            }catch(MessagingException e) {
+//                return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
+//            }
         }
         else{
             return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);

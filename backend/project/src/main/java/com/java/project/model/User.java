@@ -1,6 +1,7 @@
 package com.java.project.model;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Collections;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 public class User{
         private String password;
         private String name;
+        @Id
         private String email;
         private String contactNumber;
         private String role;

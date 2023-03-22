@@ -32,35 +32,25 @@ import {
     Link,
     Select,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 function CreateNewContact(){
-    const company = useParams();
-    
+    const email = useParams().userEmail;
 
     const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
     const [role, setRole] = useState("");
-    const [number, setNumber] = useState("");
+    const [contactNumber, setContactNumber] = useState("");
+    const [company, setCompany] = useState("");
     const [message, setMessage] = useState("");
     const passwordtest = "";
-    const [error, setError] = useState(false);
 
-    const handleEmailChange = (event) => {
-        const value = event.target.value;
-        // validate email input using regex
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (value !== '' && !regex.test(value)) {
-            setError(true);
-          } else {
-            setError(false);
-          }
-          setEmail(value);
-        setMessage("");
-        console.log(company);
-    };
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        getUser();
+      }, []);
 
     const handleNameChange = (event) => {
         setName(event.target.value);
@@ -68,26 +58,37 @@ function CreateNewContact(){
     };
 
     const handleNumberChange = (event) => {
-        setNumber(event.target.value);
+        setContactNumber(event.target.value);
         setMessage("");
     };
 
-    const handleRoleChange = (event) => {
-        setRole(event.target.value);
-        setMessage("");
-    };
+    const getUser = () => {
 
-    const createUser = async (e) => {
+    axios.get("http://localhost:8080/login/getUser?email=" + email)
+      .then((response) => {
+        setName(response.data[0]);
+        if(response.data[1] != null){
+            setContactNumber(response.data[1]);
+        }
+        setRole(response.data[2]);
+        setCompany(response.data[3]);
+        
+      })
+      .catch(error => console.error(error));
+      };
+
+    const editUser = async (e) => {
         e.preventDefault();
     
         try {
-          const res = await axios.post(
-            "http://localhost:8080/login/create" + role,
+          const res = await axios.put(
+            "http://localhost:8080/login/editUser",
             {
                 email,
                 name,
                 role,
                 company,
+                contactNumber,
                 passwordtest
             },
             {
@@ -96,9 +97,9 @@ function CreateNewContact(){
               },
             }
           );
-          console.log(res, "res");
+          navigate("/CompanyDetails/" + company)
         } catch (error) {
-          setMessage("Something went wrong");
+          setMessage("Something went wrong. Please try again later");
         }
         
       };
@@ -119,7 +120,7 @@ function CreateNewContact(){
 
             <Paper elevation={1} sx={{height:"100%", pt:1,pl:2,pb:2, my:3}} md={{}}>
                 <Grid sx={{mx:2, mb:4}} columns={{ xs: 12, sm: 12, md: 12 }}>
-                    <h3>{company.company}</h3>
+                    <h3>{company}</h3>
                 </Grid>
     
                                 
@@ -135,18 +136,15 @@ function CreateNewContact(){
 
                             <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
                                 <FormHelperText id="outlined-weight-helper-text">Email</FormHelperText>
-                                <TextField
+                                <TextField disabled
                                     value={email}
-                                    onChange={handleEmailChange}
-                                    error={error}
-                                    helperText={error && email !== '' ? 'Please enter a valid email address' : null}
                                     />
                             </FormControl>
 
                             <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
                                 <FormHelperText id="outlined-weight-helper-text">Contact Number</FormHelperText>
-                                <TextField
-                                    value={number}
+                                <TextField  
+                                    value={contactNumber}
                                     onChange={handleNumberChange}
                                 />
                             </FormControl>
@@ -158,7 +156,7 @@ function CreateNewContact(){
                                     id="demo-simple-select"
                                     value={role}
                                     label="User Role"
-                                    onChange={handleRoleChange}
+                                    disabled
                                     >
                                     <MenuItem value="Admin">Admin</MenuItem>
                                     <MenuItem value="Approver">Approver</MenuItem>
@@ -171,7 +169,7 @@ function CreateNewContact(){
 
                 <Grid sx={{mx:2, mb:4, display:"flex", justifyContent:"flex-end"}} columns={{ xs: 12, sm: 12, md: 12}}>
                     
-                        <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success" onClick={createUser}>
+                        <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success" onClick={editUser}>
                                 Save
                         </Button>
                     
