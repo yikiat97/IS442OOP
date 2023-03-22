@@ -39,7 +39,6 @@ function CreateWorkflow(){
 
     //set steps
     const [nextId, setNextId]=React.useState(1);
-    const [formStored, setFormStored]=React.useState([]);
     const [formName, setFormName]=React.useState('');
     const [stepValue, setSteps] = React.useState([
         {id:0,
@@ -81,6 +80,7 @@ function CreateWorkflow(){
     
     useEffect(() => {
         getForms();
+        getWorkflows();
     }, []);
 
 
@@ -103,7 +103,25 @@ function CreateWorkflow(){
         .catch(error => console.error(error));
     };
     
-    
+    // retrieve workflows
+    const [workflowDatabase, setWorkflowDatabase]=React.useState([]);
+    const getWorkflows = () => {
+        
+
+        axios.get("http://localhost:8080/workflow/allWorkflow")
+        .then((response) => {
+            const ini=[]
+            const data=response.data
+            
+            for(let i=0; i<data.length; i++){
+                ini.push(data[i].workflowName)
+            }
+            // console.log(ini)f
+            setWorkflowDatabase(ini)
+
+        })
+        .catch(error => console.error(error));
+    };
     // const filter = createFilterOptions();
 
     // const addFormToWorkflow = ()=>{
@@ -114,15 +132,33 @@ function CreateWorkflow(){
         console.log(stepValue);
         console.log(workflowName);
         const formNames = stepValue.map((form) => form.formName);
-        setFormStored(formNames);
-        console.log(formStored);
+
+        
+        
+        // validate if there are duplicate chosen forms
+        const uniqueForms = new Set(formNames);
+        if (uniqueForms.size !== formNames.length) {
+            alert('There are repeated forms!');
+            return;
+        }
+        
+        // validate if there is a workflow with the same name
+        console.log(workflowDatabase);
+        if(workflowDatabase.includes(workflowName)){
+            alert('There is already a workflow with the same name!');
+            return;
+        }
+
         const workflow = {
             forms: formNames,
             workflowName: workflowName,
         };
         console.log(workflow);
+        
         axios.post("http://localhost:8080/workflow/insertWorkflow", workflow).then((response) => {
             console.log(response.status, response.data.token);
+            alert("Workflow has been created!");
+            window.location.reload();
         });
     };
     
