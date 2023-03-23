@@ -9,6 +9,7 @@ import {
     TableContainer,
     Chip,
     TextField,
+    Link
         
 } from "@mui/material";
 import axios from "axios";
@@ -162,8 +163,11 @@ function WorkflowTable({props}){
     },
 
     {   
-        render: () => (
-                            <ArrowForwardIosIcon />  
+        render: (_,{id}) => (
+                        <Link href={'FormWorkflow/' + id} underline='none'>
+                            <ArrowForwardIosIcon  /> 
+                            
+                            </Link> 
             ),
     }
     ];

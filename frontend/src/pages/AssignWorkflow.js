@@ -38,10 +38,7 @@ function AssignWorkflow(){
 
     const[status, setStatus]= useState(null);
     const statuses = [
-        "Draft",
         "Workflow Created",
-        "Awaiting Approver",
-        "Awaiting Admin",
         "Deleted",
         "Approved",
         "Rejected"
@@ -74,7 +71,7 @@ function AssignWorkflow(){
                 iniWorkflow[workflowData[i].workflowName]= [workflowData[i].forms]
             }
             setWorkflows(iniWorkflow)
-            // console.log(ini)
+            // console.log(iniWorkflow)
             
         })
         .catch(error => console.error(error.response));

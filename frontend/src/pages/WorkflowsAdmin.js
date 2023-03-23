@@ -241,11 +241,12 @@ function WorkflowsAdmin(){
         },
         {
             
-            render: () => (
-                
-                    <ArrowForwardIosIcon />
-                
-                ),
+            render: (_,{id}) => (
+                <Link href={'FormWorkflow/' + id} underline='none'>
+                    <ArrowForwardIosIcon  /> 
+                    
+                    </Link> 
+    ),
         }
         ];
 
