@@ -24,12 +24,11 @@ import CreateNewContact from "./pages/CreateNewContact";
 import Vendor from "./pages/Vendor";
 import Admin from "./pages/Admin";
 import Approver from "./pages/Approver";
-import CompanyDetails from "./pages/CompanyDetails"
-import ForgetPassword from "./pages/ForgetPassword"
-import EditUser from "./pages/EditUser"
-import VendorViewForm from "./pages/VendorViewForm"
+import CompanyDetails from "./pages/CompanyDetails";
+import ForgetPassword from "./pages/ForgetPassword";
+import EditUser from "./pages/EditUser";
+import VendorViewForm from "./pages/VendorViewForm";
 import ChangePassword from "./pages/ChangePassword";
-
 
 function App() {
   const VENDOR_ROLE = "Vendor";
@@ -39,11 +38,98 @@ function App() {
   const ProtectedRoute = ({ rolesAllowed = [], children }) => {
     const role = sessionStorage.getItem("role");
     const user = sessionStorage.getItem("user");
-    if (user !== null && !rolesAllowed.includes(role)){
+    if (
+      rolesAllowed.length > 0 ||
+      (user && !rolesAllowed.includes(role)) // test this later, admin allowed all pages
+    ) {
       return <Navigate to="/NotAuthorized" replace />;
     }
 
     return children;
+  };
+
+  const routes = {
+    "/VendorViewForm": {
+      element: <VendorViewForm />,
+      rolesAllowed: [VENDOR_ROLE],
+    },
+    "/Form": { element: <Form />, rolesAllowed: [VENDOR_ROLE] },
+    "/CreateWorkflow": {
+      element: <CreateWorkflow />,
+      rolesAllowed: [ADMIN_ROLE],
+    },
+    "/WorkflowsAdmin": {
+      element: <WorkflowsAdmin />,
+      rolesAllowed: [ADMIN_ROLE],
+    },
+    "/UserManagement": {
+      element: <UserManagement />,
+      rolesAllowed: [ADMIN_ROLE],
+    },
+    "/CreateCompany": {
+      element: <CreateCompany />,
+      rolesAllowed: [ADMIN_ROLE],
+    },
+    "/CreateNewContact": {
+      element: <CreateNewContact />,
+      rolesAllowed: [ADMIN_ROLE],
+    },
+    "/Vendor": { element: <Vendor />, rolesAllowed: [ADMIN_ROLE] },
+    "/Admin": { element: <Admin />, rolesAllowed: [ADMIN_ROLE] },
+    "/Approver": { element: <Approver />, rolesAllowed: [APPROVER_ROLE] },
+    "/CompanyDetails/:company": {
+      element: <CompanyDetails />,
+      rolesAllowed: [ADMIN_ROLE, VENDOR_ROLE],
+    },
+    "/EditUser/:userEmail": {
+      element: <EditUser />,
+      rolesAllowed: [ADMIN_ROLE],
+    },
+    "/FormHomePage": { element: <FormHomePage />, rolesAllowed: [ADMIN_ROLE] },
+    "/FormCreation": { element: <FormCreation />, rolesAllowed: [ADMIN_ROLE] },
+    "/ViewForms": { element: <ViewForms />, rolesAllowed: [ADMIN_ROLE] },
+    "/CompletedWorkflow": {
+      element: <CompletedWorkflow />,
+      rolesAllowed: [ADMIN_ROLE, VENDOR_ROLE],
+    },
+    "/RejectedWorkflow": {
+      element: <RejectedWorkflow />,
+      rolesAllowed: [ADMIN_ROLE, VENDOR_ROLE],
+    },
+    "/UncompletedWorkflow": {
+      element: <UncompletedWorkflow />,
+      rolesAllowed: [ADMIN_ROLE, VENDOR_ROLE],
+    },
+    "/AssignWorkflow": {
+      element: <AssignWorkflow />,
+      rolesAllowed: [ADMIN_ROLE],
+    },
+    "/ViewWorkflowsTemplate": {
+      element: <ViewWorkflowsTemplate />,
+      rolesAllowed: [ADMIN_ROLE],
+    },
+    "/ViewAllWorkflow": {
+      element: <ViewAllWorkflow />,
+      rolesAllowed: [ADMIN_ROLE],
+    },
+    "/Login": { element: <Login />, rolesAllowed: [] },
+    "/NotAuthorized": { element: <NotAuthorized />, rolesAllowed: [] },
+    "/ForgetPassword": { element: <ForgetPassword />, rolesAllowed: [] },
+    "/": { element: <Home />, rolesAllowed: [] },
+  };
+
+  const renderRoutes = () => {
+    const paths = Object.keys(routes);
+    return paths.map((p) => (
+      <Route
+        path={p}
+        element={
+          <ProtectedRoute rolesAllowed={routes[p].rolesAllowed}>
+            {routes[p].element}
+          </ProtectedRoute>
+        }
+      />
+    ));
   };
 
   return (
@@ -52,58 +138,7 @@ function App() {
         {/* {user && <Navbar />}  */}
         <Navbar />
       </header>
-      <Routes>
-      
-        <Route path="/VendorViewForm" element={<VendorViewForm />} />
-        <Route path="/Form" element={<Form />} />
-        <Route path="/CreateWorkflow" element={<CreateWorkflow />} />
-        <Route
-          path="/WorkflowsAdmin"
-          element={
-            <ProtectedRoute rolesAllowed={["Admin"]}>
-              <WorkflowsAdmin />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/UserManagement"
-          element={
-            <ProtectedRoute rolesAllowed={["Admin"]}>
-              <UserManagement />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/CreateCompany" element={<CreateCompany />} />
-        <Route path="/CreateNewContact/:company" element={<CreateNewContact />} />
-        <Route path="/Vendor" element={<Vendor />} />
-        <Route path="/Admin" element={<Admin />} />
-        <Route path="/Approver" element={<Approver />} />
-        <Route path="/CompanyDetails/:company" element={<CompanyDetails />} />
-        <Route path="/EditUser/:userEmail" element={<EditUser />} />
-        <Route path="/Login" element={<Login />} />
-        <Route path="/ForgetPassword" element={<ForgetPassword />} />
-        <Route path="/ChangePassword" element={<ChangePassword/>} />
-        <Route path="/FormHomePage" element={<FormHomePage />} />
-        <Route path="/FormCreation" element={<FormCreation />} /> 
-        <Route path="/ViewForms" element={<ViewForms />} /> 
-        <Route exact path="/CreateWorkflow" element={<CreateWorkflow/>}/>
-        <Route path="/WorkflowsAdmin" element={<WorkflowsAdmin />} />
-        <Route path="/CompletedWorkflow" element={<CompletedWorkflow />} />
-        <Route path="/RejectedWorkflow" element={<RejectedWorkflow />} />
-        <Route
-          path="/UncompletedWorkflow"
-          element={
-            <ProtectedRoute rolesAllowed={["Vendor"]}>
-              <UncompletedWorkflow />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/AssignWorkflow" element={<AssignWorkflow />} />
-        <Route path="/ViewWorkflowsTemplate" element={<ViewWorkflowsTemplate />} />
-        <Route path="/ViewAllWorkflow" element={<ViewAllWorkflow />} />
-        <Route path="/NotAuthorized" element={<NotAuthorized />} />
-        <Route path="/" element={<Home />} />
-      </Routes>
+      <Routes>{renderRoutes()}</Routes>
     </div>
   );
 }
