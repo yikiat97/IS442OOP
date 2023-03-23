@@ -30,7 +30,6 @@ public class User{
             this.contactNumber = contactNumber;
             this.role = role;
             this.company = company;
-            this.userName = role + "_" + email;
         }
 
         public String getPassword() {
@@ -82,7 +81,9 @@ public class User{
             return userName;
         }
 
-        public void setUserName(String userName) { this.userName = userName; }
+        public void setUserName(String email, String role) {
+            this.userName = role + "_" + email;
+        }
 
         public String generateCommonLangPassword() {
             String upperCaseLetters = RandomStringUtils.random(2, 65, 90, true, true);

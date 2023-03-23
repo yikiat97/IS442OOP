@@ -1,19 +1,21 @@
 package com.java.project.model;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
 @Document("Company")
 public class Company {
+    @Id
     private String name;
     private String country;
-    private List<String> userEmail;
+    private List<String> userUserName;
 
-    public Company(String name, String country, List<String> userEmail) {
+    public Company(String name, String country, List<String> userUserName) {
         this.name = name;
         this.country = country;
-        this.userEmail = userEmail;
+        this.userUserName = userUserName;
     }
     public String getName() {
         return name;
@@ -32,20 +34,20 @@ public class Company {
     }
 
     public List<String> getUserEmail() {
-        return userEmail;
+        return userUserName;
     }
 
-    public void setUserEmail(List<String> userEmail) {
-        this.userEmail = userEmail;
+    public void setUserEmail(List<String> userUserName) {
+        this.userUserName = userUserName;
     }
 
     public List<String> addUser(String email) {
-        if(this.userEmail == null || this.userEmail.isEmpty()){
-            this.userEmail = List.of(email);
+        if(this.userUserName == null || this.userUserName.isEmpty()){
+            this.userUserName = List.of(email);
         }else{
-            this.userEmail.add(email);
+            this.userUserName.add(email);
         }
-        return userEmail;
+        return userUserName;
     }
 
 }

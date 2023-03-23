@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
@@ -30,34 +32,57 @@ public class CompanyController {
         return ResponseEntity.ok(companyList);
     }
 
-    @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity addCompany(@RequestBody Company newCompany){
-        if(CompanyRepository.findCompanyByName(newCompany.getName()) == null){
-            Company company = CompanyRepository.save(newCompany);
-            return ResponseEntity.ok(company);
+    @GetMapping("/checkCompanyExists")
+    public ResponseEntity<?> checkIfCompanyExistsBeforeCreation (@RequestParam String name){
+        Optional<Company> company = CompanyRepository.findById(name);
+        if(company == null){
+            return ResponseEntity.ok("Company does not exist");
         }else{
             return new ResponseEntity<>("Company already exists", HttpStatus.CONFLICT);
         }
     }
 
-    @GetMapping(value = "/country")
-    public ResponseEntity getCompanyCountry(@RequestParam String name){
-        Company company = CompanyRepository.findCompanyByName(name);
-        if(company != null){
-            return ResponseEntity.ok(company.getCountry());
+    @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addCompany(@RequestBody Company newCompany){
+
+        if(newCompany.getName() != null || newCompany.getName() != ""){
+            Optional<Company> company = CompanyRepository.findById(newCompany.getName());
+            if(!company.isPresent()){
+                Company savedCompany = CompanyRepository.save(newCompany);
+                return ResponseEntity.ok(savedCompany);
+            }else{
+                return new ResponseEntity<>("Company already exists", HttpStatus.CONFLICT);
+            }
         }else{
-            return new ResponseEntity<>("Company does not exist", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Company name cannot be empty", HttpStatus.UNAUTHORIZED);
         }
 
     }
 
+    @GetMapping(value = "/country")
+    public ResponseEntity<?> getCompanyCountry(@RequestParam String name){
+        Optional<Company> company = CompanyRepository.findById(name);
+        try{
+            Company databaseCompany = company.get();
+            return ResponseEntity.ok(databaseCompany.getCountry());
+        }catch(NoSuchElementException e){
+            return new ResponseEntity<>("Company does not exist", HttpStatus.UNAUTHORIZED);
+        }
+    }
+
     @GetMapping(value = "/getUsers")
     public ResponseEntity getCompanyUsers(@RequestParam String name){
-        List<String> userEmails = CompanyRepository.findCompanyByName(name).getUserEmail();
-        List<User> users = new ArrayList<>();
-        for (String email : userEmails){
-            users.add(UserRepository.findUserByUsername(email));
+        Optional<Company> company = CompanyRepository.findById(name);
+        try{
+            Company databaseCompany = company.get();
+            List<User> users = new ArrayList<>();
+            for (String email : databaseCompany.getUserEmail()){
+                users.add(UserRepository.findUserByUsername(email));
+            }
+            return ResponseEntity.ok(users);
+        }catch(NoSuchElementException e){
+            return new ResponseEntity<>("Company does not exist", HttpStatus.UNAUTHORIZED);
         }
-        return ResponseEntity.ok(users);
+
     }
 }

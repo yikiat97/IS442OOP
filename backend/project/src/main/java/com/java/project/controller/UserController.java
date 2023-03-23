@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -36,6 +37,20 @@ public class UserController {
     @Autowired
     CompanyRepository CompanyRepository;
 
+    @GetMapping("/getEmails")
+    public ResponseEntity getEmails(){
+        List<User> userList = UserRepository.findAll();
+        List<String> emailList = new ArrayList<>();
+        for (User user: userList
+             ) {
+            emailList.add(user.getEmail());
+        }
+        if(userList != null){
+            return ResponseEntity.ok(emailList);
+        }else{
+            return new ResponseEntity<>("Something went wrong", HttpStatus.UNAUTHORIZED);
+        }
+    }
     @GetMapping("/getUser")
     public ResponseEntity getUserByEmail(@RequestParam String email){
         User user = UserRepository.findUserByEmail(email);
@@ -74,17 +89,19 @@ public class UserController {
     }
 
     @PostMapping(value = "/createAdmin", consumes = "application/json", produces = "application/json")
-    public ResponseEntity createAdmin(@RequestBody Admin newAdmin) {
+    public ResponseEntity<?> createAdmin(@RequestBody Admin newAdmin) {
         if(!userService.checkEmailExists(newAdmin.getEmail())){
             String rawPassword = newAdmin.generateCommonLangPassword();
             String encodedPassword = userService.encryptPassword(rawPassword);
             newAdmin.setPassword(encodedPassword);
+            newAdmin.setUserName(newAdmin.getEmail(), newAdmin.getRole());
             Admin admin = UserRepository.save(newAdmin);
 
-            Company company = CompanyRepository.findCompanyByName(newAdmin.getCompany());
-            company.addUser(newAdmin.getUserName());
-            CompanyRepository.deleteByName(newAdmin.getCompany());
-            Company newCompany = CompanyRepository.save(company);
+            Optional<Company> company = CompanyRepository.findById(newAdmin.getCompany());
+            company.ifPresent(theCompany -> {
+                        theCompany.addUser(newAdmin.getUserName());
+                        Company newCompany = CompanyRepository.save(theCompany);
+                    });
 
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
 //            try{
@@ -103,27 +120,29 @@ public class UserController {
     }
 
     @PostMapping(value = "/createApprover", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createApprover(@RequestBody Approver newApprover) {
+    public ResponseEntity<?> createApprover(@RequestBody Approver newApprover) {
         if(!userService.checkEmailExists(newApprover.getEmail())) {
             String rawPassword = newApprover.generateCommonLangPassword();
             String encodedPassword = userService.encryptPassword(rawPassword);
             newApprover.setPassword(encodedPassword);
+            newApprover.setUserName(newApprover.getEmail(), newApprover.getRole());
             Approver approver = UserRepository.save(newApprover);
 
-            Company company = CompanyRepository.findCompanyByName(newApprover.getCompany());
-            company.addUser(newApprover.getUserName());
-            CompanyRepository.deleteByName(newApprover.getCompany());
-            Company newCompany = CompanyRepository.save(company);
+            Optional<Company> company = CompanyRepository.findById(newApprover.getCompany());
+            company.ifPresent(theCompany -> {
+                theCompany.addUser(newApprover.getUserName());
+                Company newCompany = CompanyRepository.save(theCompany);
+            });
 
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
-            try{
-                EmailService.sendEmail(approver.getEmail(),emailBody,"Account created for Quantum VMS","");
+//            try{
+//                EmailService.sendEmail(approver.getEmail(),emailBody,"Account created for Quantum VMS","");
                 return ResponseEntity.ok(approver);
-            }catch (MailException e){
-                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
-            }catch(MessagingException e) {
-                return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
-            }
+//            }catch (MailException e){
+//                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
+//            }catch(MessagingException e) {
+//                return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
+//            }
         }else{
             return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
         }
@@ -135,22 +154,24 @@ public class UserController {
             String rawPassword = newVendor.generateCommonLangPassword();
             String encodedPassword = userService.encryptPassword(rawPassword);
             newVendor.setPassword(encodedPassword);
+            newVendor.setUserName(newVendor.getEmail(), newVendor.getRole());
             Vendor vendor = UserRepository.save(newVendor);
 
-            Company company = CompanyRepository.findCompanyByName(newVendor.getCompany());
-            company.addUser(newVendor.getUserName());
-            CompanyRepository.deleteByName(vendor.getCompany());
-            Company newCompany = CompanyRepository.save(company);
+            Optional<Company> company = CompanyRepository.findById(newVendor.getCompany());
+            company.ifPresent(theCompany -> {
+                theCompany.addUser(newVendor.getUserName());
+                Company newCompany = CompanyRepository.save(theCompany);
+            });
 
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
-            try{
-                EmailService.sendEmail(vendor.getEmail(),emailBody,"Account created for Quantum VMS","");
+//            try{
+//                EmailService.sendEmail(vendor.getEmail(),emailBody,"Account created for Quantum VMS","");
                 return ResponseEntity.ok(vendor);
-            }catch (MailException e){
-                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
-            }catch(MessagingException e){
-                return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
-            }
+//            }catch (MailException e){
+//                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
+//            }catch(MessagingException e){
+//                return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
+//            }
         }else{
             return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
         }
@@ -168,8 +189,8 @@ public class UserController {
         return ResponseEntity.ok(userCount);
     }
 
-    @PostMapping(value = "/changePassword")
-    public ResponseEntity changePassword(@RequestParam String email){
+    @PostMapping(value = "/forgetPassword")
+    public ResponseEntity forgetPassword(@RequestParam String email){
         User user = UserRepository.findUserByEmail(email);
 
         String rawPassword = user.generateCommonLangPassword();
@@ -187,6 +208,22 @@ public class UserController {
         }catch(MessagingException e){
             return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @PutMapping(value = "/changePassword")
+    public ResponseEntity changePassword(@RequestParam String email, @RequestParam String oldPassword, @RequestParam String newPassword){
+        User user = UserRepository.findUserByEmail(email);
+        if(user!=null){
+            if(userService.passwordCheck(oldPassword, user.getPassword())){
+                String encodedPassword = userService.encryptPassword(newPassword);
+                user.setPassword(encodedPassword);
+                User savedUser = UserRepository.save(user);
+                return ResponseEntity.ok(savedUser);
+            }else{
+                return new ResponseEntity<>("Old password is wrong", HttpStatus.UNAUTHORIZED);
+            }
+        }
+        return new ResponseEntity<>("No such email found", HttpStatus.UNAUTHORIZED);
     }
 
     @DeleteMapping("/deleteUser")
