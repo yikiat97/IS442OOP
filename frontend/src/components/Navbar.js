@@ -3,11 +3,13 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import FeedIcon from "@mui/icons-material/Feed";
 import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
 import { Link } from 'react-router-dom';
-
+import StartIcon from '@mui/icons-material/Start';
 import PersonIcon from "@mui/icons-material/Person";
-import { Sidebar, Menu, MenuItem, SubMenu, useProSidebar, ProSidebarProvider } from "react-pro-sidebar";
+import { Sidebar, Menu, MenuItem, SubMenu, useProSidebar, ProSidebarProvider} from "react-pro-sidebar";
 import {
     Typography,
+    ListItemIcon,
+    Grid
   } from "@mui/material";
 
 
@@ -52,6 +54,7 @@ const Navbar = () => {
                 VMS
             </Typography>
             </Menu>
+
             <Menu style={{textAlign:"left"}}>
 
                 
@@ -74,21 +77,35 @@ const Navbar = () => {
 
             </Menu>
 
-            <Menu sx={{ bottom:'10px'}} onClick={handleAuthItemClick}>
-                <MenuItem icon={<PersonIcon/>}>
+            <Menu sx={{}} onClick={handleAuthItemClick}>
+                {/* <MenuItem icon={<PersonIcon/>}> */}
+                <Grid container sx={{mt:'10px',display:"flex", align:"center"}}>
+                    <Grid item md={3}>
+                    <PersonIcon/>
+                    </Grid>
+
+                    <Grid item md={6}>
+                    <Typography
+                        noWrap='true'
+                        variant="body2"
+                        sx={{fontWeight: 700, textAlign:"left" }}>
+                        {roleText}
+                    </Typography>
+                    </Grid>
+
+                    <Grid item md={3}>
+                    <Typography textAlign={'center'}>
+                            <StartIcon />   
+                    </Typography>
+                    </Grid>
+                </Grid>
                 
-
-                <Typography
-                    variant="body2"
-                    sx={{fontWeight: 700 }}>
-                    {roleText}
-                </Typography>
-
-                {/* <ListItemIcon sx={{ pl: "120px" }} >
-                    <StartIcon />
-                </ListItemIcon> */}
-                </MenuItem>
+                
+                
+                {/* </MenuItem> */}
             </Menu>
+
+
         </Sidebar>
     </ProSidebarProvider>
 
