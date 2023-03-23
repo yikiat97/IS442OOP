@@ -29,7 +29,7 @@ import ForgetPassword from "./pages/ForgetPassword"
 import EditUser from "./pages/EditUser"
 import VendorViewForm from "./pages/VendorViewForm"
 import ChangePassword from "./pages/ChangePassword";
-
+import FormWorkflow from "./pages/FormWorkflow";
 
 function App() {
   const VENDOR_ROLE = "Vendor";
@@ -101,6 +101,7 @@ function App() {
         <Route path="/AssignWorkflow" element={<AssignWorkflow />} />
         <Route path="/ViewWorkflowsTemplate" element={<ViewWorkflowsTemplate />} />
         <Route path="/ViewAllWorkflow" element={<ViewAllWorkflow />} />
+        <Route path="/FormWorkflow/:workflowID" element={<FormWorkflow />} />
         <Route path="/NotAuthorized" element={<NotAuthorized />} />
         <Route path="/" element={<Home />} />
       </Routes>
