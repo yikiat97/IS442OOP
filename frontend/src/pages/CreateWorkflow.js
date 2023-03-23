@@ -75,6 +75,9 @@ function CreateWorkflow(){
           newSteps.splice(index, 1);
           return newSteps;
         });
+        if(index!=0){
+            handleBack();
+        }
       };
 
     
@@ -87,7 +90,7 @@ function CreateWorkflow(){
     //retrieve form values
     const [forms, setForms] = React.useState([]);
     const getForms = () => {
-        
+        // console.log(activeStep);
 
         axios.get("http://localhost:8080/getForm/All")
         .then((response) => {
@@ -265,7 +268,7 @@ function CreateWorkflow(){
                                         <Grid item>
                                             <Button columns={{ xs: 12, sm: 12, md: 12 }}
                                                 variant="contained" color="error"
-                                                disabled={index === 0}
+                                                disabled={stepValue.length === 1}
                                                 onClick={() => deleteStep(index)}
                                                 sx={{ mt: 1, mr: 1 }}
                                             >
@@ -277,6 +280,7 @@ function CreateWorkflow(){
                                     </Grid>
                                         <Grid item>  
                                             <Button columns={{ xs: 12, sm: 12, md: 12 }} 
+                                                disabled = {activeStep+1 === stepValue.length}
                                                 variant="outlined"
                                                 onClick={handleNext}
                                                 sx={{ mt: 1, mr: 1 }}>
