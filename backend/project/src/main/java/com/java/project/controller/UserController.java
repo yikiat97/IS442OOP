@@ -89,19 +89,13 @@ public class UserController {
     }
 
     @PostMapping(value = "/createAdmin", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> createAdmin(@RequestBody Admin newAdmin) {
+    public ResponseEntity createAdmin(@RequestBody Admin newAdmin) {
         if(!userService.checkEmailExists(newAdmin.getEmail())){
             String rawPassword = newAdmin.generateCommonLangPassword();
             String encodedPassword = userService.encryptPassword(rawPassword);
             newAdmin.setPassword(encodedPassword);
             newAdmin.setUserName(newAdmin.getEmail(), newAdmin.getRole());
             Admin admin = UserRepository.save(newAdmin);
-
-            Optional<Company> company = CompanyRepository.findById(newAdmin.getCompany());
-            company.ifPresent(theCompany -> {
-                        theCompany.addUser(newAdmin.getUserName());
-                        Company newCompany = CompanyRepository.save(theCompany);
-                    });
 
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
 //            try{
@@ -120,19 +114,13 @@ public class UserController {
     }
 
     @PostMapping(value = "/createApprover", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createApprover(@RequestBody Approver newApprover) {
+    public ResponseEntity createApprover(@RequestBody Approver newApprover) {
         if(!userService.checkEmailExists(newApprover.getEmail())) {
             String rawPassword = newApprover.generateCommonLangPassword();
             String encodedPassword = userService.encryptPassword(rawPassword);
             newApprover.setPassword(encodedPassword);
             newApprover.setUserName(newApprover.getEmail(), newApprover.getRole());
             Approver approver = UserRepository.save(newApprover);
-
-            Optional<Company> company = CompanyRepository.findById(newApprover.getCompany());
-            company.ifPresent(theCompany -> {
-                theCompany.addUser(newApprover.getUserName());
-                Company newCompany = CompanyRepository.save(theCompany);
-            });
 
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
 //            try{
@@ -156,12 +144,6 @@ public class UserController {
             newVendor.setPassword(encodedPassword);
             newVendor.setUserName(newVendor.getEmail(), newVendor.getRole());
             Vendor vendor = UserRepository.save(newVendor);
-
-            Optional<Company> company = CompanyRepository.findById(newVendor.getCompany());
-            company.ifPresent(theCompany -> {
-                theCompany.addUser(newVendor.getUserName());
-                Company newCompany = CompanyRepository.save(theCompany);
-            });
 
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
 //            try{

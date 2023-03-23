@@ -32,21 +32,11 @@ public class CompanyController {
         return ResponseEntity.ok(companyList);
     }
 
-    @GetMapping("/checkCompanyExists")
-    public ResponseEntity<?> checkIfCompanyExistsBeforeCreation (@RequestParam String name){
-        Optional<Company> company = CompanyRepository.findById(name);
-        if(company == null){
-            return ResponseEntity.ok("Company does not exist");
-        }else{
-            return new ResponseEntity<>("Company already exists", HttpStatus.CONFLICT);
-        }
-    }
-
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addCompany(@RequestBody Company newCompany){
 
-        if(newCompany.getName() != null || newCompany.getName() != ""){
-            Optional<Company> company = CompanyRepository.findById(newCompany.getName());
+        if(newCompany.getRegistrationNum() != null || newCompany.getRegistrationNum() != ""){
+            Optional<Company> company = CompanyRepository.findById(newCompany.getRegistrationNum());
             if(!company.isPresent()){
                 Company savedCompany = CompanyRepository.save(newCompany);
                 return ResponseEntity.ok(savedCompany);
@@ -60,8 +50,8 @@ public class CompanyController {
     }
 
     @GetMapping(value = "/country")
-    public ResponseEntity<?> getCompanyCountry(@RequestParam String name){
-        Optional<Company> company = CompanyRepository.findById(name);
+    public ResponseEntity<?> getCompanyCountry(@RequestParam String registrationNumber){
+        Optional<Company> company = CompanyRepository.findById(registrationNumber);
         try{
             Company databaseCompany = company.get();
             return ResponseEntity.ok(databaseCompany.getCountry());
@@ -70,19 +60,19 @@ public class CompanyController {
         }
     }
 
-    @GetMapping(value = "/getUsers")
-    public ResponseEntity getCompanyUsers(@RequestParam String name){
-        Optional<Company> company = CompanyRepository.findById(name);
-        try{
-            Company databaseCompany = company.get();
-            List<User> users = new ArrayList<>();
-            for (String email : databaseCompany.getUserEmail()){
-                users.add(UserRepository.findUserByUsername(email));
-            }
-            return ResponseEntity.ok(users);
-        }catch(NoSuchElementException e){
-            return new ResponseEntity<>("Company does not exist", HttpStatus.UNAUTHORIZED);
-        }
-
-    }
+//    @GetMapping(value = "/getUsers")
+//    public ResponseEntity getCompanyUsers(@RequestParam String name){
+//        Optional<Company> company = CompanyRepository.findById(name);
+//        try{
+//            Company databaseCompany = company.get();
+//            List<User> users = new ArrayList<>();
+//            for (String email : databaseCompany.getUserEmail()){
+//                users.add(UserRepository.findUserByUsername(email));
+//            }
+//            return ResponseEntity.ok(users);
+//        }catch(NoSuchElementException e){
+//            return new ResponseEntity<>("Company does not exist", HttpStatus.UNAUTHORIZED);
+//        }
+//
+//    }
 }

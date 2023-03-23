@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 
 @Document("User")
 public class User{
-        private String password;
-        private String name;
         @Id
         private String email;
+        private String password;
+        private String name;
         private String contactNumber;
         private String role;
         private String company;

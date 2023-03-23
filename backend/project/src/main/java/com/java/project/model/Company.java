@@ -7,15 +7,20 @@ import java.util.List;
 
 @Document("Company")
 public class Company {
+
     @Id
+    private String registrationNum;
     private String name;
     private String country;
-    private List<String> userUserName;
+    private String businessNature;
+    private String gstRegistrationNumber;
 
-    public Company(String name, String country, List<String> userUserName) {
+    public Company(String registrationNum, String name, String country, String businessNature, String gstRegistrationNumber) {
+        this.registrationNum = registrationNum;
         this.name = name;
         this.country = country;
-        this.userUserName = userUserName;
+        this.businessNature = businessNature;
+        this.gstRegistrationNumber = gstRegistrationNumber;
     }
     public String getName() {
         return name;
@@ -33,21 +38,28 @@ public class Company {
         this.country = country;
     }
 
-    public List<String> getUserEmail() {
-        return userUserName;
+    public String getRegistrationNum() {
+        return registrationNum;
     }
 
-    public void setUserEmail(List<String> userUserName) {
-        this.userUserName = userUserName;
+    public void setRegistrationNum(String registrationNum) {
+        this.registrationNum = registrationNum;
     }
 
-    public List<String> addUser(String email) {
-        if(this.userUserName == null || this.userUserName.isEmpty()){
-            this.userUserName = List.of(email);
-        }else{
-            this.userUserName.add(email);
-        }
-        return userUserName;
+    public String getBusinessNature() {
+        return businessNature;
+    }
+
+    public void setBusinessNature(String businessNature) {
+        this.businessNature = businessNature;
+    }
+
+    public String getGstRegistrationNumber() {
+        return gstRegistrationNumber;
+    }
+
+    public void setGstRegistrationNumber(String gstRegistrationNumber) {
+        this.gstRegistrationNumber = gstRegistrationNumber;
     }
 
 }
