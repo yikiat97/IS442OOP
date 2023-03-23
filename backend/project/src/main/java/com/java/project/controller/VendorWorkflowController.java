@@ -1,7 +1,9 @@
 package com.java.project.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
-import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,11 +12,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.java.project.model.VendorWorkflow;
@@ -91,41 +92,47 @@ public class VendorWorkflowController {
         }
     }
 
+    // When status is set to approved, the date is changed to current date
     // JSON format
     // {
     // "id" : "6412eaf10bf80f2c012bd872",
-    // "forms": ["Vendor Assessment", "Pre-Evaluation Form", "Health Performance"],
-    // "workflowName": "Vendor Onboarding",
     // "status": "Approved"
     // }
-    // id is the only mandatory field to input
-    // Status can be left "" if not updating status
-    // forms can be left null if not updating forms
-    // workflowName can be left "" if not updating workflowName
-    @PutMapping("/updateVendorWorkflow")
-    public ResponseEntity<?> updateVendorWorkflow(
+    // id is a mandatory field to input
+    // Status is also a mandatory field to input
+    @PutMapping("/updateVendorWorkflowStatus")
+    public ResponseEntity<?> updateVendorWorkflowStatus(
             @RequestBody(required = false) VendorWorkflowUpdateMappingDTO VendorWorkflowUpdateMappingDTO) {
 
         // map the json object so that id, forms and workflowname can be manipulated
         String id = VendorWorkflowUpdateMappingDTO.getId();
-        List<String> forms = VendorWorkflowUpdateMappingDTO.getForms();
-        String vendorWorkflowName = VendorWorkflowUpdateMappingDTO.getVendorWorkflowName();
+        // List<String> forms = VendorWorkflowUpdateMappingDTO.getForms();
+        // String vendorWorkflowName = VendorWorkflowUpdateMappingDTO.getVendorWorkflowName();
         String status = VendorWorkflowUpdateMappingDTO.getStatus();
-        String date = VendorWorkflowUpdateMappingDTO.getDate();
 
         Optional<VendorWorkflow> VendorWorkflow = VendorWorkflowRepository.findById(id);
-
         if (VendorWorkflow.isPresent()) {
-            List<String> newForms = (forms == null) ? VendorWorkflow.get().getForms() : forms;
+
             String newStatus = (status == "") ? VendorWorkflow.get().getStatus() : status;
-            String newVendorWorkflowName = (vendorWorkflowName == "") ? VendorWorkflow.get().getWorkflowName()
-                    : vendorWorkflowName;
-            String newDate = (date == "") ? VendorWorkflow.get().getDate()
-                    : date;
-            VendorWorkflow _VendorWorkflow = VendorWorkflowRepository
-                    .save(new VendorWorkflow(VendorWorkflow.get().getId(), newForms, newVendorWorkflowName, newStatus,
-                            VendorWorkflow.get().getEmail(), VendorWorkflow.get().getCompany(), newDate, VendorWorkflow.get().getName()));
-            return new ResponseEntity<>(_VendorWorkflow, HttpStatus.OK);
+            LocalDate currentDate = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            String formattedDate = currentDate.format(formatter);
+            // System.out.println(newStatus);
+            // System.out.println(VendorWorkflow.get().getStatus());
+            // if status changes to approve, then change the date to current date
+            if (status.equals("Approved") && !VendorWorkflow.get().getStatus().equals("Approved")){
+                VendorWorkflow _VendorWorkflow = VendorWorkflowRepository
+                .save(new VendorWorkflow(VendorWorkflow.get().getId(), VendorWorkflow.get().getForms(), VendorWorkflow.get().getWorkflowName(), newStatus,
+                        VendorWorkflow.get().getEmail(), VendorWorkflow.get().getCompany(), formattedDate, VendorWorkflow.get().getName()));
+                return new ResponseEntity<>(_VendorWorkflow, HttpStatus.OK);
+            }
+            else{
+                VendorWorkflow _VendorWorkflow = VendorWorkflowRepository
+                .save(new VendorWorkflow(VendorWorkflow.get().getId(), VendorWorkflow.get().getForms(), VendorWorkflow.get().getWorkflowName(), newStatus,
+                        VendorWorkflow.get().getEmail(), VendorWorkflow.get().getCompany(), VendorWorkflow.get().getDate(), VendorWorkflow.get().getName()));
+                return new ResponseEntity<>(_VendorWorkflow, HttpStatus.OK);
+            }
+            
         } else {
             return new ResponseEntity<>("Workflow Not Found", HttpStatus.NOT_FOUND);
         }
@@ -147,4 +154,9 @@ public class VendorWorkflowController {
             return new ResponseEntity<>("Workflow Not Found", HttpStatus.NOT_FOUND);
         }
     }
+    // Path to update the status and change the date after the workflow is approved
+    // @PutMapping("/updateVendorWorkflowStatus")
+    // public ResponseEntity<?> deleteVendorWorkflowById(@PathVariable("id") String id) {
+
+    // }
 }
