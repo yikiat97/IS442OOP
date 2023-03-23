@@ -222,6 +222,7 @@ function AssignWorkflow(){
                                         AssignWorkflow(newValue);
                                         setForms(workflows[newValue][0]);
                                         }}
+                                    disableClearable
                                     /> 
                                     {vendorWorkflowName==null? <FormHelperText sx={{color:"#dd3c32"}}>Please select a workflow</FormHelperText> : <></>}
                     </FormControl>
@@ -245,6 +246,7 @@ function AssignWorkflow(){
                                         setAssigneeCompany(assignees[newValue].comp);
                                         setAssigneeEmail(assignees[newValue].userEmail);
                                         }}
+                                    disableClearable
                                     /> 
 
                                     {name==="" ? <FormHelperText sx={{color:"#dd3c32"}}>Please select an Assignee</FormHelperText> : <></>}
