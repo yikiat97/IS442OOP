@@ -16,20 +16,20 @@ public class User{
         private String name;
         private String contactNumber;
         private String role;
-        private String company;
+        private String companyRegistrationNum;
         private String userName;
 
         public User(){
 
         }
 
-        public User(String password, String name, String email, String contactNumber, String role, String company) {
+        public User(String password, String name, String email, String contactNumber, String role, String companyRegistrationNum) {
             this.password = password;
             this.name = name;
             this.email = email;
             this.contactNumber = contactNumber;
             this.role = role;
-            this.company = company;
+            this.companyRegistrationNum = companyRegistrationNum;
         }
 
         public String getPassword() {
@@ -71,11 +71,11 @@ public class User{
             this.role = role;
         }
 
-        public String getCompany() {
-            return company;
+        public String getCompanyRegistrationNum() {
+            return companyRegistrationNum;
         }
 
-        public void setCompany(String company) { this.company = company; }
+        public void setCompany(String companyRegistrationNum) { this.companyRegistrationNum = companyRegistrationNum; }
 
         public String getUserName() {
             return userName;

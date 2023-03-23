@@ -53,16 +53,16 @@ public class ProjectApplication  {
 
     @GetMapping("/createTestUser")
     public String createUser() {
-        UserRepo.save(new Approver(userService.encryptPassword("quantum1"), "Quantum_Approver1", "Quantum_Approver@hotmail.com","123456","Approver", "Quantum"));
-        UserRepo.save(new Admin(userService.encryptPassword("quantum1"), "Quantum_Admin1", "Quantum_Admin1@hotmail.com","123456","Admin", "Quantum"));
-        UserRepo.save(new Admin(userService.encryptPassword("quantum2"), "Quantum_Admin2", "Quantum_Admin2@hotmail.com","123456","Admin", "Quantum"));
-        UserRepo.save(new Vendor(userService.encryptPassword("password"), "yikiat", "yikiat@hotmail.com","123456","Vendor", "Company1"));
-        UserRepo.save(new Vendor(userService.encryptPassword("password"), "elmer", "elmer@hotmail.com","","Vendor", "Company2"));
-        UserRepo.save(new Vendor(userService.encryptPassword("password"), "diyanah", "diyanahjamal@gmail.com","","Vendor", "Company3"));
-        UserRepo.save(new Vendor(userService.encryptPassword("password"), "ch", "ch@gmail.com","","Vendor", "Company4"));
-        UserRepo.save(new Vendor(userService.encryptPassword("password"), "syafinaz", "syafinaz@gmail.com","","Vendor", "Company5"));
-        UserRepo.save(new Vendor(userService.encryptPassword("password"), "hello", "hello@gmail.com","","Vendor", "Company6"));
-        UserRepo.save(new Vendor(userService.encryptPassword("password"), "hl", "hl@gmail.com","","Vendor", "Company7"));
+        UserRepo.save(new Approver(userService.encryptPassword("quantum1"), "Quantum_Approver1", "Quantum_Approver@hotmail.com","123456","Approver", "12345678"));
+        UserRepo.save(new Admin(userService.encryptPassword("quantum1"), "Quantum_Admin1", "Quantum_Admin1@hotmail.com","123456","Admin", "12345678"));
+        UserRepo.save(new Admin(userService.encryptPassword("quantum2"), "Quantum_Admin2", "Quantum_Admin2@hotmail.com","123456","Admin", "12345678"));
+        UserRepo.save(new Vendor(userService.encryptPassword("password"), "yikiat", "yikiat@hotmail.com","123456","Vendor", "22345678"));
+        UserRepo.save(new Vendor(userService.encryptPassword("password"), "elmer", "elmer@hotmail.com","","Vendor", "32345678"));
+        UserRepo.save(new Vendor(userService.encryptPassword("password"), "diyanah", "diyanahjamal@gmail.com","","Vendor", "42345678"));
+        UserRepo.save(new Vendor(userService.encryptPassword("password"), "ch", "ch@gmail.com","","Vendor", "532345678"));
+        UserRepo.save(new Vendor(userService.encryptPassword("password"), "syafinaz", "syafinaz@gmail.com","","Vendor", "62345678"));
+        UserRepo.save(new Vendor(userService.encryptPassword("password"), "hello", "hello@gmail.com","","Vendor", "72345678"));
+        UserRepo.save(new Vendor(userService.encryptPassword("password"), "hl", "hl@gmail.com","","Vendor", "82345678"));
         return "Data creation user completed";
     }
     

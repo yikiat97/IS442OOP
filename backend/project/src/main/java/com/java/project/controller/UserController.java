@@ -59,10 +59,21 @@ public class UserController {
             userInfoList.add(user.getName());
             userInfoList.add(user.getContactNumber());
             userInfoList.add(user.getRole());
-            userInfoList.add(user.getCompany());
+            userInfoList.add(user.getCompanyRegistrationNum());
             return ResponseEntity.ok(userInfoList);
         }else {
             return new ResponseEntity<>("User does not exist", HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @GetMapping("/getUserByCompany")
+    public ResponseEntity getUserByCompany(@RequestParam String registrationNumber){
+        List<User> userList = UserRepository.findUserByCompanyRegistrationNum(registrationNumber);
+
+        if(userList!=null){
+            return ResponseEntity.ok(userList);
+        }else {
+            return new ResponseEntity<>("No user under the company", HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -222,21 +233,21 @@ public class UserController {
     @GetMapping("/getVendors")
     public ResponseEntity getVendors(){
         List<User> Vendors = UserRepository.findByRole("Vendor");
-        Map<String, List<User>> vendorMap = Vendors.stream().collect(Collectors.groupingBy(User::getCompany));
+        Map<String, List<User>> vendorMap = Vendors.stream().collect(Collectors.groupingBy(User::getCompanyRegistrationNum));
         return ResponseEntity.ok(vendorMap);
     }
 
     @GetMapping("/getAdmins")
     public ResponseEntity getAdmins(){
         List<User> Vendors = UserRepository.findByRole("Admin");
-        Map<String, List<User>> vendorMap = Vendors.stream().collect(Collectors.groupingBy(User::getCompany));
+        Map<String, List<User>> vendorMap = Vendors.stream().collect(Collectors.groupingBy(User::getCompanyRegistrationNum));
         return ResponseEntity.ok(vendorMap);
     }
 
     @GetMapping("/getApprovers")
     public ResponseEntity getApprovers(){
         List<User> Vendors = UserRepository.findByRole("Approver");
-        Map<String, List<User>> vendorMap = Vendors.stream().collect(Collectors.groupingBy(User::getCompany));
+        Map<String, List<User>> vendorMap = Vendors.stream().collect(Collectors.groupingBy(User::getCompanyRegistrationNum));
         return ResponseEntity.ok(vendorMap);
     }
 }
