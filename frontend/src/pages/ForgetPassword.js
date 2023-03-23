@@ -77,7 +77,7 @@ function ForgetPassword(props) {
     <div style={loginStyle} className='App'>
       <Container sx={{display:"flex", justifyContent:"center", alignItems:"center", minHeight:"100vh"}}>
         
-        <Paper elevation={3} sx={{pb:6, pt:3, px:6}}>
+        <Paper elevation={3} sx={{pb:6, pt:3}}>
 
           
           <Grid container sx={{py:2, pt:2,pb:3, display:"flex", justifyContent:"center", alignItems:"center"}} spacing={1}>
@@ -96,21 +96,26 @@ function ForgetPassword(props) {
               </Grid>
           </Grid>
           
-          <Typography sx={{pb:2}}>
-          Enter the email address associated with your account and we'll send you a link to reset your password.
-          </Typography>
-          
+          <Grid item>
+            <Typography sx={{pb:2, px:5}}>
+            Enter the email address associated with your account and
+            </Typography>
+            <Typography sx={{pb:2, px:5}}>
+            we'll send you a link to reset your password.
+            </Typography>
+          </Grid>
+
           <Box component="form" noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
-              fullWidth
               id="email"
               label="Email Address"
               name="email"
               autoComplete="email"
               autoFocus
               onChange={handleEmailChange}
+              sx={{width:"80%"}}
             />
             <Grid container sx={{display:"flex"}}>
               <Grid item xs>
@@ -124,9 +129,9 @@ function ForgetPassword(props) {
             </Typography>
             <Button
               type="submit"
-              fullWidth
+              
               variant="contained"
-              sx={{ mt: 3, mb: 2, background:"#2596BE"}}
+              sx={{ mt: 3, mb: 2, background:"#2596BE", width:"80%"}}
               onClick={changePassword}>
               Continue
             </Button>
