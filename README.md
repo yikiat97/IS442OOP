@@ -1,5 +1,8 @@
 # IS442OOP
 
+Batch Script:
+1. Run this code in cmd from base directory: build
+
 Fontend:
 1. npm install -> npm start
 2. npm install @mui/material @emotion/react @emotion/styled
