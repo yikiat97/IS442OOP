@@ -9,7 +9,8 @@ import {
     FormLabel,
     MenuItem,
     Button,
-    Typography
+    Typography,
+    StepButton
 } from "@mui/material";
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
@@ -17,25 +18,53 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import VendorFormPreview from '../components/VendorFormPreview';
 import { useParams } from 'react-router-dom';
+import FormPreview from '../components/FormPreview';
+import { message, Steps, theme } from 'antd';
 
 function FormWorkflow(){
     useEffect(() => {
         getWorkflow();
+        // getForms();
     }, []);
 
     const workflowID = useParams().workflowID;
     const[workflow, setWorkflow]=React.useState([])
     const[steps, setSteps]=React.useState([])
+    const[formIDS,setFormIDS]= React.useState([])
+    const[formNames, setFormNames]=React.useState([])
+    const[forms,setForms]=React.useState([])
 
     const getWorkflow = () => {
+        
         axios.get("http://localhost:8080/vendorWorkflow/vendorWorkflowByID/" + workflowID)
         .then((response) => {
             setWorkflow(response.data);
             // console.log(response.data)
-            setSteps(response.data.forms)
+            setFormIDS(response.data.forms)
+            console.log('set form id')
         })
         .catch(error => console.error(error));
+            console.log('helloid')
+            for(const id of formIDS){
+                console.log(id)
+                axios.get("http://localhost:8080/getForm/" + id)
+                .then((response) => {
+                    console.log(response.data.formName)
+                    if(steps.length<formIDS.length){
+                        setSteps([...steps,response.data])
+                        // setForms([...forms,response.data])
+                    } 
+                    
+                    console.log(steps)
+                })
+                
+                .catch(error => console.error(error));
+            }
     };
+
+    console.log(steps)
+    console.log(forms)
+    
     
     const statuses = [
         "Workflow Created",
@@ -44,51 +73,28 @@ function FormWorkflow(){
         "Rejected"
     ]
 
-    const [activeStep, setActiveStep] = React.useState(0);
-    const [skipped, setSkipped] = React.useState(new Set());
-
-    const isStepOptional = (step) => {
-    return step === 1;
+    const { token } = theme.useToken();
+    const [current, setCurrent] = useState(0);
+    const next = () => {
+        setCurrent(current + 1);
     };
-
-    const isStepSkipped = (step) => {
-    return skipped.has(step);
+    const prev = () => {
+        setCurrent(current - 1);
     };
-
-    const handleNext = () => {
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-        newSkipped = new Set(newSkipped.values());
-        newSkipped.delete(activeStep);
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
+    const stepsContent = steps.map((step) => ({
+        key: step.formID,
+        title: step.formName,
+        content: step
+    }));
+    const contentStyle = {
+        lineHeight: '260px',
+        textAlign: 'center',
+        color: token.colorTextTertiary,
+        backgroundColor: token.colorFillAlter,
+        borderRadius: token.borderRadiusLG,
+        border: `1px dashed ${token.colorBorder}`,
+        marginTop: 16,
     };
-
-    const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-
-    const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-        // You probably want to guard against something like this,
-        // it should never occur unless someone's actively trying to break something.
-        throw new Error("You can't skip a step that isn't optional.");
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-        const newSkipped = new Set(prevSkipped.values());
-        newSkipped.add(activeStep);
-        return newSkipped;
-    });
-    };
-
-    const handleReset = () => {
-    setActiveStep(0);
-    };
-
 
 
     return(
@@ -116,7 +122,6 @@ function FormWorkflow(){
                 </Grid>
 
                 </Grid>
-
 
 
         <Paper elevation={1} sx={{height:"30%", pt:4, pb:2, px:3, mt:4}}>
@@ -153,62 +158,44 @@ function FormWorkflow(){
         </Paper>
 
         <Paper elevation={1} sx={{height:"100%", pt:4, pb:2, px:3, mt:4}}>
-
-            <Stepper activeStep={activeStep}>
-                {steps.map((label, index) => {
-                const stepProps = {};
-                const labelProps = {};
-                
-                if (isStepSkipped(index)) {
-                    stepProps.completed = false;
-                }
-                return (
-                    <Step key={label} {...stepProps}>
-                    <StepLabel {...labelProps}>{label}</StepLabel>
-                    </Step>
-                );
-                })}
-            </Stepper>
-        {activeStep === steps.length ? (
-            <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1 }}>
-                All steps completed - you&apos;re finished
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                <Box sx={{ flex: '1 1 auto' }} />
-                <Button onClick={handleReset}>Reset</Button>
-            </Box>
-            </React.Fragment>
-        ) : (
-            <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                <Button
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-                >
-                Back
-                </Button>
-                <Box sx={{ flex: '1 1 auto' }} />
-                {isStepOptional(activeStep) && (
-                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                    Skip
-                </Button>
-                )}
-
-                <Button onClick={handleNext}>
-                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                </Button>
-            </Box>
-            </React.Fragment>
-        )}
-
+            <>
+        <Steps current={current} items={stepsContent} />
+        <div style={contentStyle}>
+            <FormPreview formData={stepsContent[current].content}/>
+        </div>
+        <div
+            style={{
+            marginTop: 24,
+            }}
+        >
+            {current < steps.length - 1 && (
+            <Button type="primary" onClick={() => next()}>
+                Next
+            </Button>
+            )}
+            {current === steps.length - 1 && (
+            <Button type="primary" onClick={() => message.success('Processing complete!')}>
+                Done
+            </Button>
+            )}
+            {current > 0 && (
+            <Button
+                style={{
+                margin: '0 8px',
+                }}
+                onClick={() => prev()}
+            >
+                Previous
+            </Button>
+            )}
+        </div>
+        </>
+        
         </Paper>
 
     </Grid>
     
+
     );
 }
 

@@ -371,9 +371,9 @@ function WorkflowsAdmin(){
                 </Grid>
             </Grid>
 
-            <TableContainer component={Paper}>
-                <Table columns={columns} dataSource={vendorWorkflows} onChange={onChange} />;
-            </TableContainer>
+            
+            <Table columns={columns} dataSource={vendorWorkflows} onChange={onChange} />;
+            
 
 
                 

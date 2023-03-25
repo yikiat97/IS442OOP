@@ -32,6 +32,7 @@ import {
 
 
 function CreateWorkflow(){
+    
       //submit workflow and set form steps
       const [workflowName, setWorkflowName] = React.useState('New Workflow');
       const [workflow, setWorkflow] = React.useState({});
@@ -39,9 +40,11 @@ function CreateWorkflow(){
 
     //set steps
     const [nextId, setNextId]=React.useState(1);
+    const [formID, setFormID]=React.useState('');
     const [formName, setFormName]=React.useState('');
     const [stepValue, setSteps] = React.useState([
         {id:0,
+        formID: '640b618edb086d54e974b3b4',
         formName: 'Safety Pre-Check Form 1'}]);
 
     // const onAddBtnClick = (event) => {
@@ -94,13 +97,14 @@ function CreateWorkflow(){
 
         axios.get("http://localhost:8080/getForm/All")
         .then((response) => {
-            const ini=[]
+            const ini={}
             const data=response.data
             
             for(let i=0; i<data.length; i++){
-                ini.push(data[i].formName)
+                // ini.push(data[i].formID)
+                ini[data[i].formID]= [data[i].formName]
             }
-            // console.log(ini)f
+            console.log(ini)
             setForms(ini)
         })
         .catch(error => console.error(error));
@@ -125,7 +129,7 @@ function CreateWorkflow(){
         })
         .catch(error => console.error(error));
     };
-    // const filter = createFilterOptions();
+
 
     // const addFormToWorkflow = ()=>{
     //     console.log(formName)
@@ -134,13 +138,15 @@ function CreateWorkflow(){
         // e.preventDefault();
         console.log(stepValue);
         console.log(workflowName);
-        const formNames = stepValue.map((form) => form.formName);
-
+        
+        
+        const formIDS = stepValue.map((form) => form.formID);
+        
         
         
         // validate if there are duplicate chosen forms
-        const uniqueForms = new Set(formNames);
-        if (uniqueForms.size !== formNames.length) {
+        const uniqueForms = new Set(formIDS);
+        if (uniqueForms.size !== formIDS.length) {
             alert('There are repeated forms!');
             return;
         }
@@ -152,8 +158,17 @@ function CreateWorkflow(){
             return;
         }
 
+        const forms = []
+        for(let form of stepValue){
+            let ini = {
+                        formID: form.formID,
+                        formName:form.formName}
+            forms.push(ini)
+        }
+        
+        console.log(forms)
         const workflow = {
-            forms: formNames,
+            forms: forms,
             workflowName: workflowName,
         };
         console.log(workflow);
@@ -168,14 +183,18 @@ function CreateWorkflow(){
 
     const handleFormNameChange = (e) => {
         const newValue = e.target.value;
+        console.log(newValue)
         setSteps((prevSteps) => {
-          const updatedSteps = [...prevSteps];
-          updatedSteps[activeStep].formName = newValue;
-          return updatedSteps;
+            const updatedSteps = [...prevSteps];
+            updatedSteps[activeStep].formName = forms[newValue];
+            updatedSteps[activeStep].formID = newValue;
+            console.log(updatedSteps)
+        return updatedSteps;
         });
-      };
+    };
 
 
+    console.log(stepValue)
     return(
         
         <Grid sx={{mt:6, textAlign:'left', px:4}}>
@@ -207,7 +226,7 @@ function CreateWorkflow(){
 
             <Paper elevation={1} sx={{height:"100%", pt:1,pl:2,pb:2, my:3}} md={{}}>
                 <Grid sx={{mx:2, mb:4}} columns={{ xs: 12, sm: 12, md: 12 }}>
-                    <h3>Workflow Steps</h3>
+                    <h4>Workflow Steps</h4>
                 </Grid>
     
                 <Stepper activeStep={activeStep} orientation="vertical">
@@ -230,14 +249,16 @@ function CreateWorkflow(){
                                                             value={step.formName}
                                                             onChange={(e) => {
                                                                 handleFormNameChange(e);
+                                                                
                                                                 // addFormToWorkflow();
                                                                 console.log(stepValue);
                                                                 }}
                                                             size="medium" select sx={{width:300}}>
                                                     <Button><Link underline="none" href='Form'>Create New Form</Link><AddCircleIcon color='success' sx={{pl:1}}/></Button>
-                                                    {forms.map((option, index) => (
-                                                        <MenuItem key={index} value={option}>{option}</MenuItem>
+                                                    {Object.keys(forms).map((option) => (
+                                                        <MenuItem key={option} value={option}>{forms[option]}</MenuItem>
                                                     ))}
+            
                                                 </TextField>
                                         
                                         
@@ -254,6 +275,7 @@ function CreateWorkflow(){
                                                     setSteps([
                                                         ...stepValue,
                                                         {id: nextId,
+                                                        formID: formID,
                                                         formName: formName}
                                                     ]);
                                                     console.log(nextId)

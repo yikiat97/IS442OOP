@@ -79,9 +79,9 @@ function ViewAllWorkflow(){
                 </Grid>
             </Grid>
 
-            <TableContainer component={Paper}>
-                <WorkflowTable  props={vendorWorkflows} />;
-            </TableContainer>
+            
+            <WorkflowTable  props={vendorWorkflows} />;
+            
 
 
                 
