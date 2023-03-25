@@ -26,44 +26,41 @@ function FormWorkflow(){
         getWorkflow();
         // getForms();
     }, []);
-
+    const role = sessionStorage.getItem("role");
     const workflowID = useParams().workflowID;
     const[workflow, setWorkflow]=React.useState([])
     const[steps, setSteps]=React.useState([])
-    const[formIDS,setFormIDS]= React.useState([])
-    const[formNames, setFormNames]=React.useState([])
-    const[forms,setForms]=React.useState([])
+
 
     const getWorkflow = () => {
-        
+
         axios.get("http://localhost:8080/vendorWorkflow/vendorWorkflowByID/" + workflowID)
         .then((response) => {
-            setWorkflow(response.data);
-            // console.log(response.data)
-            setFormIDS(response.data.forms)
-            console.log('set form id')
+                
+                const ini=[]
+                const promises=[]
+                for(const id of response.data.forms){
+                    promises.push(
+                        axios.get("http://localhost:8080/getForm/" + id))
+                        console.log(promises)
+                }
+
+                setWorkflow(response.data);
+
+                Promise.all(promises)
+                    .then((response) => {
+                        console.log(response)
+                        for(let obj of response){
+                            ini.push(obj.data)
+                        }
+                        setSteps(ini)
+                    })
+                
         })
         .catch(error => console.error(error));
-            console.log('helloid')
-            for(const id of formIDS){
-                console.log(id)
-                axios.get("http://localhost:8080/getForm/" + id)
-                .then((response) => {
-                    console.log(response.data.formName)
-                    if(steps.length<formIDS.length){
-                        setSteps([...steps,response.data])
-                        // setForms([...forms,response.data])
-                    } 
-                    
-                    console.log(steps)
-                })
-                
-                .catch(error => console.error(error));
-            }
     };
 
     console.log(steps)
-    console.log(forms)
     
     
     const statuses = [
@@ -99,7 +96,6 @@ function FormWorkflow(){
 
     return(
     
-    
     <Grid sx={{mt:6, textAlign:'left', px:4}}>
         
         <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:3}}>
@@ -112,14 +108,13 @@ function FormWorkflow(){
                 </Grid>
 
                 <Grid item md={0.5}></Grid>
-
-                <Grid item md={0.5} sm={6} sx={{alignItems:"flex-end", justifyContent:"center", display:'flex'}}>
-                    <Button variant="contained" sx={{width:100, backgroundColor:"#2596BE"}}>Approve</Button>
-                </Grid>
-
-                <Grid item sx={{alignItems:"center", justifyContent:"flex-end", display:'flex'}} md={0.5} sm={6}>
-                    <Button sx={{bgcolor:"#D3D3D3", color:"#000000", width:100}}>Deny</Button>
-                </Grid>
+                { role=='Approver' &&
+                <><Grid item md={0.5} sm={6} sx={{ alignItems: "flex-end", justifyContent: "center", display: 'flex' }}>
+                        <Button variant="contained" sx={{ width: 100, backgroundColor: "#2596BE" }}>Approve</Button>
+                    </Grid><Grid item sx={{ alignItems: "center", justifyContent: "flex-end", display: 'flex' }} md={0.5} sm={6}>
+                            <Button sx={{ bgcolor: "#D3D3D3", color: "#000000", width: 100 }}>Deny</Button>
+                        </Grid></>
+                }
 
                 </Grid>
 
@@ -161,7 +156,7 @@ function FormWorkflow(){
             <>
         <Steps current={current} items={stepsContent} />
         <div style={contentStyle}>
-            <FormPreview formData={stepsContent[current].content}/>
+            {steps.length>0 && <FormPreview formData={stepsContent[current].content}/> }
         </div>
         <div
             style={{
@@ -169,18 +164,19 @@ function FormWorkflow(){
             }}
         >
             {current < steps.length - 1 && (
-            <Button type="primary" onClick={() => next()}>
+            <Button color="primary" variant='contained' onClick={() => next()}>
                 Next
             </Button>
             )}
             {current === steps.length - 1 && (
-            <Button type="primary" onClick={() => message.success('Processing complete!')}>
+            <Button color="success" variant='contained' onClick={() => message.success('Processing complete!')}>
                 Done
             </Button>
             )}
             {current > 0 && (
             <Button
-                style={{
+                variant='contained'
+                sx={{
                 margin: '0 8px',
                 }}
                 onClick={() => prev()}
