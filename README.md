@@ -1,9 +1,12 @@
 # IS442OOP
 
-Batch Script:
-1. Run this code in cmd from base directory: build
+Batch Script to run both Frontend and Backend in one command:
+1. Set JAVA_HOME environment variable if not set, recommended to set to java version 17. Example: C:\Program Files\Java\jdk-17.0.5
+2. Install node.js if not yet installed
+3. Run this code in cmd from base directory: build.bat
+4. Wait till scripts are done running, 2 additional command prompts will be open: 1. to run the frontend server, 2. to run the backend server
 
-Fontend:
+Frontend:
 1. npm install -> npm start
 2. npm install @mui/material @emotion/react @emotion/styled
 3. npm install @mui/x-date-pickers

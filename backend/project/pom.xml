@@ -47,6 +47,26 @@
 			<version>2.0.1</version>
 		</dependency>
 		<dependency>
+			<groupId>jakarta.activation</groupId>
+			<artifactId>jakarta.activation-api</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.activation</groupId>
+			<artifactId>jakarta.activation</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-core</artifactId>
+			<version>3.0.0-M5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>3.0.0-M5</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
@@ -69,10 +89,24 @@
 	</dependencies>
 
 	<build>
+		<finalName>finalisedProject</finalName>
+		<outputDirectory>bin</outputDirectory>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<outputDirectory>bin</outputDirectory>
+					<outputDirectory>${project.build.outputDirectory}</outputDirectory>
+        			<testOutputDirectory>${project.build.testOutputDirectory}</testOutputDirectory>
+				</configuration>
+				<executions>
+					<execution>
+					  <goals>
+						<goal>repackage</goal>
+					  </goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
