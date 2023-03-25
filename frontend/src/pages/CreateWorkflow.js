@@ -26,7 +26,8 @@ import {
     MenuItem,
     Button,
     Link,
-    formControlClasses
+    formControlClasses,
+    Select
 } from "@mui/material";
 
 
@@ -158,17 +159,9 @@ function CreateWorkflow(){
             return;
         }
 
-        const forms = []
-        for(let form of stepValue){
-            let ini = {
-                        formID: form.formID,
-                        formName:form.formName}
-            forms.push(ini)
-        }
         
-        console.log(forms)
         const workflow = {
-            forms: forms,
+            forms: formIDS,
             workflowName: workflowName,
         };
         console.log(workflow);
@@ -193,7 +186,7 @@ function CreateWorkflow(){
         });
     };
 
-
+    console.log(forms)
     console.log(stepValue)
     return(
         
@@ -244,22 +237,25 @@ function CreateWorkflow(){
                                         <Grid item sx={{}}>
                                         
                                             
-                                                <TextField
-                                                            name='form'
-                                                            value={step.formName}
-                                                            onChange={(e) => {
-                                                                handleFormNameChange(e);
-                                                                
-                                                                // addFormToWorkflow();
-                                                                console.log(stepValue);
-                                                                }}
-                                                            size="medium" select sx={{width:300}}>
+                                                <Select
+                                                    name='form'
+                                                    value={step.formName}
+                                                    onChange={(e) => {
+                                                        handleFormNameChange(e);
+                                                        
+                                                        // addFormToWorkflow();
+                                                        console.log(step.formName);
+                                                        
+                                                        }}
+                                                    size="medium" select sx={{width:300}}>
+                                                    
                                                     <Button><Link underline="none" href='Form'>Create New Form</Link><AddCircleIcon color='success' sx={{pl:1}}/></Button>
-                                                    {Object.keys(forms).map((option) => (
-                                                        <MenuItem key={option} value={option}>{forms[option]}</MenuItem>
-                                                    ))}
+                                                        
+                                                        {Object.keys(forms).map((option) => (
+                                                            <MenuItem key={option} value={option}>{forms[option]}</MenuItem>
+                                                        ))}
             
-                                                </TextField>
+                                                </Select>
                                         
                                         
 

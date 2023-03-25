@@ -57,7 +57,7 @@ function AssignWorkflow(){
     useEffect(() => {
         getWorkflows();
         getCompanies();
-        getAssignees();
+        // getAssignees();
         
     }, []);
 
@@ -80,62 +80,37 @@ function AssignWorkflow(){
     const getCompanies = () =>{
         axios.get("http://localhost:8080/company")
         .then((response) => {
-            const ini={}
-            const companyData=response.data
-           
-            for(let comp of companyData){
-                ini[comp.name]=comp.userEmail
-            }
-            // console.log(response.data)
+            const ini_comp={}
             
-            setCompanies(ini);
+            for(let comp of response.data){
+                console.log(comp)
+                ini_comp[comp.name]=comp.registrationNum
+                
+            }
+            setCompanies(ini_comp)
+        
         })
         .catch(error => console.error(error));
     }
+    console.log(assignees)
+    console.log(companies)
 
+    const getAssigneeFromCompany = (company)=>{
+        console.log(company)
+        axios.get("http://localhost:8080/login/getUserByCompany", 
+                {params:{"registrationNumber":company}})
+        .then(response=>{
+            const data = response.data[0]
+            console.log(data)
+            setAssigneeEmail(data.email)
+            setAssigneeName(data.name)
 
-    const getAssignees = () =>{
-        axios.get("http://localhost:8080/login/getVendors")
-        .then((response) => {
-            // const main={}
-            
-            const companyData=response.data
-            // console.log(response.data)
-            // for(const [key, value] of Object.entries(companyData)){
-            //     let ini={}
-            //     for(let user of value){
-                    
-            //         ini[user.name]={userEmail: user.email,
-            //                         comp:user.company}
-            //         main[key]=ini
-            //     }
-                
-            // }
-            const ini ={}
-            for(const [key, value] of Object.entries(companyData)){
-                
-                for(let user of value){
-                    
-                    ini[user.name]={userEmail: user.email,
-                                    comp:user.company}
-                    
-                }
-                
-            }
-            
-            setAssignees(ini);
-            // console.log(main)     
         })
-        .catch(error => console.error(error));
     }
-    // console.log(assignees)
-    // const options = assignees.map((option)=>{
-    //     const company = Object.keys(option);
-    //     return{
-    //         company: Object.entries(option)
-    //     }
-    // })
 
+    console.log(email)
+    console.log(name)
+    console.log(company)
 
     const navigate= useNavigate();
     const handleSubmit= async (e) =>{
@@ -145,13 +120,17 @@ function AssignWorkflow(){
         const formattedDate = dueDate.format("DD/MM/YYYY");
         try {
             if(name===""){
-                console.log("No assignee")
+                alert("No assignee")
+                return;
+            } else if(company===""){
+                alert("No company chosen")
+                return;
             } else if(status==null){
-                console.log("No status")
+                alert("No status chosen")
+                return;
             } else if(vendorWorkflowName==null){
-                console.log(vendorWorkflowName)
-                console.log("No workflow")
-                
+                alert("No workflow chosen")
+                return;
             } else{
                 const res = await axios.post(
                     "http://localhost:8080/vendorWorkflow/insertVendorWorkflow",
@@ -235,13 +214,12 @@ function AssignWorkflow(){
                             
                                     <Autocomplete
                                     id="grouped-demo"
-                                    options={Object.keys(assignees)}
+                                    options={Object.keys(companies)}
                                     sx={{width:200}}
                                     renderInput={(params) => <TextField {...params} />}
                                     onChange={(event, newValue) => {
-                                        setAssigneeName(newValue);
-                                        setAssigneeCompany(assignees[newValue].comp);
-                                        setAssigneeEmail(assignees[newValue].userEmail);
+                                        getAssigneeFromCompany(companies[newValue])
+                                        setAssigneeCompany(newValue)
                                         }}
                                     disableClearable
                                     /> 
@@ -251,37 +229,6 @@ function AssignWorkflow(){
                             </FormControl>
                         </Grid>
 
-                        {/* <Grid item>
-                            <FormControl>
-                                <FormLabel htmlFor="Company-helper">Company</FormLabel>
-                                    
-                                <Autocomplete
-                                    id="country-select-demo"
-                                    sx={{width:200}}
-                                    options={Object.keys(companies)}
-                                    autoHighlight
-                                    onChange={(event, newValue) => {
-                                        setCompanyValue(newValue);
-                                        }}
-                                    
-                                    renderOption={(props, option) => (
-                                        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                        {option}
-                                        </Box>
-                                    )}
-                                    renderInput={(params) => (
-                                        <TextField
-                                        {...params}
-                                        inputProps={{
-                                            ...params.inputProps,
-                                        }}
-                                        />
-                                    )}
-                                    />
-
-                            </FormControl>
-                            
-                        </Grid> */}
 
                         <Grid item>
                             <FormControl>
