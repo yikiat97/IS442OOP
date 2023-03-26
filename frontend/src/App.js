@@ -74,7 +74,7 @@ function App() {
       element: <CreateNewContact />,
       rolesAllowed: [ADMIN_ROLE],
     },
-    "/Vendor": { element: <Vendor />, rolesAllowed: [ADMIN_ROLE] },
+    "/Vendor": { element: <Vendor />, rolesAllowed: [ADMIN_ROLE, VENDOR_ROLE] },
     "/Admin": { element: <Admin />, rolesAllowed: [ADMIN_ROLE] },
     "/Approver": { element: <Approver />, rolesAllowed: [APPROVER_ROLE] },
     "/CompanyDetails/:company": {
