@@ -14,13 +14,14 @@ import {
     TableRow,
     Link,
     Menu,
-    MenuItem
+    MenuItem,
         
 } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
 import Create from '@mui/icons-material/Create';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import Container from '@mui/material/Container';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 const styles = {
     container: {
         display: 'flex',
@@ -34,17 +35,27 @@ function FormHomePage() {
         
         <Container maxWidth="md" style={styles.container}>
             <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                     <Card variant="outlined" sx={{ borderRadius: '16px'  }}>
                         <a href="ViewForms">
                             <DraftsIcon></DraftsIcon>
-                            <Typography variant="body1">View past forms</Typography>                        
+                            <Typography variant="body1">View current forms</Typography>                        
                         </a>                        
                     </Card>
 
 
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
+                    <Card variant="outlined" sx={{ borderRadius: '16px'  }}>
+                        <a href="ViewDeletedForms">
+                            <DeleteOutlineIcon></DeleteOutlineIcon>
+                            <Typography variant="body1">View deleted forms</Typography>                        
+                        </a>                        
+                    </Card>
+
+
+                </Grid>
+                <Grid item xs={4}>
                     <Card variant="outlined" sx={{ borderRadius: '16px' }}>
                         <a href="FormCreation">
                             <CreateIcon></CreateIcon>

@@ -30,6 +30,7 @@ import EditUser from "./pages/EditUser"
 import VendorViewForm from "./pages/VendorViewForm"
 import ChangePassword from "./pages/ChangePassword";
 import FormWorkflow from "./pages/FormWorkflow";
+import ViewDeletedForms from "./pages/ViewPastForms";
 
 function App() {
   const VENDOR_ROLE = "Vendor";
@@ -86,6 +87,7 @@ function App() {
         <Route path="/FormHomePage" element={<FormHomePage />} />
         <Route path="/FormCreation" element={<FormCreation />} /> 
         <Route path="/ViewForms" element={<ViewForms />} /> 
+        <Route path="/ViewDeleteForms" element={<ViewDeletedForms />} /> 
         <Route exact path="/CreateWorkflow" element={<CreateWorkflow/>}/>
         <Route path="/WorkflowsAdmin" element={<WorkflowsAdmin />} />
         <Route path="/CompletedWorkflow" element={<CompletedWorkflow />} />

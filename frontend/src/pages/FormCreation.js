@@ -37,11 +37,19 @@ const FormCreation = () => {
 			type: 'canvas'
 		},
 		icon: '✏️'
+		},
+		{
+			label: 'Calculation Table',
+			attrs: {
+				type: 'calculationTable'
+			},
+
 		}
 	];
 	const handleSubmit = (event) => {
 		event.preventDefault(); // Prevent the default form submission behavior
 		console.log(formJsonObject)
+
 		fetch('http://localhost:8080/Form/insertForm', {
 			method: 'POST',
 			body: JSON.stringify(formJsonObject),
@@ -98,14 +106,20 @@ const FormCreation = () => {
 				}
 			}
 			};
+		},
+		calculationTable:function(fieldData){
+			return{
+				field: "Number of rows<input type='number'>",
+
+			};
 		}
 	};
 	const options = {
 	// to be populated from users in database
 		roles: {
-			Test: 'Test',
-			Test1: 'Test1',
-			Test2: 'Test2'
+			Admin: 'Admin',
+			Approver: 'Approver',
+			Vendor: 'Vendor'
 		},
 		disableActionButtons: ['data'],
 		stickyControls: {
@@ -142,11 +156,12 @@ const FormCreation = () => {
 			],
 		
 		onSave: function(evt,formData){
-				const formBuilder = $('#fb-editor').formBuilder('instance');
-				const jsonObject = JSON.parse(formData.replace(/\\/g, ''));
+				const formBuilder = $('#fb-editor').formBuilder('instance');				
+				console.log(formData)
+
+				const jsonObject = JSON.parse(formData.replace(/\\/g, '').replace(/\t/g, ''));
 				// setJsonObjectToReturn(jsonObject)
 				const testJson = {};
-				
 				testJson["FormName"] = formName
 				testJson["FormType"]=""
 				testJson["questionData"] = jsonObject
@@ -177,7 +192,7 @@ const FormCreation = () => {
 			<TextField id="formName" label="Form Name" variant="outlined" onChange={(event) => setFormName(event.target.value)}
 />				<div id="fb-editor" ref={fb} />	
 				{/* <Modal open={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}> sx={{textAlign:center}}*/}
-					<FormControl onSubmit={handleSubmit}sx={{ width: "100%" }}>
+					<FormControl onSubmit={handleSubmit} sx={{ width: "100%" }}>
 						<Box sx={{ border: 1, borderRadius: 1,padding:"15px" }}>
 							<FormPreview formData={formJsonObject} />
 						</Box>

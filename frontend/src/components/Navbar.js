@@ -71,7 +71,8 @@ const Navbar = () => {
                 </SubMenu>
 
                 <SubMenu label='Form Management' icon={<FeedIcon />} component={<Link to='/FormHomePage'/>}>
-                    <MenuItem component={<Link to='/ViewForms'/>}>View Past Forms</MenuItem>
+                    <MenuItem component={<Link to='/ViewDeletedForms'/>}>View Deleted Forms</MenuItem>
+                    <MenuItem component={<Link to='/ViewForms'/>}>View Current Forms</MenuItem>
                     <MenuItem component={<Link to='/FormCreation'/>}>Create New Form</MenuItem>
                 </SubMenu>
 

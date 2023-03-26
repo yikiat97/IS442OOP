@@ -10,7 +10,7 @@ function FormSelect(props) {
 
     };
     const selectedForm = forms.find((form) => form.formID === selectedFormID);
-
+    console.log(forms)
     return (
         <FormControl>
         <p>Form Name:</p>
