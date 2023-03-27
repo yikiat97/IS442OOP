@@ -97,8 +97,8 @@ function AssignWorkflow(){
 
     const getAssigneeFromCompany = (company)=>{
         console.log(company)
-        axios.get("http://localhost:8080/login/getUserByCompany", 
-                {params:{"registrationNumber":company}})
+        axios.get("http://localhost:8080/login/getUsersByCompany", 
+                {params:{"registrationNum":company}})
         .then(response=>{
             const data = response.data[0]
             console.log(data)
