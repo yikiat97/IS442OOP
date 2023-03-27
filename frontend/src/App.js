@@ -31,6 +31,7 @@ import VendorViewForm from "./pages/VendorViewForm"
 import ChangePassword from "./pages/ChangePassword";
 import FormWorkflow from "./pages/FormWorkflow";
 import ViewDeletedForms from "./pages/ViewPastForms";
+import QuantumDetails from "./pages/QuantumDetails";
 
 function App() {
   const VENDOR_ROLE = "Vendor";
@@ -80,7 +81,8 @@ function App() {
         <Route path="/Admin" element={<Admin />} />
         <Route path="/Approver" element={<Approver />} />
         <Route path="/CompanyDetails/:company" element={<CompanyDetails />} />
-        <Route path="/EditUser/:userEmail" element={<EditUser />} />
+        <Route path="/QuantumDetails" element={<QuantumDetails />} />
+        <Route path="/EditUser/:company" element={<EditUser />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/ForgetPassword" element={<ForgetPassword />} />
         <Route path="/ChangePassword" element={<ChangePassword/>} />

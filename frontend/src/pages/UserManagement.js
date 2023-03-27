@@ -243,9 +243,15 @@ function UserManagement(){
                             {company.name}
                         </StyledTableCell>
                         <StyledTableCell align="left">{company.country}</StyledTableCell>
-                        <Link href={'CompanyDetails/' + company.name} underline='none'>
-                            <StyledTableCell align="right"><ArrowForwardIosIcon /></StyledTableCell>
-                        </Link>
+                        {company.name === "Quantum"
+                            ? <Link href={'QuantumDetails'} underline='none'>
+                                <StyledTableCell align="right"><ArrowForwardIosIcon /></StyledTableCell>
+                            </Link>
+                            : <Link href={'CompanyDetails/' + company.registrationNum} underline='none'>
+                                <StyledTableCell align="right"><ArrowForwardIosIcon /></StyledTableCell>
+                            </Link>
+                        }
+                        
                         </StyledTableRow>
                     ))}
                     </TableBody>

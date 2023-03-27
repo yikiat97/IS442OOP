@@ -4,16 +4,15 @@ import com.java.project.model.Company;
 import com.java.project.model.User;
 import com.java.project.repository.CompanyRepository;
 import com.java.project.repository.UserRepository;
+import com.mongodb.internal.selector.ReadPreferenceServerSelector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import javax.swing.text.html.Option;
+import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
@@ -30,6 +29,16 @@ public class CompanyController {
     public ResponseEntity getCompanies(){
         List<Company> companyList = CompanyRepository.findAll();
         return ResponseEntity.ok(companyList);
+    }
+
+    @GetMapping (value = "/getDetails")
+    public ResponseEntity getCompanyDetails(@RequestParam String registrationNum){
+        Optional<Company> company = CompanyRepository.findById(registrationNum);
+        if(company.isEmpty()){
+            return new ResponseEntity<>("Company does not exist", HttpStatus.UNAUTHORIZED);
+        }else{
+            return ResponseEntity.ok(company);
+        }
     }
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -59,20 +68,4 @@ public class CompanyController {
             return new ResponseEntity<>("Company does not exist", HttpStatus.UNAUTHORIZED);
         }
     }
-
-//    @GetMapping(value = "/getUsers")
-//    public ResponseEntity getCompanyUsers(@RequestParam String name){
-//        Optional<Company> company = CompanyRepository.findById(name);
-//        try{
-//            Company databaseCompany = company.get();
-//            List<User> users = new ArrayList<>();
-//            for (String email : databaseCompany.getUserEmail()){
-//                users.add(UserRepository.findUserByUsername(email));
-//            }
-//            return ResponseEntity.ok(users);
-//        }catch(NoSuchElementException e){
-//            return new ResponseEntity<>("Company does not exist", HttpStatus.UNAUTHORIZED);
-//        }
-//
-//    }
 }
