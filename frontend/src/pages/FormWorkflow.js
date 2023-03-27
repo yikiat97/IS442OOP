@@ -169,7 +169,7 @@ function FormWorkflow(){
             </Button>
             )}
             {current === steps.length - 1 && (
-            <Button color="success" variant='contained' onClick={() => message.success('Processing complete!')}>
+            <Button color="success" variant='contained' onClick={() => message.success('Workflow Submitted!')}>
                 Done
             </Button>
             )}

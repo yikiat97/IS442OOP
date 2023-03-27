@@ -14,10 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -66,24 +63,15 @@ public class UserController {
         }
     }
 
-    @GetMapping("/getUserByCompany")
-    public ResponseEntity getUserByCompany(@RequestParam String registrationNumber){
-        List<User> userList = UserRepository.findUserByCompanyRegistrationNum(registrationNumber);
+    @GetMapping("/getUsersByCompany")
+    public ResponseEntity getUserByCompany(@RequestParam String registrationNum){
+        List<User> userList = UserRepository.findUserByCompanyRegistrationNum(registrationNum);
 
         if(userList!=null){
             return ResponseEntity.ok(userList);
         }else {
             return new ResponseEntity<>("No user under the company", HttpStatus.UNAUTHORIZED);
         }
-    }
-
-    @PutMapping("/editUser")
-    public ResponseEntity editUser(@RequestBody User editUser){
-        User user = UserRepository.findUserByEmail(editUser.getEmail());
-        user.setName(editUser.getName());
-        user.setContactNumber(editUser.getContactNumber());
-        UserRepository.save(user);
-        return ResponseEntity.ok(user);
     }
 
     @PostMapping(value = "/authenticate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -111,7 +99,7 @@ public class UserController {
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
 //            try{
 //                EmailService.sendEmail(admin.getEmail(),emailBody,"Account created for Quantum VMS","");
-                return ResponseEntity.ok(admin);
+            return ResponseEntity.ok(admin);
 //            }catch (MailException e){
 //                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
 //            }catch(MessagingException e) {
@@ -230,11 +218,21 @@ public class UserController {
 
     }
 
-    @GetMapping("/getVendors")
+    @GetMapping(value = "/getVendors")
     public ResponseEntity getVendors(){
-        List<User> Vendors = UserRepository.findByRole("Vendor");
-        Map<String, List<User>> vendorMap = Vendors.stream().collect(Collectors.groupingBy(User::getCompanyRegistrationNum));
-        return ResponseEntity.ok(vendorMap);
+        HashMap<String, List> response = new HashMap<>();
+        List<User> userList = UserRepository.findByRole("Vendor");
+        for (User user:userList
+        ) {
+            Optional<Company> company = CompanyRepository.findById(user.getCompanyRegistrationNum());
+            if(company.isPresent()){
+                List infoList= new ArrayList<>();
+                infoList.add(company);
+                infoList.add(user);
+                response.put(company.get().getName(), infoList);
+            }
+        }
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/getAdmins")
@@ -245,7 +243,7 @@ public class UserController {
     }
 
     @GetMapping("/getApprovers")
-    public ResponseEntity getApprovers(){
+    public ResponseEntity getApprovers() {
         List<User> Vendors = UserRepository.findByRole("Approver");
         Map<String, List<User>> vendorMap = Vendors.stream().collect(Collectors.groupingBy(User::getCompanyRegistrationNum));
         return ResponseEntity.ok(vendorMap);

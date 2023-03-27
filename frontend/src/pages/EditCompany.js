@@ -17,12 +17,18 @@ import {
     MenuItem,
     Select,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
+function EditCompany(){
+    const registrationNumUnchanged = useParams().company;
 
-function CreateCompany(){
     const [name, setName] = useState("");
     const [country, setCountry] = useState("");
     const [message, setMessage] = useState("");
@@ -30,14 +36,17 @@ function CreateCompany(){
     const [companyRegistrationNum, setCompanyRegistrationNum] = useState("");
     const [gstRegistrationNumber, setGstRegistrationNumber] = useState("");
     const [businessNature, setBusinessNature] = useState("");
-    
-    const [contactName, setContactName] = useState("");
-    const [email, setEmail] = useState("");
-    const [contactNumber, setContactNumber] = useState("");
-    const [role, setRole] = useState("Vendor");
-    const [password, setPassword] = useState("");
 
     const navigate = useNavigate();
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const handleNameChange = (event) => {
         setName(event.target.value);
@@ -46,12 +55,6 @@ function CreateCompany(){
     
     const handleCountryChange = (event) => {
         setCountry(event.target.value);
-        setMessage("");
-    };
-
-    const handleRegistratioNumberChange = (event) => {
-        setRegistrationNum(event.target.value);
-        setCompanyRegistrationNum(event.target.value);
         setMessage("");
     };
 
@@ -65,34 +68,33 @@ function CreateCompany(){
         setMessage("");
     };
 
-    const handleContactNameChange = (event) => {
-        setContactName(event.target.value);
-        setMessage("");
+    const getCompanyDetails = () => {
+        axios.get("http://localhost:8080/company/getDetails?registrationNum=" + registrationNumUnchanged)
+        .then((response) => {
+            setName(response.data.name);
+            setCountry(response.data.country);
+            setRegistrationNum(response.data.registrationNum);
+            setGstRegistrationNumber(response.data.gstRegistrationNumber);
+            setBusinessNature(response.data.businessNature);
+        })
+        .catch(error => console.error(error));
     };
 
-    const handleContactEmailChange = (event) => {
-        setEmail(event.target.value);
-        setMessage("");
-    };
-
-    const handleContactNumChange = (event) => {
-        setContactNumber(event.target.value);
-        setMessage("");
-    };
-
-    const handleContactRoleChange = (event) => {
-        setRole(event.target.value);
-        setMessage("");
-        console.log(event.target.value);
-    };
-
+    useEffect(() => {
+        getCompanyDetails();
+      }, []);
+    
+    const cancel = (event) =>{
+        const route = "/QuantumDetails/" + registrationNum;
+        navigate(route);
+    } 
 
     const saveCompany = async (e) => {
         e.preventDefault();
 
         try {
-            const res = await axios.post(
-            "http://localhost:8080/company/add",
+            const res = await axios.put(
+            "http://localhost:8080/company/edit",
             {
                 registrationNum,
                 name,
@@ -105,22 +107,6 @@ function CreateCompany(){
                 "Content-Type": "application/json"
                 },
             }
-            );
-            const res1 = await axios.post(
-                "http://localhost:8080/login/create" + role,
-                {
-                    password,
-                    name : contactName,
-                    email,
-                    contactNumber,
-                    role,
-                    registrationNum              
-                },
-                {
-                    headers: {
-                    "Content-Type": "application/json"
-                    },
-                }
             );
             
             navigate('/UserManagement');
@@ -144,24 +130,24 @@ function CreateCompany(){
                 </Grid>
 
                 <Grid item md={2.0} sm={1} sx={{justifyContent:"flex-end", display:'flex'}}>
-                        <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success" onClick={saveCompany}>
-                                Finish
-                        </Button>
+                    <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="error" onClick={cancel}>
+                            Cancel
+                    </Button>
+                    <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success" onClick={handleClickOpen}>
+                            Save
+                    </Button>
                 </Grid>
 
             </Grid>
 
             <Paper elevation={1} sx={{height:"100%", pt:1,pl:2,pb:2, my:3}} md={{}}>
-                <Grid sx={{mx:2, mb:4}} columns={{ xs: 12, sm: 12, md: 12 }}>
-                    <h3>New Company</h3>
-                </Grid>
-    
-                                
+               
                 <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
                         <div>
                             <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleNameChange}>
                                 <FormHelperText id="outlined-weight-helper-text">Company Name</FormHelperText>
                                 <OutlinedInput 
+                                    value={name}
                                     id="outlined-adornment-weight"
                                     aria-describedby="outlined-weight-helper-text"
                                 />
@@ -169,13 +155,16 @@ function CreateCompany(){
                             <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleCountryChange}>
                                 <FormHelperText id="outlined-weight-helper-text">Country of Origin</FormHelperText>
                                 <OutlinedInput
+                                    value={country}
                                     id="outlined-adornment-weight"
                                     aria-describedby="outlined-weight-helper-text"
                                 />
                             </FormControl>
-                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleRegistratioNumberChange}>
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
                                 <FormHelperText id="outlined-weight-helper-text">Registration Number</FormHelperText>
                                 <OutlinedInput
+                                    disabled
+                                    value={registrationNum}
                                     id="outlined-adornment-weight"
                                     aria-describedby="outlined-weight-helper-text"
                                 />
@@ -183,6 +172,7 @@ function CreateCompany(){
                             <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleGSTRegistratioNumberChange}>
                                 <FormHelperText id="outlined-weight-helper-text">GST Registration Number</FormHelperText>
                                 <OutlinedInput
+                                    value={gstRegistrationNumber}
                                     id="outlined-adornment-weight"
                                     aria-describedby="outlined-weight-helper-text"
                                 />
@@ -190,6 +180,7 @@ function CreateCompany(){
                             <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleBusNatureChange}>
                                 <FormHelperText id="outlined-weight-helper-text">Business Nature</FormHelperText>
                                 <OutlinedInput
+                                    value={businessNature}
                                     id="outlined-adornment-weight"
                                     aria-describedby="outlined-weight-helper-text"
                                 />
@@ -198,51 +189,29 @@ function CreateCompany(){
                     </Box>
             
             </Paper>
-
-            <Paper elevation={1} sx={{height:"100%", pt:1,pl:2,pb:2, my:3}} md={{}}>
-                <Grid sx={{mx:2, mb:4}} columns={{ xs: 12, sm: 12, md: 12 }}>
-                    <h3>New Contact</h3>
-                </Grid>
-    
-                                
-                <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                    <div>
-                        <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleContactNameChange}>
-                            <FormHelperText id="outlined-weight-helper-text">Contact Name</FormHelperText>
-                            <OutlinedInput
-                                id="outlined-adornment-weight"
-                                aria-describedby="outlined-weight-helper-text"
-                            />
-                        </FormControl>
-                        <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleContactEmailChange}>
-                            <FormHelperText id="outlined-weight-helper-text">Email</FormHelperText>
-                            <OutlinedInput
-                                id="outlined-adornment-weight"
-                                aria-describedby="outlined-weight-helper-text"
-                            />
-                        </FormControl>
-                        <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleContactNumChange}>
-                            <FormHelperText id="outlined-weight-helper-text">Contact Number</FormHelperText>
-                            <OutlinedInput
-                                id="outlined-adornment-weight"
-                                aria-describedby="outlined-weight-helper-text"
-                            />
-                        </FormControl>
-                        <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
-                            <FormHelperText id="outlined-weight-helper-text">User Role</FormHelperText>
-                                <Select value={role} onChange={handleContactRoleChange}>
-                                <MenuItem value="Admin">Admin</MenuItem>
-                                <MenuItem value="Approver">Approver</MenuItem>
-                                <MenuItem value="Vendor">Vendor</MenuItem>
-                                </Select>
-                        </FormControl>
-                    </div>
-                </Box>
-            </Paper>
            
             <Typography sx={{color: "red"}}>
               {message}
             </Typography>
+
+            <div>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        {"Confirm Changes to " + name}
+                    </DialogTitle>
+                    <DialogActions>
+                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button onClick={saveCompany} autoFocus>
+                            Agree
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
 
 
         </Grid>
@@ -251,4 +220,4 @@ function CreateCompany(){
     
 }
 
-export default CreateCompany;
+export default EditCompany;

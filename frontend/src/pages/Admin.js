@@ -187,16 +187,7 @@ function Vendor() {
 
 
             <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:3}} sx={{display:'flex', justifyContent:"space-between"}}>
-                
 
-                <Grid item md={0.5} sm={6} sx={{mb:5}}>
-                    <Link href='CreateCompany' underline='none'>
-                        <Button variant="contained" sx={{width:250, backgroundColor:"#2596BE"}}
-                                startIcon={<AddIcon/>}>
-                                Create New Company 
-                        </Button>
-                    </Link>
-                </Grid>
 
                 <Grid item md={0.5} sm={6} sx={{mb:5}}>
 

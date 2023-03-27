@@ -72,20 +72,30 @@ function CompanyDetails(){
           border: 0,
         },
       }));
-    
-    const company = useParams().company;
+
+    const registrationNum = useParams().company;
     const [users, setUsers] = useState([]);
+    const [companyDetails, setCompanyDetails] = useState([]);
 
     useEffect(() => {
         getUsers();
+        getCompanyDetails();
       }, []);
 
+    const getCompanyDetails = () => {
+        axios.get("http://localhost:8080/company/getDetails?registrationNum=" + registrationNum)
+        .then((response) => {
+            setCompanyDetails(response.data);
+        })
+        .catch(error => console.error(error));
+    };
+
     const getUsers = () => {
-    axios.get("http://localhost:8080/company/getUsers?name=" + company)
-    .then((response) => {
-        setUsers(response.data);
-    })
-    .catch(error => console.error(error));
+        axios.get("http://localhost:8080/login/getUsersByCompany?registrationNum=" + registrationNum)
+        .then((response) => {
+            setUsers(response.data);
+        })
+        .catch(error => console.error(error));
     };
 
     return(
@@ -95,54 +105,103 @@ function CompanyDetails(){
                 <Grid item md={2.0} sm={2.5}>
                     <h1>User Management</h1>
                 </Grid>
-                
                 <Grid item md={2.0} sm={1} sx={{justifyContent:"flex-end", display:'flex'}}>
-                    <Link href='CreateNewContact' underline='none'>
-                        <Button variant="contained" sx={{width:250, backgroundColor:"#2596BE"}}
-                                startIcon={<AddIcon/>}>
-                                Create New Contact 
+                        <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="primary">
+                                Edit
                         </Button>
-                    </Link>
-                
                 </Grid>
-
             </Grid>
 
             <Paper elevation={1} sx={{height:"100%", pt:1,pl:2,pb:2, my:3}} md={{}}>
                 <Grid sx={{mx:2, mb:4}} columns={{ xs: 12, sm: 12, md: 12 }}>
-                    <h2>{company}</h2>
+                    <h2>{companyDetails.name}</h2>
                 </Grid>
 
 
                 <Grid sx={{mx:2, mb:4}} columns={{ xs: 12, sm: 12, md: 12 }}>
-                   <Table size="small" aria-label="contacts">
-                        <TableHead>
-                        <StyledTableRow>
-                            <StyledTableCell align="left">Contact Name</StyledTableCell>
-                            <StyledTableCell align="left">Email</StyledTableCell>
-                            <StyledTableCell align="left">Contact Number</StyledTableCell>
-                            <StyledTableCell align="left">User Role</StyledTableCell>
-                            <StyledTableCell />
-                            <StyledTableCell />
-                        </StyledTableRow>
-                        </TableHead>
-                        <TableBody>
-                            {users.map((user) => (
-                                <StyledTableRow key={user.name}>
-                                <StyledTableCell component="th" scope="row">
-                                    {user.name}
-                                </StyledTableCell>
-                                <StyledTableCell align="left">{user.email}</StyledTableCell>
-                                <StyledTableCell align="left">{user.contactNumber == null ? "Not available" : user.contactNumber}</StyledTableCell>
-                                <StyledTableCell align="left">{user.role}</StyledTableCell>
-                                <StyledTableCell align="right"><DeleteOutlineIcon sx={{color:'#c62828'}}/></StyledTableCell>
-                                <Link href={'../EditUser/' + user.email} underline='none'>
-                                    <StyledTableCell align="left"><EditIcon sx={{color:'#1565c0'}} /></StyledTableCell>
-                                </Link>
-                            </StyledTableRow>
-                            ))}
-                        </TableBody>
-                    </Table> 
+                <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                        <div>
+                            
+                                <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                                    <FormHelperText id="outlined-weight-helper-text">Country of Origin</FormHelperText>
+                                    <OutlinedInput
+                                        id="outlined-adornment-weight"
+                                        aria-describedby="outlined-weight-helper-text"
+                                        value={companyDetails.country}
+                                        disabled
+                                    />
+                                </FormControl>
+                                <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                                    <FormHelperText id="outlined-weight-helper-text">Registration Number</FormHelperText>
+                                    <OutlinedInput
+                                        id="outlined-adornment-weight"
+                                        aria-describedby="outlined-weight-helper-text"
+                                        value={companyDetails.registrationNum}
+                                        disabled
+                                    />
+                                </FormControl>
+                                <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                                    <FormHelperText id="outlined-weight-helper-text">GST Registration Number</FormHelperText>
+                                    <OutlinedInput
+                                        id="outlined-adornment-weight"
+                                        aria-describedby="outlined-weight-helper-text"
+                                        value={companyDetails.gstRegistrationNumber}
+                                        disabled
+                                    />
+                                </FormControl>
+                                <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                                    <FormHelperText id="outlined-weight-helper-text">Business Nature</FormHelperText>
+                                    <OutlinedInput
+                                        id="outlined-adornment-weight"
+                                        aria-describedby="outlined-weight-helper-text"
+                                        value={companyDetails.businessNature}
+                                        disabled
+                                    />
+                                </FormControl>    
+                        </div>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                        {users.map((user) => (
+                            <div>
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                                <FormHelperText id="outlined-weight-helper-text">Contact Name</FormHelperText>
+                                <OutlinedInput
+                                    id="outlined-adornment-weight"
+                                    aria-describedby="outlined-weight-helper-text"
+                                    value={user.name}
+                                    disabled
+                                />
+                            </FormControl>
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                                <FormHelperText id="outlined-weight-helper-text">Email</FormHelperText>
+                                <OutlinedInput
+                                    id="outlined-adornment-weight"
+                                    aria-describedby="outlined-weight-helper-text"
+                                    value={user.email}
+                                    disabled
+                                />
+                            </FormControl>
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                                <FormHelperText id="outlined-weight-helper-text">Contact Number</FormHelperText>
+                                <OutlinedInput
+                                    id="outlined-adornment-weight"
+                                    aria-describedby="outlined-weight-helper-text"
+                                    value={user.contactNumber}
+                                    disabled
+                                />
+                            </FormControl>
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                                <FormHelperText id="outlined-weight-helper-text">User Role</FormHelperText>
+                                    <Select value={user.role} disabled>
+                                    <MenuItem value="Admin">Admin</MenuItem>
+                                    <MenuItem value="Approver">Approver</MenuItem>
+                                    <MenuItem value="Vendor">Vendor</MenuItem>
+                                    </Select>
+                            </FormControl>
+                        </div>
+                    ))}
+                </Box>
                 </Grid>
             </Paper>
         </Grid>
@@ -152,3 +211,7 @@ function CompanyDetails(){
 }
 
 export default CompanyDetails;
+/* <StyledTableCell align="right"><DeleteOutlineIcon sx={{color:'#c62828'}}/></StyledTableCell>
+                                <Link href={'../EditUser/' + user.email} underline='none'>
+                                    <StyledTableCell align="left"><EditIcon sx={{color:'#1565c0'}} /></StyledTableCell>
+                                </Link> */

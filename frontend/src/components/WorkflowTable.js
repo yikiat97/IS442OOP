@@ -20,6 +20,8 @@ import Highlighter from "react-highlight-words";
 
 function WorkflowTable({props}){
 
+    const role = sessionStorage.getItem("role");
+
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
@@ -129,7 +131,11 @@ function WorkflowTable({props}){
     },
     {
         render:()=>(
-        <Button variant='contained' size='small' sx={{ml:5, background:"#90a4ae"}} endIcon={<AddAlertIcon/>}>Send</Button>
+            // { role=='Admin' &&
+            role=='Admin' ?
+                <Button variant='contained' size='small' sx={{ml:5, background:"#90a4ae"}} endIcon={<AddAlertIcon/>}>
+                    Send</Button> :null
+            // }
         ),
     },
     {
