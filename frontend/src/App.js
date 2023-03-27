@@ -2,6 +2,7 @@ import { React } from "react";
 import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import VendorNavbar from "./components/VendorNavBar";
 
 import CreateWorkflow from "./pages/CreateWorkflow";
 import Form from "./pages/FormCreation";
@@ -31,6 +32,10 @@ import VendorViewForm from "./pages/VendorViewForm"
 import ChangePassword from "./pages/ChangePassword";
 import FormWorkflow from "./pages/FormWorkflow";
 import ViewDeletedForms from "./pages/ViewPastForms";
+import VendorOverviewPage from "./pages/VendorOverviewPage";
+import VendorAssignWorkflowPage from "./pages/VendorAssignWorkflowPage";
+import VendorPastWorkflowpage from "./pages/VendorPastWorkflowpage";
+
 
 function App() {
   const VENDOR_ROLE = "Vendor";
@@ -51,8 +56,10 @@ function App() {
     <div className="App">
       <header className="App-header">
         {/* {user && <Navbar />}  */}
-        <Navbar />
+        {sessionStorage.getItem("role") === 'Vendor' && <VendorNavbar />}
+        {sessionStorage.getItem("role") !== 'Vendor' && <Navbar />}
       </header>
+      
       <Routes>
       
         <Route path="/VendorViewForm" element={<VendorViewForm />} />
@@ -106,6 +113,10 @@ function App() {
         <Route path="/FormWorkflow/:workflowID" element={<FormWorkflow />} />
         <Route path="/NotAuthorized" element={<NotAuthorized />} />
         <Route path="/" element={<Home />} />
+
+        <Route path="/VendorOverviewPage" element={<VendorOverviewPage />} />
+        <Route path="/VendorAssignWorkflowPage" element={<VendorAssignWorkflowPage />} />
+        <Route path="/VendorPastWorkflowpage" element={<VendorPastWorkflowpage />} />
       </Routes>
     </div>
   );
