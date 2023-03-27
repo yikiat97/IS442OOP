@@ -11,7 +11,7 @@ import AlertTitle from '@mui/material/AlertTitle';
 import axios from "axios";
 import { useEffect, useState } from "react";
 import {useNavigate} from 'react-router-dom';
-
+import { message} from 'antd';
 import {
     FormControl, 
     Grid, 
@@ -120,16 +120,16 @@ function AssignWorkflow(){
         const formattedDate = dueDate.format("DD/MM/YYYY");
         try {
             if(name===""){
-                alert("No assignee")
+                message.warning("No Assignee Chosen!")
                 return;
             } else if(company===""){
-                alert("No company chosen")
+                message.warning("No Company Chosen!")
                 return;
             } else if(status==null){
-                alert("No status chosen")
+                message.warning("No Status Chosen!")
                 return;
             } else if(vendorWorkflowName==null){
-                alert("No workflow chosen")
+                message.warning("No Workflow chosen!")
                 return;
             } else{
                 const res = await axios.post(
