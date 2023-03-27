@@ -91,7 +91,7 @@ function CompanyDetails(){
     };
 
     const getUsers = () => {
-        axios.get("http://localhost:8080/login/getUsersByCompany?registrationNumber=" + registrationNum)
+        axios.get("http://localhost:8080/login/getUsersByCompany?registrationNum=" + registrationNum)
         .then((response) => {
             setUsers(response.data);
         })

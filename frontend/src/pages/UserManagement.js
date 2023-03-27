@@ -244,7 +244,7 @@ function UserManagement(){
                         </StyledTableCell>
                         <StyledTableCell align="left">{company.country}</StyledTableCell>
                         {company.name === "Quantum"
-                            ? <Link href={'QuantumDetails'} underline='none'>
+                            ? <Link href={'QuantumDetails/' + company.registrationNum} underline='none'>
                                 <StyledTableCell align="right"><ArrowForwardIosIcon /></StyledTableCell>
                             </Link>
                             : <Link href={'CompanyDetails/' + company.registrationNum} underline='none'>

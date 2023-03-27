@@ -32,6 +32,7 @@ import ChangePassword from "./pages/ChangePassword";
 import FormWorkflow from "./pages/FormWorkflow";
 import ViewDeletedForms from "./pages/ViewPastForms";
 import QuantumDetails from "./pages/QuantumDetails";
+import EditCompany from "./pages/EditCompany";
 
 function App() {
   const VENDOR_ROLE = "Vendor";
@@ -81,8 +82,9 @@ function App() {
         <Route path="/Admin" element={<Admin />} />
         <Route path="/Approver" element={<Approver />} />
         <Route path="/CompanyDetails/:company" element={<CompanyDetails />} />
-        <Route path="/QuantumDetails" element={<QuantumDetails />} />
+        <Route path="/QuantumDetails/:company" element={<QuantumDetails />} />
         <Route path="/EditUser/:company" element={<EditUser />} />
+        <Route path="/EditCompany/:company" element={<EditCompany />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/ForgetPassword" element={<ForgetPassword />} />
         <Route path="/ChangePassword" element={<ChangePassword/>} />

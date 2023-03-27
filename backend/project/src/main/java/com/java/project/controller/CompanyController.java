@@ -68,4 +68,15 @@ public class CompanyController {
             return new ResponseEntity<>("Company does not exist", HttpStatus.UNAUTHORIZED);
         }
     }
+
+    @PutMapping(value="/edit")
+    public ResponseEntity editCompany(@RequestBody Company editCompany){
+        Optional<Company> company = CompanyRepository.findById(editCompany.getRegistrationNum());
+        if(company.isPresent()){
+            Company saveCompany = CompanyRepository.save(editCompany);
+            return ResponseEntity.ok(saveCompany);
+        }else{
+            return new ResponseEntity<>("Company does not exist", HttpStatus.UNAUTHORIZED);
+        }
+    }
 }

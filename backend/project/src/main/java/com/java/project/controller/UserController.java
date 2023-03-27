@@ -64,8 +64,8 @@ public class UserController {
     }
 
     @GetMapping("/getUsersByCompany")
-    public ResponseEntity getUserByCompany(@RequestParam String registrationNumber){
-        List<User> userList = UserRepository.findUserByCompanyRegistrationNum(registrationNumber);
+    public ResponseEntity getUserByCompany(@RequestParam String registrationNum){
+        List<User> userList = UserRepository.findUserByCompanyRegistrationNum(registrationNum);
 
         if(userList!=null){
             return ResponseEntity.ok(userList);
@@ -99,7 +99,7 @@ public class UserController {
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
 //            try{
 //                EmailService.sendEmail(admin.getEmail(),emailBody,"Account created for Quantum VMS","");
-                return ResponseEntity.ok(admin);
+            return ResponseEntity.ok(admin);
 //            }catch (MailException e){
 //                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
 //            }catch(MessagingException e) {

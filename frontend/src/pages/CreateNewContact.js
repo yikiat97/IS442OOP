@@ -1,18 +1,5 @@
 import * as React from 'react';
-import dayjs from 'dayjs';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import StepContent from '@mui/material/StepContent';
-import { Container, textAlign, spacing, Box } from "@mui/system";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { Box } from "@mui/system";
 import {
     FormControl,
     FormHelperText, 
@@ -33,27 +20,29 @@ import {
     Select,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 function CreateNewContact(){
     const company = useParams().company;
+    const registrationNumber = useParams().company;
     const [showPassword, setShowPassword] = React.useState(false);
-
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault();
-    };
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("");
     const [message, setMessage] = useState("");
-    const passwordtest = "";
+    const password = "";
     const [error, setError] = useState(false);
-    const contactNumber = "";
+    const [contactNumber,setContactNumber] = useState("");
+    const [companyDetails, setCompanyDetails] = useState([]);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        getCompanyDetails();
+      }, []);
 
     const handleEmailChange = (event) => {
         const value = event.target.value;
@@ -64,7 +53,7 @@ function CreateNewContact(){
           } else {
             setError(false);
           }
-          setEmail(value);
+        setEmail(value);
         setMessage("");
     };
 
@@ -78,32 +67,47 @@ function CreateNewContact(){
         setMessage("");
     };
 
+    const handleNumberChange = (event) => {
+        setContactNumber(event.target.value);
+        setMessage("");
+    };
+
+    const getCompanyDetails = () => {
+        axios.get("http://localhost:8080/company/getDetails?registrationNum=" + registrationNumber)
+        .then((response) => {
+            setCompanyDetails(response.data);
+        })
+        .catch(error => console.error(error));
+    };
+
     const createUser = async (e) => {
         e.preventDefault();
-    
+
         try {
-          const res = await axios.post(
-            "http://localhost:8080/login/create" + role,
-            {
-                email,
-                name,
-                contactNumber,
-                role,
-                company,
-                passwordtest
-            },
-            {
-              headers: {
-                "Content-Type": "application/json"
-              },
-            }
-          );
-          console.log(res, "res");
+            const res = await axios.post(
+                "http://localhost:8080/login/create" + role,
+                {
+                    password,
+                    name,
+                    email,
+                    contactNumber,
+                    role,
+                    companyRegistrationNum: registrationNumber              
+                },
+                {
+                    headers: {
+                    "Content-Type": "application/json"
+                    },
+                }
+            );
+
+            let route = "/QuantumDetails/" + registrationNumber;  
+            navigate(route);          
         } catch (error) {
-          setMessage("Something went wrong");
+            console.log(error);
         }
-        
-      };
+    
+    };
 
     return(
         <Grid sx={{mt:6, textAlign:'left', px:4}}>
@@ -121,7 +125,7 @@ function CreateNewContact(){
 
             <Paper elevation={1} sx={{height:"100%", pt:1,pl:2,pb:2, my:3}} md={{}}>
                 <Grid sx={{mx:2, mb:4}} columns={{ xs: 12, sm: 12, md: 12 }}>
-                    <h3>{company}</h3>
+                    <h3>{companyDetails.name}</h3>
                 </Grid>
     
                                 
@@ -143,6 +147,14 @@ function CreateNewContact(){
                                     onChange={handleEmailChange}
                                     error={error}
                                     helperText={error && email !== '' ? 'Please enter a valid email address' : null}
+                                    />
+                            </FormControl>
+
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                                <FormHelperText id="outlined-weight-helper-text">Contact Number</FormHelperText>
+                                <TextField
+                                    value={contactNumber}
+                                    onChange={handleNumberChange}
                                     />
                             </FormControl>
                         
