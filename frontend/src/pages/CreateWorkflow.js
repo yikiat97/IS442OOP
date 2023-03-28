@@ -181,13 +181,15 @@ function CreateWorkflow(){
             const updatedSteps = [...prevSteps];
             updatedSteps[activeStep].formName = forms[newValue];
             updatedSteps[activeStep].formID = newValue;
-            console.log(updatedSteps)
+            // console.log(newValue);
+            // console.log(forms);
         return updatedSteps;
         });
+        // console.log(stepValue);
     };
 
-    console.log(forms)
-    console.log(stepValue)
+    // console.log(forms)
+    // console.log(stepValue)
     return(
         
         <Grid sx={{mt:6, textAlign:'left', px:4}}>
@@ -239,13 +241,13 @@ function CreateWorkflow(){
                                             
                                                 <Select
                                                     name='form'
-                                                    value={step.formName}
+                                                    value={step.formID}
                                                     onChange={(e) => {
                                                         handleFormNameChange(e);
                                                         
                                                         // addFormToWorkflow();
-                                                        console.log(step.formName);
-                                                        
+                                                        console.log(stepValue);
+                                                        console.log(step);
                                                         }}
                                                     size="medium" select sx={{width:300}}>
                                                     
