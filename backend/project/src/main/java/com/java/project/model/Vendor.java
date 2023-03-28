@@ -20,8 +20,8 @@ public class Vendor extends User{
         super(password, name, email, contactNumber, role, company);
     }
 
-    public Vendor(String password, String name, String email, String contactNumber, String role, String company, List<String> Answers, List<String> LockedSections, List<String> Workflows, List<String> Status, List<String> Priority) {
-        super(password, name, email, contactNumber, role, company);
+    public Vendor(String password, String name, String email, String contactNumber, String role, String companyRegistrationNum, List<String> Answers, List<String> LockedSections, List<String> Workflows, List<String> Status, List<String> Priority) {
+        super(password, name, email, contactNumber, role, companyRegistrationNum);
         this.Answers = Answers;
         this.LockedSections = LockedSections;
         this.Workflows = Workflows;

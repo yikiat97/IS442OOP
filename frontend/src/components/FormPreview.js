@@ -8,6 +8,7 @@ import { styled } from '@mui/material/styles';
 
 // import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 // import { Unstable_DateField as DateField } from '@mui/x-date-pickers';
+import CalculationTable from "./CalculationTable";
 import "../styles/formPreview.css" 
 import Canvas from "./canvas";
 import { Typography } from "antd";
@@ -40,14 +41,14 @@ const FormPreview = ({ formData}) => {
         switch (field.type) {
         case "h2":
             return(
-                <Typography variant="h2" component="h2">
+                <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
                     {field.label}
                     <br></br>
                 </Typography>
             );
         case "header":
             return(
-                <Typography variant="h1" component="h1">
+                <Typography variant="h1" component="h1" sx={{ fontWeight: 'bold' }}>
                     {field.label}
                     <br></br>
                 </Typography>
@@ -55,7 +56,7 @@ const FormPreview = ({ formData}) => {
         case "checkbox-group":
             return (
             <Grid container sx={{ m: 2,display:"block" }} class="formbuilder-checkbox">
-                <Typography>{field.label}</Typography>
+                <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
                 <FormGroup>
 
                     {field.values.map((value, index) => (
@@ -70,7 +71,7 @@ const FormPreview = ({ formData}) => {
         case "date":
             return (
             <Grid container sx={{ m: 2 }} >
-                <Typography>{field.label}</Typography>
+                <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
                 <br></br>
                 <input class="form-control" type="date" id={field.label}></input>
             </Grid>
@@ -78,7 +79,7 @@ const FormPreview = ({ formData}) => {
         case "number":
             return (
                 <Grid container sx={{ m: 2, }}>
-                <Typography sx={{ display: 'block' }}>{field.label}</Typography>
+                <Typography sx={{ display: 'block',fontWeight:'bold'}}>{field.label}</Typography>
                     <input
                         id="standard-number"
                         label="Number"
@@ -95,7 +96,7 @@ const FormPreview = ({ formData}) => {
         case "radio-group":
             return (
             <Grid container sx={{ m: 2 ,display:"block"}}  class="formbuilder-radio">
-                <Typography>{field.label}</Typography>
+                <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
                 <RadioGroup aria-labelledby="demo-radio-buttons-group-label" name="radio-buttons-group">
                     {field.values.map((value, index) => (
                     <div key={index}>
@@ -112,7 +113,7 @@ const FormPreview = ({ formData}) => {
             return (
             <Grid container >
                 <FormControl fullWidth>
-                <Typography>{field.label}</Typography>
+                <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
                 <Select
                     labelId="demo-simple-select-label"
                     id={field.label}
@@ -140,8 +141,7 @@ const FormPreview = ({ formData}) => {
         case "textarea":
             return (
             <Grid container sx={{ m: 2 ,display:"block"}} >
-                <Typography>{field.label}</Typography>
-                <br></br>
+                <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
                 <TextareaAutosize
                 className={field.className}
                 name={field.name}
@@ -154,10 +154,14 @@ const FormPreview = ({ formData}) => {
         case "canvas":
             return (
                 <Grid container   sx={{ display:"block"}} >
-                    <Typography>{field.label}</Typography>
+                    <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
                     <Canvas sx={{ m: 2, float: 'left',display:'block'  }}/>
                     <br></br>
                 </Grid>
+            );
+        case "calculationTable":
+            return(
+                <CalculationTable></CalculationTable>
             );
         default:
             return null;
@@ -167,7 +171,7 @@ const FormPreview = ({ formData}) => {
     return (
         <Container maxWidth="xl">
             <Typography variant="h1" component="h1">
-                {formData.formName}
+                {formData.FormName}
                 <br />
             </Typography>
             {formData.questionData.map((field, index) => (

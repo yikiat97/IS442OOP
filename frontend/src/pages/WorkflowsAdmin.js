@@ -241,11 +241,12 @@ function WorkflowsAdmin(){
         },
         {
             
-            render: () => (
-                
-                    <ArrowForwardIosIcon />
-                
-                ),
+            render: (_,{id}) => (
+                <Link href={'FormWorkflow/' + id} underline='none'>
+                    <ArrowForwardIosIcon  /> 
+                    
+                    </Link> 
+    ),
         }
         ];
 
@@ -370,9 +371,9 @@ function WorkflowsAdmin(){
                 </Grid>
             </Grid>
 
-            <TableContainer component={Paper}>
-                <Table columns={columns} dataSource={vendorWorkflows} onChange={onChange} />;
-            </TableContainer>
+            
+            <Table columns={columns} dataSource={vendorWorkflows} onChange={onChange} />;
+            
 
 
                 

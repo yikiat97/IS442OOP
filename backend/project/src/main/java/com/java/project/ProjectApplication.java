@@ -40,28 +40,29 @@ public class ProjectApplication  {
 
     @GetMapping("/createTestCompany")
     public String createCompany() {
-        CompanyRepo.save(new Company("Quantum", "Singapore", Arrays.asList("Approver_Quantum_Approver@hotmail.com", "Admin_Quantum_Admin1@hotmail.com", "Admin_Quantum_Admin2@hotmail.com")));
-        CompanyRepo.save(new Company("Company1", "Singapore", Arrays.asList("Vendor_yikiat@hotmail.com")));
-        CompanyRepo.save(new Company("Company2", "China", Arrays.asList("Vendor_elmer@hotmail.com")));
-        CompanyRepo.save(new Company("Company3", "Australia", Arrays.asList("Vendor_diyanahjamal@gmail.com")));
-        CompanyRepo.save(new Company("Company4", "Singapore", Arrays.asList("Vendor_ch@gmail.com", "Vendor_hl@gmail.com")));
-        CompanyRepo.save(new Company("Company5", "Singapore", Arrays.asList("Vendor_syafinaz@gmail.com")));
-        CompanyRepo.save(new Company("Company6", "Australia", Arrays.asList("Vendor_hello@gmail.com")));
+        CompanyRepo.save(new Company("12345678","Quantum", "Singapore", "test", "12345678"));
+        CompanyRepo.save(new Company("22345678","Company1", "Singapore", "test", "12345678"));
+        CompanyRepo.save(new Company("32345678","Company2", "China", "test", "12345678"));
+        CompanyRepo.save(new Company("42345678","Company3", "Australia", "test", "12345678"));
+        CompanyRepo.save(new Company("52345678","Company4", "Singapore", "test", "12345678"));
+        CompanyRepo.save(new Company("62345678","Company5", "Singapore", "test", "12345678"));
+        CompanyRepo.save(new Company("72345678","Company6", "Australia", "test", "12345678"));
+        CompanyRepo.save(new Company("82345678","Company7", "Australia", "test", "12345678"));
         return "Data creation company completed";
     }
 
     @GetMapping("/createTestUser")
     public String createUser() {
-        UserRepo.save(new Approver(userService.encryptPassword("quantum1"), "Quantum_Approver1", "Quantum_Approver@hotmail.com","123456","Approver", "Quantum"));
-        UserRepo.save(new Admin(userService.encryptPassword("quantum1"), "Quantum_Admin1", "Quantum_Admin1@hotmail.com","123456","Admin", "Quantum"));
-        UserRepo.save(new Admin(userService.encryptPassword("quantum2"), "Quantum_Admin2", "Quantum_Admin2@hotmail.com","123456","Admin", "Quantum"));
-        UserRepo.save(new Vendor(userService.encryptPassword("password"), "yikiat", "yikiat@hotmail.com","123456","Vendor", "Company1"));
-        UserRepo.save(new Vendor(userService.encryptPassword("password"), "elmer", "elmer@hotmail.com","","Vendor", "Company2"));
-        UserRepo.save(new Vendor(userService.encryptPassword("password"), "diyanah", "diyanahjamal@gmail.com","","Vendor", "Company3"));
-        UserRepo.save(new Vendor(userService.encryptPassword("password"), "ch", "ch@gmail.com","","Vendor", "Company4"));
-        UserRepo.save(new Vendor(userService.encryptPassword("password"), "hl", "hl@gmail.com","","Vendor", "Company4"));
-        UserRepo.save(new Vendor(userService.encryptPassword("password"), "syafinaz", "syafinaz@gmail.com","","Vendor", "Company5"));
-        UserRepo.save(new Vendor(userService.encryptPassword("password"), "hello", "hello@gmail.com","","Vendor", "Company6"));
+        UserRepo.save(new Approver(userService.encryptPassword("quantum1"), "Quantum_Approver1", "diyanahjamal@gmail.com","123456","Approver", "12345678"));
+        UserRepo.save(new Admin(userService.encryptPassword("quantum1"), "Quantum_Admin1", "oopis442team7@outlook.com","123456","Admin", "12345678"));
+        UserRepo.save(new Admin(userService.encryptPassword("quantum2"), "Quantum_Admin2", "diyanahj.2020@smu.edu.sg","123456","Admin", "12345678"));
+        UserRepo.save(new Vendor(userService.encryptPassword("password"), "yikiat", "yikiat.lim.2020@scis.smu.edu.sg","123456","Vendor", "22345678"));
+        UserRepo.save(new Vendor(userService.encryptPassword("password"), "elmer", "elmer.yeo.2020@scis.smu.edu.sg","","Vendor", "32345678"));
+        UserRepo.save(new Vendor(userService.encryptPassword("password"), "diyanah", "diyanahj.2020@scis.smu.edu.sg","","Vendor", "42345678"));
+        UserRepo.save(new Vendor(userService.encryptPassword("password"), "chong hui", "chkwan.2020@scis.smu.edu.sg","","Vendor", "52345678"));
+        UserRepo.save(new Vendor(userService.encryptPassword("password"), "syafinaz", "syafinazss.2020@scis.smu.edu.sg","","Vendor", "62345678"));
+        UserRepo.save(new Vendor(userService.encryptPassword("password"), "jun wei", "jwleong.2020@scis.smu.edu.sg","","Vendor", "72345678"));
+        UserRepo.save(new Vendor(userService.encryptPassword("password"), "hui lin", "huilin.tay.2020@scis.smu.edu.sg","","Vendor", "82345678"));
         return "Data creation user completed";
     }
     

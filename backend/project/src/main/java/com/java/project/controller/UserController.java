@@ -2,6 +2,7 @@ package com.java.project.controller;
 
 import com.java.project.model.*;
 import com.java.project.repository.CompanyRepository;
+import com.java.project.repository.EmailRepository;
 import com.java.project.repository.UserRepository;
 import com.java.project.service.EmailSenderService;
 import com.java.project.service.UserService;
@@ -14,10 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -36,6 +36,9 @@ public class UserController {
 
     @Autowired
     CompanyRepository CompanyRepository;
+
+    @Autowired
+    EmailRepository EmailRepository;
 
     @GetMapping("/getEmails")
     public ResponseEntity getEmails(){
@@ -59,20 +62,22 @@ public class UserController {
             userInfoList.add(user.getName());
             userInfoList.add(user.getContactNumber());
             userInfoList.add(user.getRole());
-            userInfoList.add(user.getCompany());
+            userInfoList.add(user.getCompanyRegistrationNum());
             return ResponseEntity.ok(userInfoList);
         }else {
             return new ResponseEntity<>("User does not exist", HttpStatus.UNAUTHORIZED);
         }
     }
 
-    @PutMapping("/editUser")
-    public ResponseEntity editUser(@RequestBody User editUser){
-        User user = UserRepository.findUserByEmail(editUser.getEmail());
-        user.setName(editUser.getName());
-        user.setContactNumber(editUser.getContactNumber());
-        UserRepository.save(user);
-        return ResponseEntity.ok(user);
+    @GetMapping("/getUsersByCompany")
+    public ResponseEntity getUserByCompany(@RequestParam String registrationNum){
+        List<User> userList = UserRepository.findUserByCompanyRegistrationNum(registrationNum);
+
+        if(userList!=null){
+            return ResponseEntity.ok(userList);
+        }else {
+            return new ResponseEntity<>("No user under the company", HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @PostMapping(value = "/authenticate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -89,7 +94,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/createAdmin", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> createAdmin(@RequestBody Admin newAdmin) {
+    public ResponseEntity createAdmin(@RequestBody Admin newAdmin) {
         if(!userService.checkEmailExists(newAdmin.getEmail())){
             String rawPassword = newAdmin.generateCommonLangPassword();
             String encodedPassword = userService.encryptPassword(rawPassword);
@@ -97,21 +102,25 @@ public class UserController {
             newAdmin.setUserName(newAdmin.getEmail(), newAdmin.getRole());
             Admin admin = UserRepository.save(newAdmin);
 
-            Optional<Company> company = CompanyRepository.findById(newAdmin.getCompany());
-            company.ifPresent(theCompany -> {
-                        theCompany.addUser(newAdmin.getUserName());
-                        Company newCompany = CompanyRepository.save(theCompany);
-                    });
-
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
-//            try{
-//                EmailService.sendEmail(admin.getEmail(),emailBody,"Account created for Quantum VMS","");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDateTime now = LocalDateTime.now();
+            //String toEmail, String body, String subject, String attachment, String type, String relatedId
+            Email email = new Email(admin.getEmail(),emailBody,"Account created for Quantum VMS","", "Account creation", "",dtf.format(now));
+            try{
+                EmailService.sendEmail(admin.getEmail(),emailBody,"Account created for Quantum VMS","");
+                email.setStatus("Success");
+                Email emailSent = EmailRepository.save(email);
                 return ResponseEntity.ok(admin);
-//            }catch (MailException e){
-//                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
-//            }catch(MessagingException e) {
-//                return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
-//            }
+            }catch (MailException e){
+                email.setStatus("Error");
+                Email emailSent = EmailRepository.save(email);
+                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
+            }catch(MessagingException e) {
+                email.setStatus("Error");
+                Email emailSent = EmailRepository.save(email);
+                return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
+            }
         }
         else{
             return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
@@ -120,7 +129,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/createApprover", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createApprover(@RequestBody Approver newApprover) {
+    public ResponseEntity createApprover(@RequestBody Approver newApprover) {
         if(!userService.checkEmailExists(newApprover.getEmail())) {
             String rawPassword = newApprover.generateCommonLangPassword();
             String encodedPassword = userService.encryptPassword(rawPassword);
@@ -128,21 +137,24 @@ public class UserController {
             newApprover.setUserName(newApprover.getEmail(), newApprover.getRole());
             Approver approver = UserRepository.save(newApprover);
 
-            Optional<Company> company = CompanyRepository.findById(newApprover.getCompany());
-            company.ifPresent(theCompany -> {
-                theCompany.addUser(newApprover.getUserName());
-                Company newCompany = CompanyRepository.save(theCompany);
-            });
-
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDateTime now = LocalDateTime.now();
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
-//            try{
-//                EmailService.sendEmail(approver.getEmail(),emailBody,"Account created for Quantum VMS","");
+            Email email = new Email(approver.getEmail(),emailBody,"Account created for Quantum VMS","", "Account creation", "",dtf.format(now));
+            try{
+                EmailService.sendEmail(approver.getEmail(),emailBody,"Account created for Quantum VMS","");
+                email.setStatus("Success");
+                Email emailSent = EmailRepository.save(email);
                 return ResponseEntity.ok(approver);
-//            }catch (MailException e){
-//                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
-//            }catch(MessagingException e) {
-//                return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
-//            }
+            }catch (MailException e){
+                email.setStatus("Error");
+                Email emailSent = EmailRepository.save(email);
+                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
+            }catch(MessagingException e) {
+                email.setStatus("Error");
+                Email emailSent = EmailRepository.save(email);
+                return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
+            }
         }else{
             return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
         }
@@ -157,21 +169,24 @@ public class UserController {
             newVendor.setUserName(newVendor.getEmail(), newVendor.getRole());
             Vendor vendor = UserRepository.save(newVendor);
 
-            Optional<Company> company = CompanyRepository.findById(newVendor.getCompany());
-            company.ifPresent(theCompany -> {
-                theCompany.addUser(newVendor.getUserName());
-                Company newCompany = CompanyRepository.save(theCompany);
-            });
-
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDateTime now = LocalDateTime.now();
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
-//            try{
-//                EmailService.sendEmail(vendor.getEmail(),emailBody,"Account created for Quantum VMS","");
+            Email email = new Email(vendor.getEmail(),emailBody,"Account created for Quantum VMS","", "Account creation", "",dtf.format(now));
+            try{
+                EmailService.sendEmail(vendor.getEmail(),emailBody,"Account created for Quantum VMS","");
+                email.setStatus("Success");
+                Email emailSent = EmailRepository.save(email);
                 return ResponseEntity.ok(vendor);
-//            }catch (MailException e){
-//                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
-//            }catch(MessagingException e){
-//                return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
-//            }
+            }catch (MailException e){
+                email.setStatus("Error");
+                Email emailSent = EmailRepository.save(email);
+                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
+            }catch(MessagingException e) {
+                email.setStatus("Error");
+                Email emailSent = EmailRepository.save(email);
+                return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
+            }
         }else{
             return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
         }
@@ -226,6 +241,33 @@ public class UserController {
         return new ResponseEntity<>("No such email found", HttpStatus.UNAUTHORIZED);
     }
 
+    @PutMapping(value = "/editUser")
+    public ResponseEntity editUser(@RequestBody User editUser){
+        Optional<User> user = UserRepository.findById(editUser.getEmail());
+        if(user.isPresent()){
+            String password = user.get().getPassword();
+            editUser.setPassword(password);
+            String role = editUser.getRole();
+
+            //password, name, email, contactNumber, role, companyRegistrationNum
+
+            if(role.equals("Admin")){
+                Admin saveUser = new Admin(editUser.getPassword(), editUser.getName(), editUser.getEmail(),editUser.getContactNumber(), role, editUser.getCompanyRegistrationNum());
+                User savedUser = UserRepository.save(saveUser);
+                return ResponseEntity.ok(savedUser);
+            } else if (role.equals("Approver")) {
+                Approver saveUser = new Approver(editUser.getPassword(), editUser.getName(), editUser.getEmail(),editUser.getContactNumber(), role, editUser.getCompanyRegistrationNum());
+                User savedUser = UserRepository.save(saveUser);
+                return ResponseEntity.ok(savedUser);
+            } else{
+                Vendor saveUser = new Vendor(editUser.getPassword(), editUser.getName(), editUser.getEmail(),editUser.getContactNumber(), role, editUser.getCompanyRegistrationNum());
+                User savedUser = UserRepository.save(saveUser);
+                return ResponseEntity.ok(savedUser);
+            }
+        }
+        return new ResponseEntity<>("No such email found", HttpStatus.UNAUTHORIZED);
+    }
+
     @DeleteMapping("/deleteUser")
     public ResponseEntity deleteUser(@RequestParam String email){
         if(userService.checkEmailExists(email)){
@@ -237,24 +279,44 @@ public class UserController {
 
     }
 
-    @GetMapping("/getVendors")
+    @GetMapping(value = "/getVendors")
     public ResponseEntity getVendors(){
-        List<User> Vendors = UserRepository.findByRole("Vendor");
-        Map<String, List<User>> vendorMap = Vendors.stream().collect(Collectors.groupingBy(User::getCompany));
-        return ResponseEntity.ok(vendorMap);
+        HashMap<String, List> response = new HashMap<>();
+        List<User> userList = UserRepository.findByRole("Vendor");
+        for (User user:userList
+        ) {
+            Optional<Company> company = CompanyRepository.findById(user.getCompanyRegistrationNum());
+            if(company.isPresent()){
+                List infoList= new ArrayList<>();
+                infoList.add(company);
+                infoList.add(user);
+                response.put(company.get().getName(), infoList);
+            }
+        }
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/getAdmins")
     public ResponseEntity getAdmins(){
-        List<User> Vendors = UserRepository.findByRole("Admin");
-        Map<String, List<User>> vendorMap = Vendors.stream().collect(Collectors.groupingBy(User::getCompany));
-        return ResponseEntity.ok(vendorMap);
+        List<List> resultList = new ArrayList<>();
+        List<User> vendorList = UserRepository.findByRole("Admin");
+        Optional<Company> company = CompanyRepository.findById(vendorList.get(0).getCompanyRegistrationNum());
+        if(company.isPresent()){
+            List<Company> companyList = new ArrayList<>();
+            companyList.add(company.get());
+            resultList.add(companyList);
+            resultList.add(vendorList);
+            return ResponseEntity.ok(resultList);
+        }else{
+            return new ResponseEntity<>("Company does not exist", HttpStatus.UNAUTHORIZED);
+        }
+
     }
 
     @GetMapping("/getApprovers")
-    public ResponseEntity getApprovers(){
+    public ResponseEntity getApprovers() {
         List<User> Vendors = UserRepository.findByRole("Approver");
-        Map<String, List<User>> vendorMap = Vendors.stream().collect(Collectors.groupingBy(User::getCompany));
+        Map<String, List<User>> vendorMap = Vendors.stream().collect(Collectors.groupingBy(User::getCompanyRegistrationNum));
         return ResponseEntity.ok(vendorMap);
     }
 }

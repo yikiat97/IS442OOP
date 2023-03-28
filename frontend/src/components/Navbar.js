@@ -54,56 +54,55 @@ const Navbar = () => {
                 VMS
             </Typography>
             </Menu>
-
-            <Menu style={{textAlign:"left"}}>
-
+            {role!=null ?
+            <><Menu style={{ textAlign: "left" }}>
                 
-                <SubMenu label='User Management' icon={<GroupsIcon />} component={<Link to='/UserManagement'/>}>
-                    <MenuItem >Create New User</MenuItem>
-                </SubMenu>
+                    <SubMenu label='User Management' icon={<GroupsIcon />} component={<Link to='/UserManagement' />}>
+                        <MenuItem>Create New User</MenuItem>
+                    </SubMenu>
 
-                <SubMenu label='Workflows' icon={<SettingsSuggestIcon />} component={<Link to='/WorkflowsAdmin'/>}>
-                    <MenuItem component={<Link to='/ViewWorkflowsTemplate'/>}>View Templates</MenuItem>
-                    <MenuItem component={<Link to='/CreateWorkflow'/>}>Create New Template</MenuItem>
-                    <MenuItem component={<Link to='/ViewAllWorkflow'/>}>View Workflows</MenuItem>
-                    <MenuItem component={<Link to='/AssignWorkflow'/>}>Assign Workflow</MenuItem>
-                    
-                </SubMenu>
+                    <SubMenu label='Workflows' icon={<SettingsSuggestIcon />} component={<Link to='/WorkflowsAdmin' />}>
+                        <MenuItem component={<Link to='/ViewWorkflowsTemplate' />}>View Templates</MenuItem>
+                        <MenuItem component={<Link to='/CreateWorkflow' />}>Create New Template</MenuItem>
+                        <MenuItem component={<Link to='/ViewAllWorkflow' />}>View Workflows</MenuItem>
+                        <MenuItem component={<Link to='/AssignWorkflow' />}>Assign Workflow</MenuItem>
 
-                <SubMenu label='Form Management' icon={<FeedIcon />} component={<Link to='/FormHomePage'/>}>
-                    <MenuItem component={<Link to='/ViewForms'/>}>View Past Forms</MenuItem>
-                    <MenuItem component={<Link to='/FormCreation'/>}>Create New Form</MenuItem>
-                </SubMenu>
+                    </SubMenu>
 
-            </Menu>
+                    <SubMenu label='Form Management' icon={<FeedIcon />} component={<Link to='/FormHomePage' />}>
+                        <MenuItem component={<Link to='/ViewDeletedForms' />}>View Deleted Forms</MenuItem>
+                        <MenuItem component={<Link to='/ViewForms' />}>View Current Forms</MenuItem>
+                        <MenuItem component={<Link to='/FormCreation' />}>Create New Form</MenuItem>
+                    </SubMenu>
 
-            <Menu sx={{}} onClick={handleAuthItemClick}>
-                {/* <MenuItem icon={<PersonIcon/>}> */}
-                <Grid container sx={{mt:'10px',display:"flex", align:"center"}}>
-                    <Grid item md={3}>
-                    <PersonIcon/>
-                    </Grid>
+                </Menu><Menu sx={{}} onClick={handleAuthItemClick}>
+                        {/* <MenuItem icon={<PersonIcon/>}> */}
+                        <Grid container sx={{ mt: '10px', display: "flex", align: "center" }}>
+                            <Grid item md={3}>
+                                <PersonIcon />
+                            </Grid>
 
-                    <Grid item md={6}>
-                    <Typography
-                        noWrap='true'
-                        variant="body2"
-                        sx={{fontWeight: 700, textAlign:"left" }}>
-                        {roleText}
-                    </Typography>
-                    </Grid>
+                            <Grid item md={6}>
+                                <Typography
+                                    noWrap='true'
+                                    variant="body2"
+                                    sx={{ fontWeight: 700, textAlign: "left" }}>
+                                    {roleText}
+                                </Typography>
+                            </Grid>
 
-                    <Grid item md={3}>
-                    <Typography textAlign={'center'}>
-                            <StartIcon />   
-                    </Typography>
-                    </Grid>
-                </Grid>
-                
-                
-                
-                {/* </MenuItem> */}
-            </Menu>
+                            <Grid item md={3}>
+                                <Typography textAlign={'center'}>
+                                    <StartIcon />
+                                </Typography>
+                            </Grid>
+                        </Grid>
+
+
+
+                          {/* </MenuItem> */}
+                      </Menu></>
+            :<></>}
 
 
         </Sidebar>

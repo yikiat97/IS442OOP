@@ -271,7 +271,7 @@ console.log(formData)
       case "select":
         return (
           <div style={{backgroundColor: "white", borderRadius: "10px"}}>
-          <Grid style={{padding:"50px",}}container sx={{ }}>
+          <Grid container sx={{ }}>
             <InputLabel style={{paddingRight:"10px",}} htmlFor={field.name}>{field.label}</InputLabel>
  
             <Select
@@ -279,7 +279,7 @@ console.log(formData)
               id={field.name}
               style={getStylesForField(field.name)}
               className={field.className}
-              required={field.required}
+              required={true}
               multiple={field.multiple}
               value={field.values.find((option) => option.selected)?.value || ""}
               onChange={(e) => handleRadioChange(field.name, e.target.value)}
@@ -312,10 +312,11 @@ console.log(formData)
 
       case "canvas":
           return (
-              <Grid container   >
-                  <Typography>{field.label}</Typography><br></br>
-                  <Canvas sx={{ m: 2, float: 'left',display:'block'  }}/>
-              </Grid>
+            <Grid container   sx={{ display:"block"}} >
+                <Typography>{field.label}</Typography>
+                <Canvas sx={{ m: 2, float: 'left',display:'block'  }}/>
+                <br></br>
+            </Grid>
           );
       default:
           return (
@@ -327,7 +328,7 @@ console.log(formData)
   };
 
   return (
-    <div style={{backgroundColor: "lightBlue"}}>
+    <div>
     <Grid style={{ width:"70%", margin:"auto"}} container spacing={2}>
       {formData.questionData.map((field, index) => (
         <Grid key={index} item xs={12}>

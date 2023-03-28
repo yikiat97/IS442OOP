@@ -18,7 +18,7 @@ public class EmailSenderService {
     @Autowired
     private JavaMailSender mailSender;
     public void sendEmail(String toEmail, String body, String subject, String attachment) throws MailException, MessagingException {
-        if(attachment == ""){
+        if(attachment.equals("")){
             SimpleMailMessage message = new SimpleMailMessage();
 
             message.setFrom("oopis442team7@outlook.com");

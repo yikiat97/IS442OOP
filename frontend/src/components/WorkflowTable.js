@@ -9,6 +9,7 @@ import {
     TableContainer,
     Chip,
     TextField,
+    Link
         
 } from "@mui/material";
 import axios from "axios";
@@ -18,6 +19,8 @@ import Highlighter from "react-highlight-words";
 
 
 function WorkflowTable({props}){
+
+    const role = sessionStorage.getItem("role");
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -128,7 +131,11 @@ function WorkflowTable({props}){
     },
     {
         render:()=>(
-        <Button variant='contained' size='small' sx={{ml:5, background:"#90a4ae"}} endIcon={<AddAlertIcon/>}>Send</Button>
+
+            role=='Admin' ?
+                <Button variant='contained' size='small' sx={{ml:5, background:"#90a4ae"}} endIcon={<AddAlertIcon/>}>
+                    Send</Button> :null
+
         ),
     },
     {
@@ -154,16 +161,24 @@ function WorkflowTable({props}){
                                         status === 'Approved' ? '#4caf50' : 
                                         status === 'Rejected' ? '#c62828' :
                                         status === 'Deleted' ? '#c62828' :
-                                        status === 'Draft' ? '#e0e0e0':
                                         status === 'Awaiting Approver' ? '#ff9800' :
-                                        status === 'Awaiting Admin' ? '#ff9800' : '#03a9f4'}}></Chip>
+                                        status === 'Pending' ? '#ff9800' : '#03a9f4'}}></Chip>
         ),
     
     },
 
     {   
-        render: () => (
-                            <ArrowForwardIosIcon />  
+        render: (_,{id,status}) => (
+
+            status=='Pending' && role=='Vendor' ?
+                    
+                        <Link href={'FormWorkflow/' + id} underline='none'>
+                            <ArrowForwardIosIcon  /> 
+                        </Link> :
+            role=='Admin' | role=='Approver'?
+                        <Link href={'FormWorkflow/' + id} underline='none'>
+                        <ArrowForwardIosIcon  /> 
+                        </Link> : null
             ),
     }
     ];

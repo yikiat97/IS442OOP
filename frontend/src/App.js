@@ -2,6 +2,7 @@ import { React } from "react";
 import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import VendorNavbar from "./components/VendorNavBar";
 
 import CreateWorkflow from "./pages/CreateWorkflow";
 import Form from "./pages/FormCreation";
@@ -29,6 +30,17 @@ import ForgetPassword from "./pages/ForgetPassword";
 import EditUser from "./pages/EditUser";
 import VendorViewForm from "./pages/VendorViewForm";
 import ChangePassword from "./pages/ChangePassword";
+import FormWorkflow from "./pages/FormWorkflow";
+import ViewDeletedForms from "./pages/ViewPastForms";
+import VendorOverviewPage from "./pages/VendorOverviewPage";
+import VendorAssignWorkflowPage from "./pages/VendorAssignWorkflowPage";
+import VendorPastWorkflowpage from "./pages/VendorPastWorkflowpage";
+import EditCompanyDetails from "./pages/EditCompanyDetails";
+import QuantumDetails from "./pages/QuantumDetails";
+import EditCompany from "./pages/EditCompany";
+import UpdateWorkflow from "./pages/UpdateWorkflow";
+import ViewEmails from "./pages/ViewEmails";
+import ViewWorkflowEmails from "./pages/ViewWorkflowEmails";
 
 function App() {
   const VENDOR_ROLE = "Vendor";
@@ -38,9 +50,13 @@ function App() {
   const ProtectedRoute = ({ rolesAllowed = [], children }) => {
     const role = sessionStorage.getItem("role");
     const user = sessionStorage.getItem("user");
+    console.log(role, rolesAllowed, rolesAllowed.includes(role));
+
     if (
-      rolesAllowed.length > 0 ||
-      (user && !rolesAllowed.includes(role)) // test this later, admin allowed all pages
+      role !== ADMIN_ROLE &&
+      rolesAllowed.length > 0 &&
+      user &&
+      !rolesAllowed.includes(role) // test this later, admin allowed all pages
     ) {
       return <Navigate to="/NotAuthorized" replace />;
     }
@@ -116,6 +132,19 @@ function App() {
     "/NotAuthorized": { element: <NotAuthorized />, rolesAllowed: [] },
     "/ForgetPassword": { element: <ForgetPassword />, rolesAllowed: [] },
     "/": { element: <Home />, rolesAllowed: [] },
+    "/ChangePassword": { element: <ChangePassword />, rolesAllowed: [] },
+    "/FormWorkflow": { element: <FormWorkflow />, rolesAllowed: [ADMIN_ROLE] },
+    "/ViewDeletedForms": { element: <ViewDeletedForms />, rolesAllowed: [ADMIN_ROLE] },
+    "/VendorOverviewPage": { element: <VendorOverviewPage />, rolesAllowed: [VENDOR_ROLE] },
+    "/VendorAssignWorkflowPage": { element: <VendorAssignWorkflowPage />, rolesAllowed: [VENDOR_ROLE] },
+    "/VendorPastWorkflowpage": { element: <VendorPastWorkflowpage />, rolesAllowed: [VENDOR_ROLE] },
+
+    "/EditCompanyDetails": { element: <EditCompanyDetails />, rolesAllowed: [ADMIN_ROLE] },
+    "/QuantumDetails": { element: <QuantumDetails />, rolesAllowed: [ADMIN_ROLE] },
+    "/EditCompany": { element: <EditCompany />, rolesAllowed: [ADMIN_ROLE] },
+    "/UpdateWorkflow": { element: <UpdateWorkflow />, rolesAllowed: [ADMIN_ROLE] },
+    "/ViewEmails": { element: <ViewEmails />, rolesAllowed: [ADMIN_ROLE] },
+    "/ViewWorkflowEmails": { element: <ViewWorkflowEmails />, rolesAllowed: [ADMIN_ROLE] },
   };
 
   const renderRoutes = () => {
@@ -135,10 +164,17 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        {/* {user && <Navbar />}  */}
-        <Navbar />
+        {sessionStorage.getItem("role") === "Vendor" ? (
+          <VendorNavbar />
+        ) : sessionStorage.getItem("role") === "Approver" || "Admin" ? (
+          <Navbar />
+        ) : (
+          <Navbar />
+        )}
       </header>
-      <Routes>{renderRoutes()}</Routes>
+      <Routes>
+        {renderRoutes()}
+      </Routes>
     </div>
   );
 }

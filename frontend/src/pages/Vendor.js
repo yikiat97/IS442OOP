@@ -62,20 +62,6 @@ function Row(props) {
     },
   }));
 
-  const [country, setCountry] = useState("");
-
-  useEffect(() => {
-    getCountry();
-  }, []);
-  
-  const getCountry = () => {
-      axios.get("http://localhost:8080/company/country?name=" + row[0])
-      .then((response) => {
-        setCountry(response.data);
-      })
-      .catch(error => console.error(error));
-  };
-
   return (
     <React.Fragment>
       <StyledTableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -89,16 +75,18 @@ function Row(props) {
           </IconButton>
         </StyledTableCell>
         <StyledTableCell component="th" scope="row" >
-            <Typography sx={{fontWeight: 'bold'}}>{row[0]}</Typography>
+            <Typography sx={{fontWeight: 'bold'}}>{row[0].registrationNum}</Typography>
         </StyledTableCell>
         <StyledTableCell component="th" scope="row" >
-            <Typography sx={{fontWeight: 'bold'}}>{country}</Typography>
+            <Typography sx={{fontWeight: 'bold'}}>{row[0].name}</Typography>
         </StyledTableCell>
-        <StyledTableCell align="left">
-            <Link href='CreateNewContact' underline='none'>
-                <PersonAddIcon sx={{color:'#1565c0'}} />
-            </Link> 
+        <StyledTableCell component="th" scope="row" >
+            <Typography sx={{fontWeight: 'bold'}}>{row[0].country}</Typography>
         </StyledTableCell>
+        <StyledTableCell align="left"><DeleteOutlineIcon sx={{color:'#c62828'}}/></StyledTableCell>
+        <Link href={'EditUser/' + row[1].email} underline='none'>
+            <StyledTableCell align="left"><EditIcon sx={{color:'#1565c0'}} /></StyledTableCell>
+        </Link>
       </StyledTableRow>
       <StyledTableRow>
         <StyledTableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -114,20 +102,14 @@ function Row(props) {
                   </StyledTableRow>
                 </TableHead>
                 <TableBody>
-                  {row[1].map((contactsRow) => (
-                    <StyledTableRow key={contactsRow.name}>
-                      <StyledTableCell component="th" scope="row">
-                        {contactsRow.name}
-                      </StyledTableCell>
-                      <StyledTableCell align="left">{contactsRow.email}</StyledTableCell>
-                      <StyledTableCell align="left">{contactsRow.email}</StyledTableCell>
-                      <StyledTableCell align="left">{contactsRow.role}</StyledTableCell>
-                      <StyledTableCell align="right"><DeleteOutlineIcon sx={{color:'#c62828'}}/></StyledTableCell>
-                      <Link href={'EditUser/' + contactsRow.email} underline='none'>
-                          <StyledTableCell align="left"><EditIcon sx={{color:'#1565c0'}} /></StyledTableCell>
-                      </Link>
-                    </StyledTableRow>
-                  ))}
+                  <StyledTableRow key={row[1].name}>
+                    <StyledTableCell component="th" scope="row">
+                      {row[1].name}
+                    </StyledTableCell>
+                    <StyledTableCell align="left">{row[1].name}</StyledTableCell>
+                    <StyledTableCell align="left">{row[1].email}</StyledTableCell>
+                    <StyledTableCell align="left">{row[1].role}</StyledTableCell>
+                  </StyledTableRow>
                 </TableBody>
               </Table>
             </Box>
@@ -218,14 +200,16 @@ function Vendor() {
                     <TableHead>
                     <StyledTableRow>
                         <StyledTableCell/>
-                        <StyledTableCell >Company Name</StyledTableCell>
+                        <StyledTableCell >Registration Number</StyledTableCell>
+                        <StyledTableCell align="left">Company Name</StyledTableCell>
                         <StyledTableCell align="left">Country of Origin</StyledTableCell>
-                        <StyledTableCell align="right"></StyledTableCell>
+                        <StyledTableCell align="left"></StyledTableCell>
+                        <StyledTableCell align="left"></StyledTableCell>
                     </StyledTableRow>
                     </TableHead>
                     <TableBody>
                     {companies.map((company) => (
-                        <Row key={company[0]} row={company} />
+                        <Row key={company[0]} row={company[1]} />
                     ))}
                     </TableBody>
                 </Table>

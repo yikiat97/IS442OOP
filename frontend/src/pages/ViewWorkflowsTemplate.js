@@ -143,11 +143,13 @@ function ViewWorkflowsTemplate(){
   },
   {
       
-      render: () => (
-          
-              <ArrowForwardIosIcon />
-          
-          ),
+      render: (_,{id}) => (
+        
+        <Link href={'UpdateWorkflow/' + id} underline='none'>
+            <ArrowForwardIosIcon  /> 
+        </Link>
+        
+        ),
   }
   ];
 
