@@ -191,6 +191,7 @@ function CreateCompany(){
             } 
         }catch (error) {
             console.log(error.response);
+            navigate('/UserManagement');
         }
     
     };

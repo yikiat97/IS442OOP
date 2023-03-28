@@ -59,7 +59,7 @@ public class ProjectApplication  {
         UserRepo.save(new Vendor(userService.encryptPassword("password"), "yikiat", "yikiat.lim.2020@scis.smu.edu.sg","123456","Vendor", "22345678"));
         UserRepo.save(new Vendor(userService.encryptPassword("password"), "elmer", "elmer.yeo.2020@scis.smu.edu.sg","","Vendor", "32345678"));
         UserRepo.save(new Vendor(userService.encryptPassword("password"), "diyanah", "diyanahj.2020@scis.smu.edu.sg","","Vendor", "42345678"));
-        UserRepo.save(new Vendor(userService.encryptPassword("password"), "chong hui", "chkwan.2020@scis.smu.edu.sg","","Vendor", "532345678"));
+        UserRepo.save(new Vendor(userService.encryptPassword("password"), "chong hui", "chkwan.2020@scis.smu.edu.sg","","Vendor", "52345678"));
         UserRepo.save(new Vendor(userService.encryptPassword("password"), "syafinaz", "syafinazss.2020@scis.smu.edu.sg","","Vendor", "62345678"));
         UserRepo.save(new Vendor(userService.encryptPassword("password"), "jun wei", "jwleong.2020@scis.smu.edu.sg","","Vendor", "72345678"));
         UserRepo.save(new Vendor(userService.encryptPassword("password"), "hui lin", "huilin.tay.2020@scis.smu.edu.sg","","Vendor", "82345678"));

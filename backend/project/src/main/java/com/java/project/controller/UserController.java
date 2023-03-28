@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -101,18 +103,21 @@ public class UserController {
             Admin admin = UserRepository.save(newAdmin);
 
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
-            Email email = new Email(admin.getEmail(),"Hidden","Account created for Quantum VMS","");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDateTime now = LocalDateTime.now();
+            //String toEmail, String body, String subject, String attachment, String type, String relatedId
+            Email email = new Email(admin.getEmail(),emailBody,"Account created for Quantum VMS","", "Account creation", "",dtf.format(now));
             try{
                 EmailService.sendEmail(admin.getEmail(),emailBody,"Account created for Quantum VMS","");
-                email.setStatus("success");
+                email.setStatus("Success");
                 Email emailSent = EmailRepository.save(email);
                 return ResponseEntity.ok(admin);
             }catch (MailException e){
-                email.setStatus("error");
+                email.setStatus("Error");
                 Email emailSent = EmailRepository.save(email);
                 return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
             }catch(MessagingException e) {
-                email.setStatus("error");
+                email.setStatus("Error");
                 Email emailSent = EmailRepository.save(email);
                 return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
             }
@@ -132,19 +137,21 @@ public class UserController {
             newApprover.setUserName(newApprover.getEmail(), newApprover.getRole());
             Approver approver = UserRepository.save(newApprover);
 
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDateTime now = LocalDateTime.now();
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
-            Email email = new Email(approver.getEmail(),"Hidden","Account created for Quantum VMS","");
+            Email email = new Email(approver.getEmail(),emailBody,"Account created for Quantum VMS","", "Account creation", "",dtf.format(now));
             try{
                 EmailService.sendEmail(approver.getEmail(),emailBody,"Account created for Quantum VMS","");
-                email.setStatus("success");
+                email.setStatus("Success");
                 Email emailSent = EmailRepository.save(email);
                 return ResponseEntity.ok(approver);
             }catch (MailException e){
-                email.setStatus("error");
+                email.setStatus("Error");
                 Email emailSent = EmailRepository.save(email);
                 return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
             }catch(MessagingException e) {
-                email.setStatus("error");
+                email.setStatus("Error");
                 Email emailSent = EmailRepository.save(email);
                 return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
             }
@@ -162,19 +169,21 @@ public class UserController {
             newVendor.setUserName(newVendor.getEmail(), newVendor.getRole());
             Vendor vendor = UserRepository.save(newVendor);
 
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDateTime now = LocalDateTime.now();
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
-            Email email = new Email(vendor.getEmail(),"Hidden","Account created for Quantum VMS","");
+            Email email = new Email(vendor.getEmail(),emailBody,"Account created for Quantum VMS","", "Account creation", "",dtf.format(now));
             try{
                 EmailService.sendEmail(vendor.getEmail(),emailBody,"Account created for Quantum VMS","");
-                email.setStatus("success");
+                email.setStatus("Success");
                 Email emailSent = EmailRepository.save(email);
                 return ResponseEntity.ok(vendor);
             }catch (MailException e){
-                email.setStatus("error");
+                email.setStatus("Error");
                 Email emailSent = EmailRepository.save(email);
                 return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
             }catch(MessagingException e) {
-                email.setStatus("error");
+                email.setStatus("Error");
                 Email emailSent = EmailRepository.save(email);
                 return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
             }

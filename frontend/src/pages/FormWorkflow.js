@@ -22,7 +22,7 @@ import CircleIcon from '@mui/icons-material/Circle';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 import VendorFormPreview from '../components/VendorFormPreview';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import FormPreview from '../components/FormPreview';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -68,7 +68,10 @@ function FormWorkflow(){
     };
 
     console.log(steps)
-    
+    const navigate = useNavigate();
+    const viewEmails = (event) =>{
+        navigate("/ViewWorkflowEmails/" + workflowID)
+    }
     
     const statuses = [
         "Pending",
@@ -114,6 +117,12 @@ function FormWorkflow(){
                         {workflow.workflowName}
                     </Typography>
                     
+                </Grid>
+
+                <Grid item md={2.0} sm={1} sx={{justifyContent:"flex-end", display:'flex'}}>
+                    <Button color="primary" variant="contained" sx={{width:250, backgroundColor:"#2596BE"}} onClick={viewEmails}>
+                            View Emails
+                    </Button>
                 </Grid>
 
                 <Grid item md={0.5}></Grid>
