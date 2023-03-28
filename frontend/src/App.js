@@ -86,8 +86,8 @@ function App() {
         <Route path="/CreateCompany" element={<CreateCompany />} />
         <Route path="/CreateNewContact/:company" element={<CreateNewContact />} />
         <Route path="/Vendor" element={<Vendor />} />
-        <Route path="/Admin" element={<Admin />} />
-        <Route path="/Approver" element={<Approver />} />
+        <Route path="/Admin/:registrationNum" element={<Admin />} />
+        <Route path="/Approver/:registrationNum" element={<Approver />} />
         <Route path="/CompanyDetails/:company" element={<CompanyDetails />} />
         <Route path="/QuantumDetails/:company" element={<QuantumDetails />} />
         <Route path="/EditUser/:company/:email" element={<EditUser />} />

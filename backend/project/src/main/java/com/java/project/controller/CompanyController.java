@@ -31,6 +31,12 @@ public class CompanyController {
         return ResponseEntity.ok(companyList);
     }
 
+    @GetMapping("/quantumRegNum")
+    public ResponseEntity getQuantumRegistrationNum(){
+        List<User> userList = UserRepository.findByRole("Approver");
+        return ResponseEntity.ok(userList.get(0).getCompanyRegistrationNum());
+    }
+
     @GetMapping("/registrationList")
     public ResponseEntity getRegistrationNumbers(){
         List<Company> companyList = CompanyRepository.findAll();

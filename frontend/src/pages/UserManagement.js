@@ -34,6 +34,7 @@ function UserManagement(){
     const [numApprover, setNumApprover] = useState("");
     const [numAdmin, setNumAdmin] = useState("");
     const [companies, setCompanies] = useState([]);
+    const [quantumRegistrationNum, setQuantumRegistrationNum] = useState("");
 
         const StyledMenu = styled((props) => (
             <Menu
@@ -108,9 +109,18 @@ function UserManagement(){
             }));
 
             useEffect(() => {
+                getQuantumRegNum();
                 getNumUsers();
                 getCompany();
             }, []);
+
+            const getQuantumRegNum = () => {
+                axios.get("http://localhost:8080/company/quantumRegNum")
+                .then((response) => {
+                    setQuantumRegistrationNum(response.data);
+                })
+                .catch(error => console.error(error));
+            };
 
             const getNumUsers = () => {
                 axios.get("http://localhost:8080/login/numUsers")
@@ -164,7 +174,7 @@ function UserManagement(){
                 </Grid>
 
                 <Grid item xs={4}>
-                    <Link href='Admin' underline='none'>
+                    <Link href={'Admin/' + quantumRegistrationNum} underline='none'>
                     <Card sx={{ borderRadius: '16px' }} style={{backgroundColor: "#FEDBC2"}}>
                         <CardContent align="center">
                                 <Typography variant="h2" component="div" fontWeight="Bold" color={"#8A3C03"}>
@@ -186,7 +196,7 @@ function UserManagement(){
                 </Grid>
 
                 <Grid item xs={4}>
-                    <Link href='Approver' underline='none'>
+                    <Link href={'Approver/' + quantumRegistrationNum} underline='none'>
                     <Card sx={{ borderRadius: '16px' }} style={{backgroundColor: "#FFD9D9"}}>
                         <CardContent align="center">
                                 <Typography variant="h2" component="div" fontWeight="Bold" color={"#790202"}>
@@ -232,6 +242,7 @@ function UserManagement(){
                     <TableHead>
                     <StyledTableRow>
                         <StyledTableCell align="left">Company Name</StyledTableCell>
+                        <StyledTableCell align="left">Registration Number</StyledTableCell>
                         <StyledTableCell align="left">Country of Origin</StyledTableCell>
                         <StyledTableCell align="right"></StyledTableCell>
                     </StyledTableRow>
@@ -242,6 +253,7 @@ function UserManagement(){
                         <StyledTableCell component="th" scope="row">
                             {company.name}
                         </StyledTableCell>
+                        <StyledTableCell align="left">{company.registrationNum}</StyledTableCell>
                         <StyledTableCell align="left">{company.country}</StyledTableCell>
                         {company.name === "Quantum"
                             ? <Link href={'QuantumDetails/' + company.registrationNum} underline='none'>
