@@ -2,6 +2,7 @@ package com.java.project.controller;
 
 import com.java.project.model.*;
 import com.java.project.repository.CompanyRepository;
+import com.java.project.repository.EmailRepository;
 import com.java.project.repository.UserRepository;
 import com.java.project.service.EmailSenderService;
 import com.java.project.service.UserService;
@@ -33,6 +34,9 @@ public class UserController {
 
     @Autowired
     CompanyRepository CompanyRepository;
+
+    @Autowired
+    EmailRepository EmailRepository;
 
     @GetMapping("/getEmails")
     public ResponseEntity getEmails(){
@@ -97,14 +101,21 @@ public class UserController {
             Admin admin = UserRepository.save(newAdmin);
 
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
-//            try{
-//                EmailService.sendEmail(admin.getEmail(),emailBody,"Account created for Quantum VMS","");
-            return ResponseEntity.ok(admin);
-//            }catch (MailException e){
-//                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
-//            }catch(MessagingException e) {
-//                return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
-//            }
+            Email email = new Email(admin.getEmail(),"Hidden","Account created for Quantum VMS","");
+            try{
+                EmailService.sendEmail(admin.getEmail(),emailBody,"Account created for Quantum VMS","");
+                email.setStatus("success");
+                Email emailSent = EmailRepository.save(email);
+                return ResponseEntity.ok(admin);
+            }catch (MailException e){
+                email.setStatus("error");
+                Email emailSent = EmailRepository.save(email);
+                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
+            }catch(MessagingException e) {
+                email.setStatus("error");
+                Email emailSent = EmailRepository.save(email);
+                return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
+            }
         }
         else{
             return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
@@ -122,14 +133,21 @@ public class UserController {
             Approver approver = UserRepository.save(newApprover);
 
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
-//            try{
-//                EmailService.sendEmail(approver.getEmail(),emailBody,"Account created for Quantum VMS","");
+            Email email = new Email(approver.getEmail(),"Hidden","Account created for Quantum VMS","");
+            try{
+                EmailService.sendEmail(approver.getEmail(),emailBody,"Account created for Quantum VMS","");
+                email.setStatus("success");
+                Email emailSent = EmailRepository.save(email);
                 return ResponseEntity.ok(approver);
-//            }catch (MailException e){
-//                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
-//            }catch(MessagingException e) {
-//                return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
-//            }
+            }catch (MailException e){
+                email.setStatus("error");
+                Email emailSent = EmailRepository.save(email);
+                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
+            }catch(MessagingException e) {
+                email.setStatus("error");
+                Email emailSent = EmailRepository.save(email);
+                return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
+            }
         }else{
             return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
         }
@@ -145,14 +163,21 @@ public class UserController {
             Vendor vendor = UserRepository.save(newVendor);
 
             String emailBody = "An account has been created for you. Your password is: "+ rawPassword;
-//            try{
-//                EmailService.sendEmail(vendor.getEmail(),emailBody,"Account created for Quantum VMS","");
+            Email email = new Email(vendor.getEmail(),"Hidden","Account created for Quantum VMS","");
+            try{
+                EmailService.sendEmail(vendor.getEmail(),emailBody,"Account created for Quantum VMS","");
+                email.setStatus("success");
+                Email emailSent = EmailRepository.save(email);
                 return ResponseEntity.ok(vendor);
-//            }catch (MailException e){
-//                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
-//            }catch(MessagingException e){
-//                return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
-//            }
+            }catch (MailException e){
+                email.setStatus("error");
+                Email emailSent = EmailRepository.save(email);
+                return new ResponseEntity<>("Mail Exception error", HttpStatus.UNAUTHORIZED);
+            }catch(MessagingException e) {
+                email.setStatus("error");
+                Email emailSent = EmailRepository.save(email);
+                return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
+            }
         }else{
             return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
         }

@@ -1,6 +1,7 @@
 package com.java.project.controller;
 
 import com.java.project.model.Email;
+import com.java.project.repository.EmailRepository;
 import com.java.project.service.EmailSenderService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +16,23 @@ public class EmailController {
         @Autowired
         private EmailSenderService service;
 
+        @Autowired
+        private EmailRepository EmailRepository;
+
         @PostMapping(value = "/sendEmail", consumes = "application/json", produces = "application/json")
         public String sendEmail(@RequestBody Email email) {
             try{
                 service.sendEmail(email.getToEmail(),email.getBody(),email.getSubject(),email.getAttachment());
+                email.setStatus("success");
+                Email emailSent = EmailRepository.save(email);
                 return "Email sent successfully";
             }catch (MailException e){
+                email.setStatus("error");
+                Email emailSent = EmailRepository.save(email);
                 return "error";
             }catch(MessagingException e){
+                email.setStatus("error");
+                Email emailSent = EmailRepository.save(email);
                 return "error";
             }
     }
