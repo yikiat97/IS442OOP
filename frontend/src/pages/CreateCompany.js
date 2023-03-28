@@ -178,7 +178,7 @@ function CreateCompany(){
                         email,
                         contactNumber,
                         role,
-                        registrationNum              
+                        companyRegistrationNum: registrationNum              
                     },
                     {
                         headers: {
