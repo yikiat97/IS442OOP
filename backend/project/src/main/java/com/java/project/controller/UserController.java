@@ -207,6 +207,33 @@ public class UserController {
         return new ResponseEntity<>("No such email found", HttpStatus.UNAUTHORIZED);
     }
 
+    @PutMapping(value = "/editUser")
+    public ResponseEntity editUser(@RequestBody User editUser){
+        Optional<User> user = UserRepository.findById(editUser.getEmail());
+        if(user.isPresent()){
+            String password = user.get().getPassword();
+            editUser.setPassword(password);
+            String role = editUser.getRole();
+
+            //password, name, email, contactNumber, role, companyRegistrationNum
+
+            if(role.equals("Admin")){
+                Admin saveUser = new Admin(editUser.getPassword(), editUser.getName(), editUser.getEmail(),editUser.getContactNumber(), role, editUser.getCompanyRegistrationNum());
+                User savedUser = UserRepository.save(saveUser);
+                return ResponseEntity.ok(savedUser);
+            } else if (role.equals("Approver")) {
+                Approver saveUser = new Approver(editUser.getPassword(), editUser.getName(), editUser.getEmail(),editUser.getContactNumber(), role, editUser.getCompanyRegistrationNum());
+                User savedUser = UserRepository.save(saveUser);
+                return ResponseEntity.ok(savedUser);
+            } else{
+                Vendor saveUser = new Vendor(editUser.getPassword(), editUser.getName(), editUser.getEmail(),editUser.getContactNumber(), role, editUser.getCompanyRegistrationNum());
+                User savedUser = UserRepository.save(saveUser);
+                return ResponseEntity.ok(savedUser);
+            }
+        }
+        return new ResponseEntity<>("No such email found", HttpStatus.UNAUTHORIZED);
+    }
+
     @DeleteMapping("/deleteUser")
     public ResponseEntity deleteUser(@RequestParam String email){
         if(userService.checkEmailExists(email)){
@@ -237,9 +264,19 @@ public class UserController {
 
     @GetMapping("/getAdmins")
     public ResponseEntity getAdmins(){
-        List<User> Vendors = UserRepository.findByRole("Admin");
-        Map<String, List<User>> vendorMap = Vendors.stream().collect(Collectors.groupingBy(User::getCompanyRegistrationNum));
-        return ResponseEntity.ok(vendorMap);
+        List<List> resultList = new ArrayList<>();
+        List<User> vendorList = UserRepository.findByRole("Admin");
+        Optional<Company> company = CompanyRepository.findById(vendorList.get(0).getCompanyRegistrationNum());
+        if(company.isPresent()){
+            List<Company> companyList = new ArrayList<>();
+            companyList.add(company.get());
+            resultList.add(companyList);
+            resultList.add(vendorList);
+            return ResponseEntity.ok(resultList);
+        }else{
+            return new ResponseEntity<>("Company does not exist", HttpStatus.UNAUTHORIZED);
+        }
+
     }
 
     @GetMapping("/getApprovers")

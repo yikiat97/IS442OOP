@@ -1,24 +1,8 @@
 import * as React from 'react';
-import dayjs from 'dayjs';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import StepContent from '@mui/material/StepContent';
 import { Container, textAlign, spacing, Box } from "@mui/system";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import AddIcon from '@mui/icons-material/Add';
 import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditIcon from '@mui/icons-material/Edit';
-
+import { message} from 'antd';
 import {
     FormControl,
     FormHelperText, 
@@ -46,7 +30,7 @@ import {
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 
 function EditUser(){
@@ -74,13 +58,37 @@ function EditUser(){
       }));
 
     const registrationNum = useParams().company;
-    const [users, setUsers] = useState([]);
+    const email = useParams().email;
+    const password = "";
+    const [contactName, setContactName] = useState("");
+    const [contactNumber, setContactNumber] = useState("");
+    const [role, setRole] = useState("");
+
+    const navigate = useNavigate();
+
+    const handleContactNameChange = (event) => {
+        setContactName(event.target.value);
+    };
+
+    const handleContactNumChange = (event) => {
+        setContactNumber(event.target.value);
+    };
+
+    const handleRoleChange = (event) => {
+        setRole(event.target.value);
+        console.log(event.target.value);
+    };
+
     const [companyDetails, setCompanyDetails] = useState([]);
 
     useEffect(() => {
-        getUsers();
+        getUser();
         getCompanyDetails();
       }, []);
+
+    const cancel = (event) =>{
+        navigate('/QuantumDetails/' + registrationNum);
+    }
 
     const getCompanyDetails = () => {
         axios.get("http://localhost:8080/company/getDetails?registrationNum=" + registrationNum)
@@ -90,12 +98,48 @@ function EditUser(){
         .catch(error => console.error(error));
     };
 
-    const getUsers = () => {
-        axios.get("http://localhost:8080/login/getUsersByCompany?registrationNumber=" + registrationNum)
+    const getUser = () => {
+        axios.get("http://localhost:8080/login/getUser?email=" + email)
         .then((response) => {
-            setUsers(response.data);
+            console.log(response.data[2]);
+            setContactName(response.data[0]);
+            setContactNumber(response.data[1]);
+            setRole(response.data[2])
         })
         .catch(error => console.error(error));
+    };
+
+    const saveUser = async (e) => {
+        e.preventDefault();
+
+        try {
+            if(contactName===""){
+                message.warning("No Contact Name given!")
+                return;
+            } else{
+                const res1 = await axios.put(
+                    "http://localhost:8080/login/editUser",
+                    {
+                        password,
+                        name : contactName,
+                        email,
+                        contactNumber,
+                        role,
+                        companyRegistrationNum: registrationNum              
+                    },
+                    {
+                        headers: {
+                        "Content-Type": "application/json"
+                        },
+                    }
+                );
+                
+                navigate('/QuantumDetails/' + registrationNum);
+            } 
+        }catch (error) {
+            console.log(error.response);
+        }
+    
     };
 
     return(
@@ -106,101 +150,61 @@ function EditUser(){
                     <h1>User Management</h1>
                 </Grid>
                 <Grid item md={2.0} sm={1} sx={{justifyContent:"flex-end", display:'flex'}}>
-                        <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="primary">
-                                Edit
-                        </Button>
+                    <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="error" onClick={cancel}>
+                        Cancel
+                    </Button>
+                    <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success" onClick={saveUser}>
+                            Save
+                    </Button>
                 </Grid>
             </Grid>
 
             <Paper elevation={1} sx={{height:"100%", pt:1,pl:2,pb:2, my:3}} md={{}}>
                 <Grid sx={{mx:2, mb:4}} columns={{ xs: 12, sm: 12, md: 12 }}>
-                    <h2>{companyDetails.name}</h2>
+                    <h2>Editing {companyDetails.name} User {contactName}</h2>
                 </Grid>
 
 
                 <Grid sx={{mx:2, mb:4}} columns={{ xs: 12, sm: 12, md: 12 }}>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                        <div>
-                            
-                                <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
-                                    <FormHelperText id="outlined-weight-helper-text">Country of Origin</FormHelperText>
-                                    <OutlinedInput
-                                        id="outlined-adornment-weight"
-                                        aria-describedby="outlined-weight-helper-text"
-                                        value={companyDetails.country}
-                                        
-                                    />
-                                </FormControl>
-                                <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
-                                    <FormHelperText id="outlined-weight-helper-text">Registration Number</FormHelperText>
-                                    <OutlinedInput
-                                        id="outlined-adornment-weight"
-                                        aria-describedby="outlined-weight-helper-text"
-                                        value={companyDetails.registrationNum}
-                                        
-                                    />
-                                </FormControl>
-                                <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
-                                    <FormHelperText id="outlined-weight-helper-text">GST Registration Number</FormHelperText>
-                                    <OutlinedInput
-                                        id="outlined-adornment-weight"
-                                        aria-describedby="outlined-weight-helper-text"
-                                        value={companyDetails.gstRegistrationNumber}
-                                        
-                                    />
-                                </FormControl>
-                                <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
-                                    <FormHelperText id="outlined-weight-helper-text">Business Nature</FormHelperText>
-                                    <OutlinedInput
-                                        id="outlined-adornment-weight"
-                                        aria-describedby="outlined-weight-helper-text"
-                                        value={companyDetails.businessNature}
-                                        
-                                    />
-                                </FormControl>    
-                        </div>
-                    </Box>
-
                     <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                        {users.map((user) => (
                             <div>
-                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleContactNameChange}>
                                 <FormHelperText id="outlined-weight-helper-text">Contact Name</FormHelperText>
                                 <OutlinedInput
                                     id="outlined-adornment-weight"
                                     aria-describedby="outlined-weight-helper-text"
-                                    value={user.name}
-                                    
+                                    value={contactName}
                                 />
+                                {contactName===""? <FormHelperText sx={{color:"#dd3c32"}}>Please enter a Name</FormHelperText> : <></>}
                             </FormControl>
                             <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
                                 <FormHelperText id="outlined-weight-helper-text">Email</FormHelperText>
                                 <OutlinedInput
+                                    disabled
                                     id="outlined-adornment-weight"
                                     aria-describedby="outlined-weight-helper-text"
-                                    value={user.email}
+                                    value={email}
                                     
                                 />
                             </FormControl>
-                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleContactNumChange}>
                                 <FormHelperText id="outlined-weight-helper-text">Contact Number</FormHelperText>
                                 <OutlinedInput
                                     id="outlined-adornment-weight"
                                     aria-describedby="outlined-weight-helper-text"
-                                    value={user.contactNumber}
+                                    value={contactNumber}
                                     
                                 />
                             </FormControl>
                             <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
-                                <FormHelperText id="outlined-weight-helper-text">User Role</FormHelperText>
-                                    <Select value={user.role} >
-                                    <MenuItem value="Admin">Admin</MenuItem>
-                                    <MenuItem value="Approver">Approver</MenuItem>
-                                    <MenuItem value="Vendor">Vendor</MenuItem>
+                                <FormHelperText id="outlined-weight-helper-text" defaultValue={role}>User Role</FormHelperText>
+                                    <Select value={role} onChange={handleRoleChange}>
+                                        <MenuItem value="Admin">Admin</MenuItem>
+                                        <MenuItem value="Approver">Approver</MenuItem>
+                                        <MenuItem value="Vendor">Vendor</MenuItem>
                                     </Select>
                             </FormControl>
                         </div>
-                    ))}
                 </Box>
                 </Grid>
             </Paper>

@@ -23,54 +23,68 @@ import Typography from "@mui/material/Typography";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
+import { message} from 'antd';
 
 function CreateNewContact(){
-    const company = useParams().company;
     const registrationNumber = useParams().company;
     const [showPassword, setShowPassword] = React.useState(false);
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("");
-    const [message, setMessage] = useState("");
     const password = "";
-    const [error, setError] = useState(false);
     const [contactNumber,setContactNumber] = useState("");
     const [companyDetails, setCompanyDetails] = useState([]);
+    
+    const [emailList, setEmailList] = useState([]);
+    const [emailError, setEmailError] = useState("");
 
     const navigate = useNavigate();
 
     useEffect(() => {
+        setEmailError("Please enter an Email");
         getCompanyDetails();
+        getEmails();
       }, []);
 
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     const handleEmailChange = (event) => {
-        const value = event.target.value;
-        // validate email input using regex
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (value !== '' && !regex.test(value)) {
-            setError(true);
-          } else {
-            setError(false);
-          }
-        setEmail(value);
-        setMessage("");
+        setEmail(event.target.value);
+        if(event.target.value === ""){
+            setEmailError("Please enter an Email");
+        }else if(emailList.includes(event.target.value)){
+            setEmailError("Email already exists");
+        }else if(!regex.test(event.target.value)){
+            setEmailError("Enter a valid Email");
+        }else{
+            setEmailError("");
+        }
     };
 
     const handleNameChange = (event) => {
         setName(event.target.value);
-        setMessage("");
     };
 
     const handleRoleChange = (event) => {
         setRole(event.target.value);
-        setMessage("");
     };
 
     const handleNumberChange = (event) => {
         setContactNumber(event.target.value);
-        setMessage("");
     };
+
+    const getEmails = () => {
+        axios.get("http://localhost:8080/login/getEmails")
+        .then((response) => {
+            setEmailList(response.data);
+        })
+        .catch(error => console.error(error));
+    };
+
+    const cancel = (event) => {
+        navigate("/QuantumDetails/" + registrationNumber);
+    }
 
     const getCompanyDetails = () => {
         axios.get("http://localhost:8080/company/getDetails?registrationNum=" + registrationNumber)
@@ -82,27 +96,43 @@ function CreateNewContact(){
 
     const createUser = async (e) => {
         e.preventDefault();
-
+        console.log(role);
         try {
-            const res = await axios.post(
-                "http://localhost:8080/login/create" + role,
-                {
-                    password,
-                    name,
-                    email,
-                    contactNumber,
-                    role,
-                    companyRegistrationNum: registrationNumber              
-                },
-                {
-                    headers: {
-                    "Content-Type": "application/json"
+            if(name===""){
+                message.warning("No Contact Name given!")
+                return;
+            } else if(email===""){
+                message.warning("No Contact Email given!")
+                return;
+            } else if(emailList.includes(email)){
+                message.warning("Email already exists!")
+                return;
+            } else if(!regex.test(email)){
+                message.warning("Enter a valid Email");
+            } else if(role===""){
+                message.warning("Select a Role")
+                return;
+            } else{
+                const res = await axios.post(
+                    "http://localhost:8080/login/create" + role,
+                    {
+                        password,
+                        name,
+                        email,
+                        contactNumber,
+                        role,
+                        companyRegistrationNum: registrationNumber              
                     },
-                }
-            );
+                    {
+                        headers: {
+                        "Content-Type": "application/json"
+                        },
+                    }
+                );
 
-            let route = "/QuantumDetails/" + registrationNumber;  
-            navigate(route);          
+                let route = "/QuantumDetails/" + registrationNumber;  
+                navigate(route);  
+            }        
         } catch (error) {
             console.log(error);
         }
@@ -135,25 +165,22 @@ function CreateNewContact(){
                             <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
                                 <FormHelperText id="outlined-weight-helper-text">Contact Name</FormHelperText>
                                 <TextField
-                                    value={name}
                                     onChange={handleNameChange}
                                 />
+                                {name===""? <FormHelperText sx={{color:"#dd3c32"}}>Please enter a Name</FormHelperText> : <></>}
                             </FormControl>
 
                             <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
                                 <FormHelperText id="outlined-weight-helper-text">Email</FormHelperText>
                                 <TextField
-                                    value={email}
                                     onChange={handleEmailChange}
-                                    error={error}
-                                    helperText={error && email !== '' ? 'Please enter a valid email address' : null}
                                     />
+                                <FormHelperText sx={{color:"#dd3c32"}}>{emailError}</FormHelperText>
                             </FormControl>
 
                             <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
                                 <FormHelperText id="outlined-weight-helper-text">Contact Number</FormHelperText>
                                 <TextField
-                                    value={contactNumber}
                                     onChange={handleNumberChange}
                                     />
                             </FormControl>
@@ -171,20 +198,20 @@ function CreateNewContact(){
                                     <MenuItem value="Approver">Approver</MenuItem>
                                     <MenuItem value="Vendor">Vendor</MenuItem>
                                     </Select>
+                                    {role===""? <FormHelperText sx={{color:"#dd3c32"}}>Please select a Role</FormHelperText> : <></>}
                             </FormControl>
                         </div>
                     </Box>
                                
 
                 <Grid sx={{mx:2, mb:4, display:"flex", justifyContent:"flex-end"}} columns={{ xs: 12, sm: 12, md: 12}}>
-                    
-                        <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success" onClick={createUser}>
-                                Save
-                        </Button>
+                    <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="error" onClick={cancel}>
+                            Cancel
+                    </Button>
+                    <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success" onClick={createUser}>
+                            Save
+                    </Button>
                 </Grid>
-                <Typography sx={{color: "red"}}>
-                    {message}
-                </Typography>
             
             </Paper>
             

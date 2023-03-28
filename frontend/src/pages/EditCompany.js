@@ -25,47 +25,33 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { message} from 'antd';
 
 function EditCompany(){
     const registrationNumUnchanged = useParams().company;
 
     const [name, setName] = useState("");
     const [country, setCountry] = useState("");
-    const [message, setMessage] = useState("");
     const [registrationNum, setRegistrationNum] = useState("");
-    const [companyRegistrationNum, setCompanyRegistrationNum] = useState("");
     const [gstRegistrationNumber, setGstRegistrationNumber] = useState("");
     const [businessNature, setBusinessNature] = useState("");
 
     const navigate = useNavigate();
-    const [open, setOpen] = React.useState(false);
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
 
     const handleNameChange = (event) => {
         setName(event.target.value);
-        setMessage("");
-      };
+    };
     
     const handleCountryChange = (event) => {
         setCountry(event.target.value);
-        setMessage("");
     };
 
     const handleGSTRegistratioNumberChange = (event) => {
         setGstRegistrationNumber(event.target.value);
-        setMessage("");
     };
 
     const handleBusNatureChange = (event) => {
         setBusinessNature(event.target.value);
-        setMessage("");
     };
 
     const getCompanyDetails = () => {
@@ -93,29 +79,37 @@ function EditCompany(){
         e.preventDefault();
 
         try {
-            const res = await axios.put(
-            "http://localhost:8080/company/edit",
-            {
-                registrationNum,
-                name,
-                country,
-                businessNature,
-                gstRegistrationNumber              
-            },
-            {
-                headers: {
-                "Content-Type": "application/json"
+            if(name===""){
+                message.warning("No Company Name given!")
+                return;
+            } else if(country===""){
+                message.warning("No Country given!")
+                return;
+            } else if(gstRegistrationNumber===""){
+                message.warning("No GST Registration Number given!")
+                return;
+            } else{
+                const res = await axios.put(
+                "http://localhost:8080/company/edit",
+                {
+                    registrationNum,
+                    name,
+                    country,
+                    businessNature,
+                    gstRegistrationNumber              
                 },
-            }
-            );
-            
-            navigate('/UserManagement');
-        } catch (error) {
-            if (error.response.status === 409) {
-                setMessage("Company already exists")
-            } else {
-                setMessage("Something went wrong")
+                {
+                    headers: {
+                    "Content-Type": "application/json"
+                    },
                 }
+                );
+                
+                navigate('/UserManagement');
+            }
+            
+        } catch (error) {
+            console.log(error);
         }
     
     };
@@ -133,7 +127,7 @@ function EditCompany(){
                     <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="error" onClick={cancel}>
                             Cancel
                     </Button>
-                    <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success" onClick={handleClickOpen}>
+                    <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="success" onClick={saveCompany}>
                             Save
                     </Button>
                 </Grid>
@@ -151,6 +145,7 @@ function EditCompany(){
                                     id="outlined-adornment-weight"
                                     aria-describedby="outlined-weight-helper-text"
                                 />
+                                {name===""? <FormHelperText sx={{color:"#dd3c32"}}>Please enter a Name</FormHelperText> : <></>}
                             </FormControl>
                             <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleCountryChange}>
                                 <FormHelperText id="outlined-weight-helper-text">Country of Origin</FormHelperText>
@@ -159,6 +154,7 @@ function EditCompany(){
                                     id="outlined-adornment-weight"
                                     aria-describedby="outlined-weight-helper-text"
                                 />
+                                {country===""? <FormHelperText sx={{color:"#dd3c32"}}>Please enter a Country</FormHelperText> : <></>}
                             </FormControl>
                             <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
                                 <FormHelperText id="outlined-weight-helper-text">Registration Number</FormHelperText>
@@ -176,6 +172,7 @@ function EditCompany(){
                                     id="outlined-adornment-weight"
                                     aria-describedby="outlined-weight-helper-text"
                                 />
+                                {gstRegistrationNumber===""? <FormHelperText sx={{color:"#dd3c32"}}>Please enter a GST registration number</FormHelperText> : <></>}
                             </FormControl>
                             <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleBusNatureChange}>
                                 <FormHelperText id="outlined-weight-helper-text">Business Nature</FormHelperText>
@@ -189,31 +186,6 @@ function EditCompany(){
                     </Box>
             
             </Paper>
-           
-            <Typography sx={{color: "red"}}>
-              {message}
-            </Typography>
-
-            <div>
-                <Dialog
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                >
-                    <DialogTitle id="alert-dialog-title">
-                        {"Confirm Changes to " + name}
-                    </DialogTitle>
-                    <DialogActions>
-                        <Button onClick={handleClose}>Cancel</Button>
-                        <Button onClick={saveCompany} autoFocus>
-                            Agree
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-            </div>
-
-
         </Grid>
         
     )
