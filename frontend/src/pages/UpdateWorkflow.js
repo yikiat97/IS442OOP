@@ -29,36 +29,22 @@ import {
     formControlClasses,
     Select
 } from "@mui/material";
+import { useParams } from 'react-router-dom';
 
 
 
-function CreateWorkflow(){
+function UpdateWorkflow(){
     
-      //submit workflow and set form steps
-      const [workflowName, setWorkflowName] = React.useState('New Workflow');
-      const [workflow, setWorkflow] = React.useState({});
-      const [formSteps, setFormStep]= React.useState([]);  
+    const workflowID = useParams().workflowID
+
 
     //set steps
     const [nextId, setNextId]=React.useState(1);
     const [formID, setFormID]=React.useState('');
     const [formName, setFormName]=React.useState('');
-    const [stepValue, setSteps] = React.useState([
-        {id:0,
-        formID: '640b618edb086d54e974b3b4',
-        formName: 'Safety Pre-Check Form 1'}]);
+    const [stepValue, setSteps] = React.useState([]);
+    const [workflowName, setWorkflowName]=React.useState("")
 
-    // const onAddBtnClick = (event) => {
-    //     const step ={
-    //         label:"Select form",
-    //         form: ""
-    //     }
-    //     setSteps([
-    //         ...stepValue,
-    //         step
-    //     ]);
-    //     setWorkflow([...workflow])
-    //     .then(() => console.log(workflow));    }
 
     //stepper handle next and back button
     const [activeStep, setActiveStep] = React.useState(0);
@@ -86,8 +72,9 @@ function CreateWorkflow(){
 
     
     useEffect(() => {
+        getWorkflow();
         getForms();
-        getWorkflows();
+        getWorkflowDatabase();
     }, []);
 
 
@@ -99,6 +86,7 @@ function CreateWorkflow(){
         axios.get("http://localhost:8080/getForm/All")
         .then((response) => {
             const ini={}
+            console.log(response.data)
             const data=response.data
             
             for(let i=0; i<data.length; i++){
@@ -110,10 +98,40 @@ function CreateWorkflow(){
         })
         .catch(error => console.error(error));
     };
-    
     // retrieve workflows
-    const [workflowDatabase, setWorkflowDatabase]=React.useState([]);
-    const getWorkflows = () => {
+    const [workflowDatabase,setWorkflowDatabase]=React.useState([]);
+    const [workflow, setWorkflow]=React.useState([]);
+    const getWorkflow = () => {
+        
+
+        axios.get("http://localhost:8080/workflow/WorkflowByID/"+ workflowID)
+        .then((response) => {
+            const ini=[]
+            const promises=[]
+            
+            for(const id of response.data.forms){
+                promises.push(
+                    axios.get("http://localhost:8080/getForm/" + id))
+                    console.log(promises)
+            }
+            
+            setWorkflow(response.data)
+
+            Promise.all(promises)
+                    .then((response) => {
+                        console.log(response)
+                        for(let obj of response){
+                            ini.push(obj.data)
+                        }
+                        setSteps(ini)
+                    })
+            
+
+        })
+        .catch(error => console.error(error));
+    };
+
+    const getWorkflowDatabase = () => {
         
 
         axios.get("http://localhost:8080/workflow/allWorkflow")
@@ -161,14 +179,15 @@ function CreateWorkflow(){
 
         
         const workflow = {
+            id:workflowID,
             forms: formIDS,
             workflowName: workflowName,
         };
         console.log(workflow);
         
-        axios.post("http://localhost:8080/workflow/insertWorkflow", workflow).then((response) => {
+        axios.put("http://localhost:8080/workflow/updateWorkflow", workflow).then((response) => {
             console.log(response.status, response.data.token);
-            alert("Workflow has been created!");
+            alert("Workflow has been updated!");
             window.location.reload();
         });
     };
@@ -188,8 +207,15 @@ function CreateWorkflow(){
         // console.log(stepValue);
     };
 
-    // console.log(forms)
-    // console.log(stepValue)
+    console.log(stepValue)
+
+    const deleteWorkflow = () => {
+        axios.delete("http://localhost:8080/workflow/deleteWorkflow/", workflow.id).then((response) => {
+                    console.log(response.status, response.data.token);
+                    alert("Workflow has been deleted!");
+                    window.location.reload();
+                });
+    }
     return(
         
         <Grid sx={{mt:6, textAlign:'left', px:4}}>
@@ -197,22 +223,22 @@ function CreateWorkflow(){
             
             <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:3}}>
 
-                <Grid item md={1.5}>
-                    <TextField variant='standard' value={workflowName} onChange={(e) => {
-                                                                setWorkflowName(e.target.value);
-                                                                }}
+                <Grid item md={1}>
+                    <TextField variant='standard' 
+                    value={workflow.workflowName} 
+                    onChange={(e) => {
+                    setWorkflowName(e.target.value);}}
                                 fullWidth hiddenLabel></TextField>
                 </Grid>
 
                 <Grid item md={1}></Grid>
 
-                {/* <Grid item md={0.25} sm={6} sx={{alignItems:"flex-end", justifyContent:"center", display:'flex'}}>
-                    <Button variant="contained" sx={{width:100, backgroundColor:"#2596BE"}}>Save</Button>
+                <Grid item md={1} sm={6} sx={{alignItems:"flex-end", justifyContent:"center", display:'flex'}}>
+                    <Button variant="contained" color="error" size="small" sx={{width:"75%"}}
+                    onClick = {()=>deleteWorkflow()}>Delete Workflow</Button>
                 </Grid>
 
-                <Grid item sx={{alignItems:"center", justifyContent:"flex-end", display:'flex'}} md={0.25} sm={6}>
-                    <Button sx={{bgcolor:"#D3D3D3", color:"#000000", width:100}}>Cancel</Button>
-                </Grid> */}
+                
 
             </Grid>
             
@@ -334,4 +360,4 @@ function CreateWorkflow(){
     )
 }
 
-export default CreateWorkflow;
+export default UpdateWorkflow;

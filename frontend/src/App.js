@@ -38,6 +38,7 @@ import VendorPastWorkflowpage from "./pages/VendorPastWorkflowpage";
 import EditCompanyDetails from "./pages/EditCompanyDetails";
 import QuantumDetails from "./pages/QuantumDetails";
 import EditCompany from "./pages/EditCompany";
+import UpdateWorkflow from "./pages/UpdateWorkflow";
 import ViewEmails from "./pages/ViewEmails";
 import ViewWorkflowEmails from "./pages/ViewWorkflowEmails";
 
@@ -59,9 +60,9 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        {/* {user && <Navbar />}  */}
-        {sessionStorage.getItem("role") === 'Vendor' && <VendorNavbar />}
-        {sessionStorage.getItem("role") !== 'Vendor' && <Navbar />}
+        
+        {sessionStorage.getItem("role") === 'Vendor' ? <VendorNavbar /> :
+        sessionStorage.getItem("role") === 'Approver' || 'Admin' ? <Navbar /> : <Navbar />}
       </header>
       
       <Routes>
@@ -69,6 +70,7 @@ function App() {
         <Route path="/VendorViewForm" element={<VendorViewForm />} />
         <Route path="/Form" element={<Form />} />
         <Route path="/CreateWorkflow" element={<CreateWorkflow />} />
+        <Route path="/UpdateWorkflow/:workflowID" element={<UpdateWorkflow />} />
         <Route
           path="/WorkflowsAdmin"
           element={
