@@ -25,7 +25,8 @@ import { useEffect, useState, useRef } from "react";
 import WorkflowTable from "../components/WorkflowTable"
 
 function VendorOverviewPage(){
-    
+    const id = sessionStorage.getItem('email')
+    console.log(id)
     useEffect(() => {
         getVendorWorkflows();
         ;
@@ -42,9 +43,14 @@ function VendorOverviewPage(){
     const getVendorWorkflows = () =>{
         axios.get("http://localhost:8080/vendorWorkflow/allVendorWorkflow")
         .then((response) => {
-            // const vendorWorkflows=[]
+            const ini=[]
             console.log(response.data)
-            setVendorWorkflows(response.data)
+            for(let obj of response.data){
+                if(obj.email==id){
+                    ini.push(obj)
+                }
+            }
+            setVendorWorkflows(ini)
             
             
         })

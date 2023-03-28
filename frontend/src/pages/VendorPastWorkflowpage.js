@@ -40,15 +40,23 @@ function VendorPastWorkflowpage(){
       "Approved",
       "Rejected"
   ]
-
+    const id = sessionStorage.getItem('email')
     const[vendorWorkflows, setVendorWorkflows]= React.useState([]);
     const getVendorWorkflows = () =>{
         axios.get("http://localhost:8080/vendorWorkflow/allVendorWorkflow")
        
         .then((response) => {
-            const filteredWorkflows = response.data.filter(workflow => workflow.status !== "Workflow Created");
-            console.log(filteredWorkflows);
-            setVendorWorkflows(filteredWorkflows);
+            // const filteredWorkflows = response.data.filter(workflow => workflow.status !== "Workflow Created");
+            // console.log(filteredWorkflows);
+
+            const ini=[]
+            console.log(response.data)
+            for(let obj of response.data){
+                if(obj.email==id && (obj.status=='Approved' || obj.status=='Deleted')){
+                    ini.push(obj)
+                }
+            }
+            setVendorWorkflows(ini);
         })
         .catch(error => console.error(error.response));
     }

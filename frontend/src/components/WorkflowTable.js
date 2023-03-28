@@ -131,11 +131,11 @@ function WorkflowTable({props}){
     },
     {
         render:()=>(
-            // { role=='Admin' &&
+
             role=='Admin' ?
                 <Button variant='contained' size='small' sx={{ml:5, background:"#90a4ae"}} endIcon={<AddAlertIcon/>}>
                     Send</Button> :null
-            // }
+
         ),
     },
     {
@@ -161,19 +161,24 @@ function WorkflowTable({props}){
                                         status === 'Approved' ? '#4caf50' : 
                                         status === 'Rejected' ? '#c62828' :
                                         status === 'Deleted' ? '#c62828' :
-                                        status === 'Draft' ? '#e0e0e0':
                                         status === 'Awaiting Approver' ? '#ff9800' :
-                                        status === 'Awaiting Admin' ? '#ff9800' : '#03a9f4'}}></Chip>
+                                        status === 'Pending' ? '#ff9800' : '#03a9f4'}}></Chip>
         ),
     
     },
 
     {   
-        render: (_,{id}) => (
+        render: (_,{id,status}) => (
+
+            status=='Pending' && role=='Vendor' ?
+                    
                         <Link href={'FormWorkflow/' + id} underline='none'>
                             <ArrowForwardIosIcon  /> 
-                            
-                            </Link> 
+                        </Link> :
+            role=='Admin' | role=='Approver'?
+                        <Link href={'FormWorkflow/' + id} underline='none'>
+                        <ArrowForwardIosIcon  /> 
+                        </Link> : null
             ),
     }
     ];
