@@ -4,7 +4,7 @@ cd frontend
 call npm i
 start npm start
 
-cd backend
+cd ../backend
 cd project
 call mvnw clean package
 cd bin

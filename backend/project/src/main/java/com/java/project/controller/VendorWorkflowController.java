@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.java.project.model.VendorWorkflow;
 import com.java.project.model.VendorWorkflowMappingDTO;
-import com.java.project.model.VendorWorkflowUpdateMappingDTO;
 import com.java.project.repository.VendorWorkflowRepository;
 import com.java.project.service.SequenceGeneratorService;
 
@@ -36,13 +34,13 @@ public class VendorWorkflowController {
 
     // JSON FORMAT FOR CREATING VENDORWORKFLOW
     // {
-    //     "forms": ["Vendor Assessment", "Pre-Evaluation Form", "Health Performance"],
-    //     "vendorWorkflowName": "Vendor Onboarding",
-    //     "status": "Pending",
-    //     "email": "elmer@gmail.com"
-    //     "company": "ek bank"
-    //     "date": "DD/MM/YYYY"
-    //     "name": "elmer"
+    // "forms": ["Vendor Assessment", "Pre-Evaluation Form", "Health Performance"],
+    // "vendorWorkflowName": "Vendor Onboarding",
+    // "status": "Pending",
+    // "email": "elmer@gmail.com"
+    // "company": "ek bank"
+    // "date": "DD/MM/YYYY"
+    // "name": "elmer"
     // }
     @PostMapping("/insertVendorWorkflow")
     public ResponseEntity<VendorWorkflow> createVendorWorkflow(
@@ -94,45 +92,34 @@ public class VendorWorkflowController {
 
     // When status is set to approved, the date is changed to current date
     // JSON format
-    // {
-    // "id" : "6412eaf10bf80f2c012bd872",
-    // "status": "Approved"
-    // }
+
+    // "6412eaf10bf80f2c012bd872",
+
     // id is a mandatory field to input
-    // Status is also a mandatory field to input
-    @PutMapping("/updateVendorWorkflowStatus")
-    public ResponseEntity<?> updateVendorWorkflowStatus(
-            @RequestBody(required = false) VendorWorkflowUpdateMappingDTO VendorWorkflowUpdateMappingDTO) {
+    // status to be automatically updated, dont need for updateMappingDTO
+    @PutMapping("/approveVendorWorkflow")
+    public ResponseEntity<?> approveVendorWorkflow(
+            @RequestBody(required = false) String id) {
 
         // map the json object so that id, forms and workflowname can be manipulated
-        String id = VendorWorkflowUpdateMappingDTO.getId();
         // List<String> forms = VendorWorkflowUpdateMappingDTO.getForms();
-        // String vendorWorkflowName = VendorWorkflowUpdateMappingDTO.getVendorWorkflowName();
-        String status = VendorWorkflowUpdateMappingDTO.getStatus();
-
+        // String vendorWorkflowName =
+        // VendorWorkflowUpdateMappingDTO.getVendorWorkflowName();
         Optional<VendorWorkflow> VendorWorkflow = VendorWorkflowRepository.findById(id);
         if (VendorWorkflow.isPresent()) {
-
-            String newStatus = (status == "") ? VendorWorkflow.get().getStatus() : status;
             LocalDate currentDate = LocalDate.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             String formattedDate = currentDate.format(formatter);
             // System.out.println(newStatus);
             // System.out.println(VendorWorkflow.get().getStatus());
             // if status changes to approve, then change the date to current date
-            if (status.equals("Approved") && !VendorWorkflow.get().getStatus().equals("Approved")){
-                VendorWorkflow _VendorWorkflow = VendorWorkflowRepository
-                .save(new VendorWorkflow(VendorWorkflow.get().getId(), VendorWorkflow.get().getForms(), VendorWorkflow.get().getWorkflowName(), newStatus,
-                        VendorWorkflow.get().getEmail(), VendorWorkflow.get().getCompany(), formattedDate, VendorWorkflow.get().getName()));
-                return new ResponseEntity<>(_VendorWorkflow, HttpStatus.OK);
-            }
-            else{
-                VendorWorkflow _VendorWorkflow = VendorWorkflowRepository
-                .save(new VendorWorkflow(VendorWorkflow.get().getId(), VendorWorkflow.get().getForms(), VendorWorkflow.get().getWorkflowName(), newStatus,
-                        VendorWorkflow.get().getEmail(), VendorWorkflow.get().getCompany(), VendorWorkflow.get().getDate(), VendorWorkflow.get().getName()));
-                return new ResponseEntity<>(_VendorWorkflow, HttpStatus.OK);
-            }
-            
+            VendorWorkflow _VendorWorkflow = VendorWorkflowRepository
+                    .save(new VendorWorkflow(VendorWorkflow.get().getId(), VendorWorkflow.get().getForms(),
+                            VendorWorkflow.get().getWorkflowName(), "Approved",
+                            VendorWorkflow.get().getEmail(), VendorWorkflow.get().getCompany(), formattedDate,
+                            VendorWorkflow.get().getName()));
+            return new ResponseEntity<>(_VendorWorkflow, HttpStatus.OK);
+
         } else {
             return new ResponseEntity<>("Workflow Not Found", HttpStatus.NOT_FOUND);
         }
@@ -141,22 +128,74 @@ public class VendorWorkflowController {
 
     }
 
-    // Path to delete workflow here
-    @DeleteMapping("/deleteVendorWorkflow/{id}")
-    public ResponseEntity<?> deleteVendorWorkflowById(@PathVariable("id") String id) {
-        System.out.println(id);
-        Optional<VendorWorkflow> VendorWorkflow = VendorWorkflowRepository.findById(id);
+    // Path after approval of all forms
+    // JSON format
 
+    // "6412eaf10bf80f2c012bd872",
+
+    // id is a mandatory field to input
+    @PutMapping("/rejectVendorWorkflow")
+    public ResponseEntity<?> rejectVendorWorkflow(
+            @RequestBody(required = false) String id) {
+        Optional<VendorWorkflow> VendorWorkflow = VendorWorkflowRepository.findById(id);
         if (VendorWorkflow.isPresent()) {
-            VendorWorkflowRepository.deleteById(id);
-            return new ResponseEntity<>("Workflow deleted", HttpStatus.NO_CONTENT);
+            // System.out.println(newStatus);
+            // System.out.println(VendorWorkflow.get().getStatus());
+            // if status changes to approve, then change the date to current date
+            VendorWorkflow _VendorWorkflow = VendorWorkflowRepository
+                    .save(new VendorWorkflow(VendorWorkflow.get().getId(), VendorWorkflow.get().getForms(),
+                            VendorWorkflow.get().getWorkflowName(), "Rejected",
+                            VendorWorkflow.get().getEmail(), VendorWorkflow.get().getCompany(),
+                            VendorWorkflow.get().getDate(),
+                            VendorWorkflow.get().getName()));
+            return new ResponseEntity<>(_VendorWorkflow, HttpStatus.OK);
+
         } else {
             return new ResponseEntity<>("Workflow Not Found", HttpStatus.NOT_FOUND);
         }
     }
-    // Path to update the status and change the date after the workflow is approved
-    // @PutMapping("/updateVendorWorkflowStatus")
-    // public ResponseEntity<?> deleteVendorWorkflowById(@PathVariable("id") String id) {
 
+    // Path to delete workflow here
+    // @DeleteMapping("/deleteVendorWorkflow/{id}")
+    // public ResponseEntity<?> deleteVendorWorkflowById(@PathVariable("id") String
+    // id) {
+    // System.out.println(id);
+    // Optional<VendorWorkflow> VendorWorkflow =
+    // VendorWorkflowRepository.findById(id);
+
+    // if (VendorWorkflow.isPresent()) {
+    // VendorWorkflowRepository.deleteById(id);
+    // return new ResponseEntity<>("Workflow deleted", HttpStatus.NO_CONTENT);
+    // } else {
+    // return new ResponseEntity<>("Workflow Not Found", HttpStatus.NOT_FOUND);
     // }
+    // }
+
+    // Path to soft delete vendor workflow
+
+    // JSON format
+
+    // "6412eaf10bf80f2c012bd872",
+
+    // id is a mandatory field to input
+    @PutMapping("/deleteVendorWorkflow")
+    public ResponseEntity<?> deleteVendorWorkflow(
+            @RequestBody(required = false) String id) {
+        Optional<VendorWorkflow> VendorWorkflow = VendorWorkflowRepository.findById(id);
+        if (VendorWorkflow.isPresent()) {
+            // System.out.println(newStatus);
+            // System.out.println(VendorWorkflow.get().getStatus());
+            // if status changes to approve, then change the date to current date
+            VendorWorkflow _VendorWorkflow = VendorWorkflowRepository
+                    .save(new VendorWorkflow(VendorWorkflow.get().getId(), VendorWorkflow.get().getForms(),
+                            VendorWorkflow.get().getWorkflowName(), "Deleted",
+                            VendorWorkflow.get().getEmail(), VendorWorkflow.get().getCompany(),
+                            VendorWorkflow.get().getDate(),
+                            VendorWorkflow.get().getName()));
+            return new ResponseEntity<>(_VendorWorkflow, HttpStatus.OK);
+
+        } else {
+            return new ResponseEntity<>("Workflow Not Found", HttpStatus.NOT_FOUND);
+        }
+    }
 }
