@@ -46,7 +46,7 @@ import {
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 
 function CompanyDetails(){
@@ -76,6 +76,7 @@ function CompanyDetails(){
     const registrationNum = useParams().company;
     const [users, setUsers] = useState([]);
     const [companyDetails, setCompanyDetails] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         getUsers();
@@ -98,6 +99,11 @@ function CompanyDetails(){
         .catch(error => console.error(error));
     };
 
+    const editUser = (event) => {
+        let route = "/EditCompanyDetails/" + registrationNum
+        navigate(route);
+    }
+
     return(
         <Grid sx={{mt:6, textAlign:'left', px:4}}>
             
@@ -106,7 +112,7 @@ function CompanyDetails(){
                     <h1>User Management</h1>
                 </Grid>
                 <Grid item md={2.0} sm={1} sx={{justifyContent:"flex-end", display:'flex'}}>
-                        <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="primary">
+                        <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="primary" onClick={editUser}>
                                 Edit
                         </Button>
                 </Grid>

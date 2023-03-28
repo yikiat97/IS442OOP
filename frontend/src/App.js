@@ -35,7 +35,7 @@ import ViewDeletedForms from "./pages/ViewPastForms";
 import VendorOverviewPage from "./pages/VendorOverviewPage";
 import VendorAssignWorkflowPage from "./pages/VendorAssignWorkflowPage";
 import VendorPastWorkflowpage from "./pages/VendorPastWorkflowpage";
-
+import EditCompanyDetails from "./pages/EditCompanyDetails";
 import QuantumDetails from "./pages/QuantumDetails";
 import EditCompany from "./pages/EditCompany";
 
@@ -90,8 +90,9 @@ function App() {
         <Route path="/Approver" element={<Approver />} />
         <Route path="/CompanyDetails/:company" element={<CompanyDetails />} />
         <Route path="/QuantumDetails/:company" element={<QuantumDetails />} />
-        <Route path="/EditUser/:company" element={<EditUser />} />
+        <Route path="/EditUser/:company/:email" element={<EditUser />} />
         <Route path="/EditCompany/:company" element={<EditCompany />} />
+        <Route path="/EditCompanyDetails/:company" element={<EditCompanyDetails />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/ForgetPassword" element={<ForgetPassword />} />
         <Route path="/ChangePassword" element={<ChangePassword/>} />

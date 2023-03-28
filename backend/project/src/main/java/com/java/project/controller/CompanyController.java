@@ -31,6 +31,17 @@ public class CompanyController {
         return ResponseEntity.ok(companyList);
     }
 
+    @GetMapping("/registrationList")
+    public ResponseEntity getRegistrationNumbers(){
+        List<Company> companyList = CompanyRepository.findAll();
+        List<String> registarionNumList = new ArrayList<>();
+        for (Company company: companyList
+             ) {
+            registarionNumList.add(company.getRegistrationNum());
+        }
+        return ResponseEntity.ok(registarionNumList);
+    }
+
     @GetMapping (value = "/getDetails")
     public ResponseEntity getCompanyDetails(@RequestParam String registrationNum){
         Optional<Company> company = CompanyRepository.findById(registrationNum);

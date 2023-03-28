@@ -172,7 +172,7 @@ function QuantumDetails(){
                                         <StyledTableCell align="left">{user.contactNumber == null ? "Not available" : user.contactNumber}</StyledTableCell>
                                         <StyledTableCell align="left">{user.role}</StyledTableCell>
                                         <StyledTableCell align="right"><DeleteOutlineIcon sx={{color:'#c62828'}}/></StyledTableCell>
-                                        <Link href={'../EditUser/' + user.email} underline='none'>
+                                        <Link href={'../EditUser/' + companyDetails.registrationNum + "/" + user.email} underline='none'>
                                             <StyledTableCell align="left"><EditIcon sx={{color:'#1565c0'}} /></StyledTableCell>
                                         </Link>
                                     </StyledTableRow>
