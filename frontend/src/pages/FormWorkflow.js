@@ -10,15 +10,22 @@ import {
     MenuItem,
     Button,
     Typography,
-    StepButton
+    List,
+    ListItem,
+    ListItemText,
+    ListItemIcon,
+    ListItemAvatar,
+    Avatar,
+    Chip
 } from "@mui/material";
+import CircleIcon from '@mui/icons-material/Circle';
+import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
 import VendorFormPreview from '../components/VendorFormPreview';
 import { useParams } from 'react-router-dom';
 import FormPreview from '../components/FormPreview';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { message, Steps, theme } from 'antd';
 
 function FormWorkflow(){
@@ -64,10 +71,12 @@ function FormWorkflow(){
     
     
     const statuses = [
-        "Workflow Created",
-        "Deleted",
+        "Pending",
+        "In Progress",
+        "Awaiting Approver",
         "Approved",
-        "Rejected"
+        "Rejected",
+        "Deleted"
     ]
 
     const { token } = theme.useToken();
@@ -84,13 +93,13 @@ function FormWorkflow(){
         content: step
     }));
     const contentStyle = {
-        lineHeight: '260px',
-        textAlign: 'center',
+        
+        textAlign: 'left',
         color: token.colorTextTertiary,
         backgroundColor: token.colorFillAlter,
         borderRadius: token.borderRadiusLG,
         border: `1px dashed ${token.colorBorder}`,
-        marginTop: 16,
+        marginTop: 10,
     };
 
 
@@ -119,8 +128,9 @@ function FormWorkflow(){
                 </Grid>
 
 
-        <Paper elevation={1} sx={{height:"30%", pt:4, pb:2, px:3, mt:4}}>
-            <Grid container spacing={6} sx={{display:"flex", justifyContent:"flex-start"}}>
+        <Paper elevation={1} sx={{height:"30%", pt:2, pb:2, px:3, mt:4}}>
+            <Divider light sx={{mb:2}}>Workflow Details</Divider>
+            <Grid container spacing={6} sx={{display:"flex", justifyContent:"flex-start"}}>  
                 <Grid item>
                     <FormControl>
                         <FormLabel htmlFor="WorkflowName" sx={{}}>Company</FormLabel>
@@ -149,6 +159,29 @@ function FormWorkflow(){
                     </FormControl>
                 </Grid>
             </Grid> 
+            
+            <Divider light sx={{my:3}}>Form Status</Divider>
+                <Grid container>
+                    <Grid item>
+                        <List>
+                            {steps.map((step) =>(
+                            <ListItem>
+                                    <ListItemIcon sx={{pr:2}}>
+                                        <Chip label="Approved" color="success" />
+                                    </ListItemIcon>
+                                    <ListItemText primary={step.formName}></ListItemText>
+ 
+                            </ListItem>
+                            
+                            ))}
+                        
+                            
+                                
+                            
+
+                        </List>
+                    </Grid>
+                </Grid>
 
         </Paper>
 
@@ -157,33 +190,69 @@ function FormWorkflow(){
         <Steps current={current} items={stepsContent} />
         <div style={contentStyle}>
             {steps.length>0 && <FormPreview formData={stepsContent[current].content}/> }
+
+            <Divider light sx={{my:3}}>Approval</Divider>
+            <Grid container>
+                <Grid item sx={{p:2}} xs={12} sm={12} md={12}>
+                    <TextField
+                        label="Comments"
+                        fullWidth
+                        multiline
+                        rows={5}
+                        required
+                        defaultValue="Input Comments"
+                        />
+                </Grid>
+
+                <Grid item sx={{p:2}} xs={6} sm={6} md={2}>
+                    <Button variant="contained" color="success" startIcon={<TaskAltIcon/>}>
+                        Approve
+                    </Button>
+                </Grid>
+
+
+                <Grid item sx={{p:2}} xs={6} sm={6} md={2}>
+                    <Button variant="contained" color="error" startIcon={<CancelIcon/>}>
+                        Reject
+                    </Button>
+                </Grid>
+                
+
+            </Grid>
+        
         </div>
         <div
             style={{
-            marginTop: 24,
+            marginTop: 14,
             }}
         >
-            {current < steps.length - 1 && (
-            <Button color="primary" variant='contained' onClick={() => next()}>
-                Next
-            </Button>
-            )}
-            {current === steps.length - 1 && (
+            {/* {current === steps.length - 1 && (
             <Button color="success" variant='contained' onClick={() => message.success('Workflow Submitted!')}>
                 Done
             </Button>
-            )}
-            {current > 0 && (
-            <Button
-                variant='contained'
-                sx={{
-                margin: '0 8px',
-                }}
-                onClick={() => prev()}
-            >
-                Previous
-            </Button>
-            )}
+            )} */}
+            <Grid container>
+                <Grid item md={10}></Grid>
+                <Grid item md={2}>
+                        {current < steps.length - 1 && (
+                        <Button color="primary" variant='contained' fullWidth onClick={() => next()}>
+                            Next
+                        </Button>
+                        )}
+                        
+                        {current > 0 && (
+                        <Button
+                            variant='contained'
+                            fullWidth
+                            onClick={() => prev()}
+                        >
+                            Previous
+                        </Button>
+                        )}
+                </Grid>
+
+            </Grid>
+    
         </div>
         </>
         

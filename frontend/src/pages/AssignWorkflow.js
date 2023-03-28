@@ -38,10 +38,13 @@ function AssignWorkflow(){
 
     const[status, setStatus]= useState(null);
     const statuses = [
-        "Workflow Created",
+        "Pending",
+        "In Progress",
+        "Awaiting Approver",
         "Deleted",
         "Approved",
-        "Rejected"
+        "Rejected",
+        "Reopen"
     ]
 
     const [error, setError] = useState([]);
