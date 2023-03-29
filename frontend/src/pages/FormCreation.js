@@ -18,6 +18,7 @@ const FormCreation = () => {
 	const [jsonObjectToReturn, setJsonObjectToReturn] = useState(null);
 	const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 	const [formName, setFormName] = useState(null);
+    const [ratings, setRatings] = useState([]);
 
 
 
@@ -39,17 +40,17 @@ const FormCreation = () => {
 		icon: '✏️'
 		},
 		{
-			label: 'Calculation Table',
+			label: 'Rating',
 			attrs: {
-				type: 'calculationTable'
+				type: 'rating'
 			},
 
 		}
 	];
 	const handleSubmit = (event) => {
-		event.preventDefault(); // Prevent the default form submission behavior
+		// event.preventDefault(); // Prevent the default form submission behavior
 		console.log(formJsonObject)
-
+		
 		fetch('http://localhost:8080/Form/insertForm', {
 			method: 'POST',
 			body: JSON.stringify(formJsonObject),
@@ -107,12 +108,8 @@ const FormCreation = () => {
 			}
 			};
 		},
-		calculationTable:function(fieldData){
-			return{
-				field: "Number of rows<input type='number'>",
-
-			};
-		}
+		rating:{}
+		
 	};
 	const options = {
 	// to be populated from users in database
@@ -192,14 +189,14 @@ const FormCreation = () => {
 			<TextField id="formName" label="Form Name" variant="outlined" onChange={(event) => setFormName(event.target.value)}
 />				<div id="fb-editor" ref={fb} />	
 				{/* <Modal open={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}> sx={{textAlign:center}}*/}
-					<FormControl onSubmit={handleSubmit} sx={{ width: "100%" }}>
+					<form onSubmit={handleSubmit} sx={{ width: "100%" }}>
 						<Box sx={{ border: 1, borderRadius: 1,padding:"15px" }}>
 							<FormPreview formData={formJsonObject} />
 						</Box>
 					
 					<br></br>
 					<Button type="submit" sx={{float:'right'}}>Submit</Button> {/* Add submit button */}
-					</FormControl>
+					</form>
 
 				{/* </Modal> */}
 					

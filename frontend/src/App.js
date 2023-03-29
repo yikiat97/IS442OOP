@@ -31,6 +31,15 @@ import VendorViewForm from "./pages/VendorViewForm"
 import ChangePassword from "./pages/ChangePassword";
 import FormWorkflow from "./pages/FormWorkflow";
 import ViewDeletedForms from "./pages/ViewPastForms";
+import VendorOverviewPage from "./pages/VendorOverviewPage";
+import VendorAssignWorkflowPage from "./pages/VendorAssignWorkflowPage";
+import VendorPastWorkflowpage from "./pages/VendorPastWorkflowpage";
+import EditCompanyDetails from "./pages/EditCompanyDetails";
+import QuantumDetails from "./pages/QuantumDetails";
+import EditCompany from "./pages/EditCompany";
+import UpdateWorkflow from "./pages/UpdateWorkflow";
+import ViewEmails from "./pages/ViewEmails";
+// import ViewWorkflowEmails from "./pages/ViewWorkflowEmails";
 
 function App() {
   const VENDOR_ROLE = "Vendor";
@@ -84,6 +93,8 @@ function App() {
         <Route path="/Login" element={<Login />} />
         <Route path="/ForgetPassword" element={<ForgetPassword />} />
         <Route path="/ChangePassword" element={<ChangePassword/>} />
+        <Route path="/ViewEmails" element={<ViewEmails/>}/>
+        {/* <Route path="/ViewWorkflowEmails/:workflowId" element={<ViewWorkflowEmails/>}/> */}
         <Route path="/FormHomePage" element={<FormHomePage />} />
         <Route path="/FormCreation" element={<FormCreation />} /> 
         <Route path="/ViewForms" element={<ViewForms />} /> 

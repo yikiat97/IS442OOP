@@ -8,7 +8,7 @@ import { styled } from '@mui/material/styles';
 
 // import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 // import { Unstable_DateField as DateField } from '@mui/x-date-pickers';
-import CalculationTable from "./CalculationTable";
+import Rating from "./Rating";
 import "../styles/formPreview.css" 
 import Canvas from "./canvas";
 import { Typography } from "antd";
@@ -18,15 +18,37 @@ require("formBuilder");
 require('formBuilder/dist/form-render.min.js')
 
 
-
+const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    color: theme.palette.text.secondary,
+    
+}));
 
 const FormPreview = ({ formData}) => {
     const [formFields, setFormFields] = useState([]);
+    const [totalRating, setTotalRating] = useState(0);
+    const updateTotalRating = (newRating) => {
+        console.log(newRating)
+        setTotalRating(totalRating + newRating);
+    };
+
+    let haveRating=false;
     console.log('form preview rendering')
     console.log(formData)
     useEffect(() => {
         if (formData && formData.jsonObject) {
             setFormFields(formData.jsonObject.fields);
+            // const fields = formData.jsonObject.fields;
+            // let totalRating = 0;
+            // fields.forEach((field) => {
+            //     if (field.type === "rating") {
+            //         totalRating += parseInt(field.rating);
+            //     }
+            // });
+            
+            // setTotalRating(totalRating);
         }
     }, [formData]);
     if (!formData) {
@@ -41,10 +63,15 @@ const FormPreview = ({ formData}) => {
         switch (field.type) {
         case "h2":
             return(
-                <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold' }}>
-                    {field.label}
-                    <br></br>
-                </Typography>
+                <Grid item xs={12}>
+                    <Item sx={{ width: "100%" }}>
+                    <Typography variant="h2" component="h2">
+                        {field.label}
+                        <br></br>
+                    </Typography>
+                    </Item>
+                </Grid>
+
             );
         case "header":
             return(
@@ -55,7 +82,8 @@ const FormPreview = ({ formData}) => {
             );
         case "checkbox-group":
             return (
-            <Grid container sx={{ m: 2,display:"block" }} class="formbuilder-checkbox">
+            <Item>
+                
                 <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
                 <FormGroup>
 
@@ -64,38 +92,36 @@ const FormPreview = ({ formData}) => {
                         <FormControlLabel value={value.value} control={<Checkbox defaultChecked />} label={value.label} />
                     ))}
                 </FormGroup>
-                <br></br>
-
-            </Grid>
+            </Item>
             );
         case "date":
             return (
-            <Grid container sx={{ m: 2 }} >
+            <Item sx={{ m: 2 }} >
                 <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
                 <br></br>
                 <input class="form-control" type="date" id={field.label}></input>
-            </Grid>
+            </Item>
             );
         case "number":
             return (
-                <Grid container sx={{ m: 2, }}>
-                <Typography sx={{ display: 'block',fontWeight:'bold'}}>{field.label}</Typography>
-                    <input
-                        id="standard-number"
-                        label="Number"
-                        type="number"
-                        class="formbuilder-number"
-                        InputLabelProps={{
-                        shrink: true,
-                        }}
-                        variant="standard"
-                        sx={{ display: 'block' }}
-                    />                    
-                </Grid>
+                <Item sx={{ m: 2, }}>
+                    <Typography sx={{ display: 'block',fontWeight:'bold'}}>{field.label}</Typography>
+                        <input
+                            id="standard-number"
+                            label="Number"
+                            type="number"
+                            class="formbuilder-number"
+                            InputLabelProps={{
+                            shrink: true,
+                            }}
+                            variant="standard"
+                            sx={{ display: 'block' }}
+                        />                    
+                </Item>
             );
         case "radio-group":
             return (
-            <Grid container sx={{ m: 2 ,display:"block"}}  class="formbuilder-radio">
+            <Item sx={{ m: 2 ,display:"block"}}  class="formbuilder-radio">
                 <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
                 <RadioGroup aria-labelledby="demo-radio-buttons-group-label" name="radio-buttons-group">
                     {field.values.map((value, index) => (
@@ -107,11 +133,11 @@ const FormPreview = ({ formData}) => {
                     ))}
                 </RadioGroup>
                 <br></br>
-            </Grid>
+            </Item>
             );
         case "select":
             return (
-            <Grid container >
+            <Item>
                 <FormControl fullWidth>
                 <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
                 <Select
@@ -136,11 +162,11 @@ const FormPreview = ({ formData}) => {
                         </select> */}
                 </FormControl>
                 <br></br>
-            </Grid>
+            </Item>
             );
         case "textarea":
             return (
-            <Grid container sx={{ m: 2 ,display:"block"}} >
+            <Item >
                 <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
                 <TextareaAutosize
                 className={field.className}
@@ -149,40 +175,55 @@ const FormPreview = ({ formData}) => {
                 cols={field.cols}
                 />
                 <br></br>
-            </Grid>
+            </Item>
             );
         case "canvas":
             return (
-                <Grid container   sx={{ display:"block"}} >
+                <Item >
                     <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
                     <Canvas sx={{ m: 2, float: 'left',display:'block'  }}/>
                     <br></br>
-                </Grid>
+                </Item>
             );
-        case "calculationTable":
+        case "rating":
+            haveRating=true;
             return(
-                <CalculationTable></CalculationTable>
+                <Rating totalRating={totalRating} updateTotalRating={updateTotalRating}></Rating>
             );
         default:
             return null;
         }
     };
+    const renderRatingsSummary = () => {
+        if(haveRating){
+            return (
+            <Box sx={{ marginTop: 2 }}>
+                <Typography>Total Score:{totalRating}</Typography>
+            </Box>
+            );            
+        }
 
+    };
     return (
         <Container maxWidth="xl">
-            <Typography variant="h1" component="h1">
+            <Typography variant="h1" component="h1" sx={{ fontWeight: 'bold' }}>
                 {formData.FormName}
                 <br />
             </Typography>
-            {formData.questionData.map((field, index) => (
-                <Grid key={index} id="test" sx={{display:"block"}}>
-                {field.subtype ? (
-                    renderField({ ...field, type: field.subtype })
-                ) : (
-                    renderField(field)
-                )}
-                </Grid>
-            ))}
+            <Grid container spacing={2}>
+
+                {formData.questionData.map((field, index) => (
+                    <Grid key={index} item xs={12} >
+                    {field.subtype ? (
+                        renderField({ ...field, type: field.subtype })
+                    ) : (
+                        renderField(field)
+                    )}
+                    </Grid>
+                ))}
+            </Grid>
+            {renderRatingsSummary()}
+
         </Container>
 
     );
