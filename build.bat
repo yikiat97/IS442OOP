@@ -1,7 +1,7 @@
 @echo off;
 
 cd frontend
-call npm --force i
+call npm i
 start npm start
 
 cd ../backend

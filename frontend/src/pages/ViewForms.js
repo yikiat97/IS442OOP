@@ -1,14 +1,9 @@
 // Main component
-import $ from "jquery";
 import { useState, useEffect } from 'react';
 import { Grid,Container,Button } from '@mui/material';
 import FormSelect from '../components/FormSelection';
 import FormPreview from '../components/FormPreview';
-window.jQuery = $;
-window.$ = $;
-require("jquery-ui-sortable");
-require("formBuilder");
-require('formBuilder/dist/form-render.min.js')
+
 function ViewForms() {
   const [forms, setForms] = useState([]);
   const [selectedForm, setSelectedForm] = useState({});

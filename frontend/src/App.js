@@ -32,6 +32,7 @@ import VendorViewForm from "./pages/VendorViewForm"
 import ChangePassword from "./pages/ChangePassword";
 import FormWorkflow from "./pages/FormWorkflow";
 import ViewDeletedForms from "./pages/ViewPastForms";
+<<<<<<< HEAD
 import VendorOverviewPage from "./pages/VendorOverviewPage";
 import VendorAssignWorkflowPage from "./pages/VendorAssignWorkflowPage";
 import VendorPastWorkflowpage from "./pages/VendorPastWorkflowpage";
@@ -41,6 +42,8 @@ import EditCompany from "./pages/EditCompany";
 import UpdateWorkflow from "./pages/UpdateWorkflow";
 import ViewEmails from "./pages/ViewEmails";
 import ViewWorkflowEmails from "./pages/ViewWorkflowEmails";
+=======
+>>>>>>> parent of 3f7ab91 (VendorFormPreview stylings change)
 
 function App() {
   const VENDOR_ROLE = "Vendor";
@@ -100,8 +103,11 @@ function App() {
         <Route path="/Login" element={<Login />} />
         <Route path="/ForgetPassword" element={<ForgetPassword />} />
         <Route path="/ChangePassword" element={<ChangePassword/>} />
+<<<<<<< HEAD
         <Route path="/ViewEmails" element={<ViewEmails/>}/>
         <Route path="/ViewWorkflowEmails/:workflowId" element={<ViewWorkflowEmails/>}/>
+=======
+>>>>>>> parent of 3f7ab91 (VendorFormPreview stylings change)
         <Route path="/FormHomePage" element={<FormHomePage />} />
         <Route path="/FormCreation" element={<FormCreation />} /> 
         <Route path="/ViewForms" element={<ViewForms />} /> 

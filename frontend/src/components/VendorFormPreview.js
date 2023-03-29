@@ -12,20 +12,9 @@ import {
   MenuItem,
   InputLabel,
   TextField,
-  Container,
-  FormControl
 } from "@mui/material";
-import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
-
 import Canvas from "./canvas";
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  color: theme.palette.text.secondary,
-  textAlign:"left"
-}));
+
 const VendorFormPreview = ({ formData, fakeID }) => {
   //console.log(formData)
   const [updatedStructure, setUpdatedStructure] = useState(formData.questionData);
@@ -44,7 +33,6 @@ console.log(formData)
   const submit = (data) => {
   // Check for invalid fields
   const invalidFields = data
-  console.log(data)
     .filter((field) => {
       if (field.required) {
         const isValuePresent =
@@ -184,27 +172,13 @@ console.log(formData)
       
       switch (field.type) {
       case "h2":
-          return(
-            <Grid item xs={12}>
-                <Item sx={{ width: "100%" }}>
-                <Typography variant="h2" component="h2">
-                    {field.label}
-                    <br></br>
-                </Typography>
-                </Item>
-            </Grid>
-
-        );
+          console.log(field)
+          return <h2>{field.label}</h2>;
       case "header":
-          return(
-              <Typography variant="h1" component="h1" sx={{ fontWeight: 'bold' }}>
-                  {field.label}
-                  <br></br>
-              </Typography>
-          );
+          return <h1>{field.label}</h1>;
       case "checkbox-group":
         return (
-          <Item>
+          <Grid style={getStylesForField(field.name)} container sx={{ m: 2 }} class="formbuilder-checkbox">
             <Typography>{field.label}</Typography>
             <FormGroup>
               {field.values.map((option, index) => (
@@ -223,14 +197,12 @@ console.log(formData)
                 />
               ))}
             </FormGroup>
-          </Item>
+          </Grid>
         );
       case "date":
         return (
-          <Item sx={{ m: 2 }}>
-            <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
-
-            <input 
+          <Grid container sx={{ m: 2 }}>
+            <TextField
               label={field.label}
               style={getStylesForField(field.name)}
               type="date"
@@ -246,11 +218,11 @@ console.log(formData)
               value={field.value || ""}
               onChange={(e) => handleFieldChange(field.name, e.target.value)}
             />
-          </Item>
+          </Grid>
         );
       case "number":
           return (
-            <Item sx={{ m: 2, }}>
+              <Grid container sx={{ m: 2 }}>
               <Typography sx={{ display: 'block' }}>{field.label}</Typography>
               <FormGroup>
                   <br></br>
@@ -270,14 +242,20 @@ console.log(formData)
                   />                    
               </FormGroup>
 
-              </Item>
+              </Grid>
                   // <input type="number"></input>
           );
       case "radio-group":
         return (
+<<<<<<< HEAD
           <Item sx={{ m: 2 ,display:"block"}}  class="formbuilder-radio">
           <Typography>{field.label}</Typography>
           <RadioGroup
+=======
+          <Grid container sx={{ m: 2 }} class="formbuilder-radio">
+            <Typography>{field.label}</Typography>
+            <RadioGroup
+>>>>>>> parent of 3f7ab91 (VendorFormPreview stylings change)
               aria-labelledby="demo-radio-buttons-group-label"
               name={field.name}
               style={getStylesForField(field.name)}
@@ -294,22 +272,25 @@ console.log(formData)
                 </div>
               ))}
             </RadioGroup>
+<<<<<<< HEAD
           <br></br>
       </Item>
+=======
+          </Grid>
+>>>>>>> parent of 3f7ab91 (VendorFormPreview stylings change)
         );
       case "select":
         return (
-        <Item>
-            <FormControl fullWidth>
-
-            <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
+          <div style={{backgroundColor: "white", borderRadius: "10px"}}>
+          <Grid container sx={{ }}>
+            <InputLabel style={{paddingRight:"10px",}} htmlFor={field.name}>{field.label}</InputLabel>
  
             <Select
               labelId={field.name}
               id={field.name}
               style={getStylesForField(field.name)}
               className={field.className}
-              required={field.required}
+              required={true}
               multiple={field.multiple}
               value={field.values.find((option) => option.selected)?.value || ""}
               onChange={(e) => handleRadioChange(field.name, e.target.value)}
@@ -320,14 +301,13 @@ console.log(formData)
                 </MenuItem>
               ))}
             </Select>
-            </FormControl>
-          </Item>
+          </Grid>
+          </div>
         );
       case "textarea":
         return (
-          <Item>
-            <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
-
+          <div style={{backgroundColor: "white", borderRadius: "10px"}}>
+          <Grid style={{padding:"50px",}}container sx={{ }}>
             <TextField
               multiline
               fullWidth
@@ -336,29 +316,29 @@ console.log(formData)
               value={field.value}
               onChange={(e) => handleTextareaChange(field.name, e.target.value)}
             />
-          </Item>
+          </Grid>
+          </div>
         );
 
       case "canvas":
           return (
-            <Item >
-                <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
+            <Grid container   sx={{ display:"block"}} >
+                <Typography>{field.label}</Typography>
                 <Canvas sx={{ m: 2, float: 'left',display:'block'  }}/>
                 <br></br>
-            </Item>
+            </Grid>
           );
-      case "rating":
-        // haveRating=true;
-        // return(
-        //     <Rating totalRating={totalRating} updateTotalRating={updateTotalRating}></Rating>
-        // );
       default:
-        return null;
-
+          return (
+            <p>
+            Please await admin to assign form to you
+          </p>
+          );;
       }
   };
 
   return (
+<<<<<<< HEAD
     <Container maxWidth="xl">
       <Typography variant="h1" component="h1" sx={{ fontWeight: 'bold' }}>
           {formData.FormName}
@@ -383,10 +363,25 @@ console.log(formData)
             Submit
           </Button>
         </Grid>
+=======
+    <div>
+    <Grid style={{ width:"70%", margin:"auto"}} container spacing={2}>
+      {formData.questionData.map((field, index) => (
+        <Grid key={index} item xs={12}>
+          {field.subtype ? renderField({ ...field, type: field.subtype }) : renderField(field)}
+        </Grid>
+      ))}
+      <Grid item xs={12}>
+        <Button variant="contained" color="primary" onClick={() => save(updatedStructure)}>
+          Save
+        </Button>
+        <Button variant="contained" color="primary" onClick={() => submit(updatedStructure)}>
+          Submit
+        </Button>
+>>>>>>> parent of 3f7ab91 (VendorFormPreview stylings change)
       </Grid>
-      {/* {renderRatingsSummary()} */}
-
-  </Container>
+    </Grid>
+    </div>
   );
 };
 
