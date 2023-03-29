@@ -8,10 +8,20 @@ public class Question {
     @Id
     private String questionID;
     private List<Map<String, Object>> QuestionData;
+    private String Comments;
     
 
     public String getQuestionID() {
         return questionID;
+    }
+
+
+    public void setComments(String Comments) {
+        this.Comments = Comments;
+    }
+
+    public String getComments() {
+        return Comments;
     }
 
 
@@ -30,10 +40,12 @@ public class Question {
     }
 
 
-    public Question( String questionID,List<Map<String, Object>> QuestionData){
+    public Question( String questionID,List<Map<String, Object>> QuestionData , String Comments){
         //super();
         this.questionID = questionID;
         this.QuestionData = QuestionData;
+        this.Comments = Comments;
+        
     }
 
 

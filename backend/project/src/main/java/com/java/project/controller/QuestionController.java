@@ -72,7 +72,6 @@ public class QuestionController {
       //               }
       //   }}
 
-
       @PutMapping("/Question/updateQuestion/{id}")
       public ResponseEntity<Question> updateQuestionById(@PathVariable(value = "id") String questionId,
                                                     @RequestBody Question questionData) {
@@ -81,6 +80,7 @@ public class QuestionController {
       if (optionalQuestion.isPresent()) {
           Question question = optionalQuestion.get();
           question.setQuestionData(questionData.getQuestionData());
+          question.setComments(questionData.getComments());
 
           QuestionRepository.save(question);
           System.out.println("========= UPDATE DATA SUCCESSFUL ===========");
