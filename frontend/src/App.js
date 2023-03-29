@@ -32,18 +32,6 @@ import VendorViewForm from "./pages/VendorViewForm"
 import ChangePassword from "./pages/ChangePassword";
 import FormWorkflow from "./pages/FormWorkflow";
 import ViewDeletedForms from "./pages/ViewPastForms";
-<<<<<<< HEAD
-import VendorOverviewPage from "./pages/VendorOverviewPage";
-import VendorAssignWorkflowPage from "./pages/VendorAssignWorkflowPage";
-import VendorPastWorkflowpage from "./pages/VendorPastWorkflowpage";
-import EditCompanyDetails from "./pages/EditCompanyDetails";
-import QuantumDetails from "./pages/QuantumDetails";
-import EditCompany from "./pages/EditCompany";
-import UpdateWorkflow from "./pages/UpdateWorkflow";
-import ViewEmails from "./pages/ViewEmails";
-import ViewWorkflowEmails from "./pages/ViewWorkflowEmails";
-=======
->>>>>>> parent of 3f7ab91 (VendorFormPreview stylings change)
 
 function App() {
   const VENDOR_ROLE = "Vendor";
@@ -70,10 +58,10 @@ function App() {
       
       <Routes>
       
-        <Route path="/VendorViewForm" element={<VendorViewForm />} />
+        {/* <Route path="/VendorViewForm" element={<VendorViewForm />} /> */}
         <Route path="/Form" element={<Form />} />
         <Route path="/CreateWorkflow" element={<CreateWorkflow />} />
-        <Route path="/UpdateWorkflow/:workflowID" element={<UpdateWorkflow />} />
+        {/* <Route path="/UpdateWorkflow/:workflowID" element={<UpdateWorkflow />} /> */}
         <Route
           path="/WorkflowsAdmin"
           element={
@@ -96,18 +84,13 @@ function App() {
         <Route path="/Admin/:registrationNum" element={<Admin />} />
         <Route path="/Approver/:registrationNum" element={<Approver />} />
         <Route path="/CompanyDetails/:company" element={<CompanyDetails />} />
-        <Route path="/QuantumDetails/:company" element={<QuantumDetails />} />
+        {/* <Route path="/QuantumDetails/:company" element={<QuantumDetails />} />
         <Route path="/EditUser/:company/:email" element={<EditUser />} />
         <Route path="/EditCompany/:company" element={<EditCompany />} />
-        <Route path="/EditCompanyDetails/:company" element={<EditCompanyDetails />} />
+        <Route path="/EditCompanyDetails/:company" element={<EditCompanyDetails />} /> */}
         <Route path="/Login" element={<Login />} />
         <Route path="/ForgetPassword" element={<ForgetPassword />} />
         <Route path="/ChangePassword" element={<ChangePassword/>} />
-<<<<<<< HEAD
-        <Route path="/ViewEmails" element={<ViewEmails/>}/>
-        <Route path="/ViewWorkflowEmails/:workflowId" element={<ViewWorkflowEmails/>}/>
-=======
->>>>>>> parent of 3f7ab91 (VendorFormPreview stylings change)
         <Route path="/FormHomePage" element={<FormHomePage />} />
         <Route path="/FormCreation" element={<FormCreation />} /> 
         <Route path="/ViewForms" element={<ViewForms />} /> 
@@ -131,9 +114,9 @@ function App() {
         <Route path="/NotAuthorized" element={<NotAuthorized />} />
         <Route path="/" element={<Home />} />
 
-        <Route path="/VendorOverviewPage" element={<VendorOverviewPage />} />
+        {/* <Route path="/VendorOverviewPage" element={<VendorOverviewPage />} />
         <Route path="/VendorAssignWorkflowPage" element={<VendorAssignWorkflowPage />} />
-        <Route path="/VendorPastWorkflowpage" element={<VendorPastWorkflowpage />} />
+        <Route path="/VendorPastWorkflowpage" element={<VendorPastWorkflowpage />} /> */}
       </Routes>
     </div>
   );

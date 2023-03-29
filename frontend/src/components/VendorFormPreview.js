@@ -247,15 +247,9 @@ console.log(formData)
           );
       case "radio-group":
         return (
-<<<<<<< HEAD
-          <Item sx={{ m: 2 ,display:"block"}}  class="formbuilder-radio">
-          <Typography>{field.label}</Typography>
-          <RadioGroup
-=======
           <Grid container sx={{ m: 2 }} class="formbuilder-radio">
             <Typography>{field.label}</Typography>
             <RadioGroup
->>>>>>> parent of 3f7ab91 (VendorFormPreview stylings change)
               aria-labelledby="demo-radio-buttons-group-label"
               name={field.name}
               style={getStylesForField(field.name)}
@@ -272,12 +266,7 @@ console.log(formData)
                 </div>
               ))}
             </RadioGroup>
-<<<<<<< HEAD
-          <br></br>
-      </Item>
-=======
           </Grid>
->>>>>>> parent of 3f7ab91 (VendorFormPreview stylings change)
         );
       case "select":
         return (
@@ -338,32 +327,6 @@ console.log(formData)
   };
 
   return (
-<<<<<<< HEAD
-    <Container maxWidth="xl">
-      <Typography variant="h1" component="h1" sx={{ fontWeight: 'bold' }}>
-          {formData.FormName}
-          <br />
-      </Typography>
-      <Grid container spacing={2} sx={{ textAlign: 'left' }}>
-
-          {formData.questionData.map((field, index) => (
-              <Grid key={index} item xs={12}sx={{ textAlign: 'left' }} >
-              {field.subtype ? (
-                  renderField({ ...field, type: field.subtype })
-              ) : (
-                  renderField(field)
-              )}
-              </Grid>
-          ))}
-          <Grid item xs={12}>
-        <Button variant="contained" color="primary" onClick={() => save(updatedStructure)}>
-            Save
-          </Button>
-          <Button variant="contained" color="primary" onClick={() => submit(updatedStructure)}>
-            Submit
-          </Button>
-        </Grid>
-=======
     <div>
     <Grid style={{ width:"70%", margin:"auto"}} container spacing={2}>
       {formData.questionData.map((field, index) => (
@@ -378,7 +341,6 @@ console.log(formData)
         <Button variant="contained" color="primary" onClick={() => submit(updatedStructure)}>
           Submit
         </Button>
->>>>>>> parent of 3f7ab91 (VendorFormPreview stylings change)
       </Grid>
     </Grid>
     </div>
