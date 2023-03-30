@@ -45,6 +45,7 @@ function EditCompanyDetails(){
       }));
 
     const registrationNum = useParams().company;
+    const currUser = sessionStorage.getItem("role");
 
     const [name, setName] = useState("");
     const [country, setCountry] = useState("");
@@ -170,8 +171,12 @@ function EditCompanyDetails(){
                         },
                     }
                 );
+                if(currUser === "Admin"){
+                    navigate('/UserManagement');
+                }else{
+                    navigate('/VendorInfoPage');
+                }
                 
-                navigate('/UserManagement');
             } 
         }catch (error) {
             console.log(error.response);
@@ -183,9 +188,13 @@ function EditCompanyDetails(){
         <Grid sx={{mt:6, textAlign:'left', px:4}}>
             
             <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:4}} sx={{display:"flex", justifyContent:"space-between", alignItems:"center"}}>
+                {currUser==="Admin" ? 
                 <Grid item md={2.0} sm={2.5}>
                     <h1>User Management</h1>
                 </Grid>
+                : <Grid item md={2.0} sm={2.5}>
+                <h1>Update Details</h1>
+                </Grid>}
                 <Grid item md={2.0} sm={1} sx={{justifyContent:"flex-end", display:'flex'}}>
                     <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="error" onClick={cancel}>
                             Cancel 

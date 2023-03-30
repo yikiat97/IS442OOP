@@ -90,7 +90,11 @@ public class UserController {
             return new ResponseEntity<>("Password does not match", HttpStatus.UNAUTHORIZED);
         }
 
-        return ResponseEntity.ok(user.getRole());
+        List<String> returnList = new ArrayList<>();
+        returnList.add(user.getRole());
+        returnList.add(user.getCompanyRegistrationNum());
+
+        return ResponseEntity.ok(returnList);
     }
 
     @PostMapping(value = "/createAdmin", consumes = "application/json", produces = "application/json")
