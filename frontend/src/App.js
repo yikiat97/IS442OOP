@@ -86,18 +86,18 @@ function App() {
       element: <CreateCompany />,
       rolesAllowed: [ADMIN_ROLE],
     },
-    "/CreateNewContact": {
+    "/CreateNewContact/:company": {
       element: <CreateNewContact />,
       rolesAllowed: [ADMIN_ROLE],
     },
     "/Vendor": { element: <Vendor />, rolesAllowed: [ADMIN_ROLE, VENDOR_ROLE] },
-    "/Admin": { element: <Admin />, rolesAllowed: [ADMIN_ROLE] },
-    "/Approver": { element: <Approver />, rolesAllowed: [APPROVER_ROLE] },
+    "/Admin/:registrationNum": { element: <Admin />, rolesAllowed: [ADMIN_ROLE] },
+    "/Approver/:registrationNum": { element: <Approver />, rolesAllowed: [APPROVER_ROLE] },
     "/CompanyDetails/:company": {
       element: <CompanyDetails />,
       rolesAllowed: [ADMIN_ROLE, VENDOR_ROLE],
     },
-    "/EditUser/:userEmail": {
+    "/EditUser/:company/:email": {
       element: <EditUser />,
       rolesAllowed: [ADMIN_ROLE],
     },
@@ -133,18 +133,18 @@ function App() {
     "/ForgetPassword": { element: <ForgetPassword />, rolesAllowed: [] },
     "/": { element: <Home />, rolesAllowed: [] },
     "/ChangePassword": { element: <ChangePassword />, rolesAllowed: [] },
-    "/FormWorkflow": { element: <FormWorkflow />, rolesAllowed: [ADMIN_ROLE] },
+    "/FormWorkflow/:workflowID": { element: <FormWorkflow />, rolesAllowed: [ADMIN_ROLE] },
     "/ViewDeletedForms": { element: <ViewDeletedForms />, rolesAllowed: [ADMIN_ROLE] },
     "/VendorOverviewPage": { element: <VendorOverviewPage />, rolesAllowed: [VENDOR_ROLE] },
     "/VendorAssignWorkflowPage": { element: <VendorAssignWorkflowPage />, rolesAllowed: [VENDOR_ROLE] },
     "/VendorPastWorkflowpage": { element: <VendorPastWorkflowpage />, rolesAllowed: [VENDOR_ROLE] },
 
-    "/EditCompanyDetails": { element: <EditCompanyDetails />, rolesAllowed: [ADMIN_ROLE] },
-    "/QuantumDetails": { element: <QuantumDetails />, rolesAllowed: [ADMIN_ROLE] },
-    "/EditCompany": { element: <EditCompany />, rolesAllowed: [ADMIN_ROLE] },
-    "/UpdateWorkflow": { element: <UpdateWorkflow />, rolesAllowed: [ADMIN_ROLE] },
+    "/EditCompanyDetails/:company": { element: <EditCompanyDetails />, rolesAllowed: [ADMIN_ROLE] },
+    "/QuantumDetails/:company": { element: <QuantumDetails />, rolesAllowed: [ADMIN_ROLE] },
+    "/EditCompany/:company": { element: <EditCompany />, rolesAllowed: [ADMIN_ROLE] },
+    "/UpdateWorkflow/:workflowID": { element: <UpdateWorkflow />, rolesAllowed: [ADMIN_ROLE] },
     "/ViewEmails": { element: <ViewEmails />, rolesAllowed: [ADMIN_ROLE] },
-    "/ViewWorkflowEmails": { element: <ViewWorkflowEmails />, rolesAllowed: [ADMIN_ROLE] },
+    "/ViewWorkflowEmails/:workflowId": { element: <ViewWorkflowEmails />, rolesAllowed: [ADMIN_ROLE] },
   };
 
   const renderRoutes = () => {
