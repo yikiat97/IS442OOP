@@ -8,6 +8,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import AutoAwesomeMosaicIcon from '@mui/icons-material/AutoAwesomeMosaic';
 import GradingIcon from '@mui/icons-material/Grading';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { Sidebar, Menu, MenuItem, SubMenu, useProSidebar, ProSidebarProvider} from "react-pro-sidebar";
 import {
     Typography,
@@ -60,14 +61,17 @@ const VendorNavbar = () => {
 
             <Menu style={{textAlign:"left"}}>
 
-                <SubMenu label='Overview' icon={<AutoAwesomeMosaicIcon />} component={<Link to='/VendorOverviewPage'/>}>
-                </SubMenu>
+                <MenuItem icon={<AutoAwesomeMosaicIcon />} component={<Link to='/VendorOverviewPage'/>}>Overview
+                </MenuItem>
 
-                <SubMenu label='Pending Workflow' icon={<AssignmentIcon />} component={<Link to='/VendorAssignWorkflowPage'/>}>
-                </SubMenu>
+                <MenuItem icon={<AssignmentIcon />} component={<Link to='/VendorAssignWorkflowPage'/>}> Pending Workflow
+                </MenuItem>
 
-                <SubMenu label='Completed Worflow' icon={<GradingIcon />} component={<Link to='/VendorPastWorkflowpage'/>}>
-                </SubMenu>
+                <MenuItem icon={<GradingIcon />} component={<Link to='/VendorPastWorkflowpage'/>}> Completed Worflow
+                </MenuItem>
+
+                <MenuItem icon={<SettingsIcon />} component={<Link to='/Tobefillin'/>}>Settings
+                </MenuItem>
 
             </Menu>
 

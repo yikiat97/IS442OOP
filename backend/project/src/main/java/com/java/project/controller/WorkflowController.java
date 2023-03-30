@@ -23,6 +23,8 @@ import com.java.project.model.Workflow;
 import com.java.project.model.WorkflowMappingDTO;
 import com.java.project.model.WorkflowUpdateMappingDTO;
 import com.java.project.repository.WorkflowRepository;
+import com.java.project.exception.GlobalExceptionHandler;
+import com.java.project.exception.DataNotFoundException;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
@@ -31,6 +33,9 @@ public class WorkflowController {
   @Autowired
   WorkflowRepository WorkflowRepository;
 
+  @Autowired
+    private GlobalExceptionHandler globalExceptionHandler;
+
   // JSON Format for creation of workflow
   // {
   // "forms": ["Vendor Assessment", "Pre-Evaluation Form", "Health Performance"],
@@ -38,20 +43,20 @@ public class WorkflowController {
   // }
   @PostMapping("/insertWorkflow")
   public ResponseEntity<Workflow> createWorkflow(@RequestBody(required = false) WorkflowMappingDTO WorkflowDTO) {
-    try {
+
       // logic handling of the workflow json to fit object workflow
       // Use a DTO to map forms and workflowName for creation of forms
 
       List<String> forms = WorkflowDTO.getForms();
       String workflowName = WorkflowDTO.getWorkflowName();
-
+      if(forms == null || workflowName == null){
+        throw new IllegalArgumentException("One or more of the fields is missing or incorrect"); 
+    }
       Workflow _Workflow = WorkflowRepository.save(new Workflow(null, forms, workflowName));
       // System.out.println(form);
       return new ResponseEntity<>(_Workflow, HttpStatus.CREATED);
-    } catch (Exception e) {
-      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-  }
+  
 
   // routing to get workflow by id
   @GetMapping("/WorkflowByID/{id}")
@@ -61,7 +66,7 @@ public class WorkflowController {
     if (Workflow.isPresent()) {
       return new ResponseEntity<>(Workflow.get(), HttpStatus.OK);
     } else {
-      return new ResponseEntity<>("Workflow Not Found", HttpStatus.NOT_FOUND);
+      throw new DataNotFoundException("Workflow not found");
     }
   }
 
@@ -73,7 +78,7 @@ public class WorkflowController {
     if (!Workflows.isEmpty()) {
       return new ResponseEntity<>(Workflows, HttpStatus.OK);
     } else {
-      return new ResponseEntity<>("Workflows Not Found", HttpStatus.NOT_FOUND);
+      throw new DataNotFoundException("Workflows not found");
     }
   }
 
@@ -104,7 +109,7 @@ public class WorkflowController {
           .save(new Workflow(Workflow.get().getId(), newForms, newWorkflowName));
       return new ResponseEntity<>(_Workflow, HttpStatus.OK);
     } else {
-      return new ResponseEntity<>("Workflow Not Found", HttpStatus.NOT_FOUND);
+      throw new DataNotFoundException("Workflow not found");
     }
 
     // System.out.println(form);
@@ -121,7 +126,7 @@ public class WorkflowController {
       WorkflowRepository.deleteById(id);
       return new ResponseEntity<>("Workflow deleted", HttpStatus.NO_CONTENT);
     } else {
-      return new ResponseEntity<>("Workflow Not Found", HttpStatus.NOT_FOUND);
+      throw new DataNotFoundException("Workflow not found");
     }
   }
 }

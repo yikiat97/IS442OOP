@@ -5,6 +5,7 @@ import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
 import { Link } from 'react-router-dom';
 import StartIcon from '@mui/icons-material/Start';
 import PersonIcon from "@mui/icons-material/Person";
+import SettingsIcon from '@mui/icons-material/Settings';
 import { Sidebar, Menu, MenuItem, SubMenu, useProSidebar, ProSidebarProvider} from "react-pro-sidebar";
 import {
     Typography,
@@ -58,7 +59,7 @@ const Navbar = () => {
             <><Menu style={{ textAlign: "left" }}>
                 
                     <SubMenu label='User Management' icon={<GroupsIcon />} component={<Link to='/UserManagement' />}>
-                        <MenuItem>Create New User</MenuItem>
+                        <MenuItem component={<Link to='/CreateCompany' />}>Create New Company</MenuItem>
                     </SubMenu>
 
                     <SubMenu label='Workflows' icon={<SettingsSuggestIcon />} component={<Link to='/WorkflowsAdmin' />}>
@@ -74,6 +75,9 @@ const Navbar = () => {
                         <MenuItem component={<Link to='/ViewForms' />}>View Current Forms</MenuItem>
                         <MenuItem component={<Link to='/FormCreation' />}>Create New Form</MenuItem>
                     </SubMenu>
+
+                    <MenuItem icon={<SettingsIcon />} component={<Link to='/Tobefillin'/>}>Settings
+                    </MenuItem>
 
                 </Menu><Menu sx={{}} onClick={handleAuthItemClick}>
                         {/* <MenuItem icon={<PersonIcon/>}> */}

@@ -43,6 +43,8 @@ import UpdateWorkflow from "./pages/UpdateWorkflow";
 import ViewEmails from "./pages/ViewEmails";
 import ViewWorkflowEmails from "./pages/ViewWorkflowEmails";
 import VendorInfoPage from "./pages/VendorInfoPage";
+import ApproverOverviewPage from "./pages/ApproverOverviewPage";
+import ApproverInfoPage from "./pages/ApproverInfoPage";
 
 function App() {
   const VENDOR_ROLE = "Vendor";
@@ -135,7 +137,7 @@ function App() {
     "/ForgetPassword": { element: <ForgetPassword />, rolesAllowed: [] },
     "/": { element: <Home />, rolesAllowed: [] },
     "/ChangePassword": { element: <ChangePassword />, rolesAllowed: [] },
-    "/FormWorkflow/:workflowID": { element: <FormWorkflow />, rolesAllowed: [ADMIN_ROLE] },
+    "/FormWorkflow/:workflowID": { element: <FormWorkflow />, rolesAllowed: [ADMIN_ROLE, VENDOR_ROLE] },
     "/ViewDeletedForms": { element: <ViewDeletedForms />, rolesAllowed: [ADMIN_ROLE] },
     "/VendorOverviewPage": { element: <VendorOverviewPage />, rolesAllowed: [VENDOR_ROLE] },
     "/VendorAssignWorkflowPage": { element: <VendorAssignWorkflowPage />, rolesAllowed: [VENDOR_ROLE] },
@@ -148,6 +150,8 @@ function App() {
     "/ViewEmails": { element: <ViewEmails />, rolesAllowed: [ADMIN_ROLE] },
     "/ViewWorkflowEmails/:workflowId": { element: <ViewWorkflowEmails />, rolesAllowed: [ADMIN_ROLE] },
     "/VendorInfoPage/": { element: <VendorInfoPage />, rolesAllowed: [VENDOR_ROLE] },
+    "/ApproverOverviewPage/": { element: <ApproverOverviewPage />, rolesAllowed: [APPROVER_ROLE] },
+    "/ApproverInfoPage/": { element: <ApproverInfoPage />, rolesAllowed: [APPROVER_ROLE] },
   };
 
   const renderRoutes = () => {

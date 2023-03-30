@@ -16,8 +16,11 @@ import {
     ListItemIcon,
     ListItemAvatar,
     Avatar,
-    Chip
+    Chip, 
+    IconButton
 } from "@mui/material";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import EmailIcon from '@mui/icons-material/Email';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
@@ -99,16 +102,15 @@ function FormWorkflow(){
         
         textAlign: 'left',
         color: token.colorTextTertiary,
-        backgroundColor: token.colorFillAlter,
         borderRadius: token.borderRadiusLG,
         border: `1px dashed ${token.colorBorder}`,
         marginTop: 10,
     };
 
-    console.log(workflow)
+    console.log(stepsContent)
     return(
     
-    <Grid sx={{mt:6, textAlign:'left', px:4}}>
+    <Grid sx={{my:6, textAlign:'left', px:4}}>
         
         <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:3}}>
 
@@ -149,7 +151,7 @@ function FormWorkflow(){
                 <Grid item>
                     <FormControl>
                         <FormLabel htmlFor="WorkflowName" sx={{}}>Status</FormLabel>
-                        <TextField variant="filled" size='small' value={workflow.status} select sx={{width:200}}>
+                        <TextField variant="filled" size='small' value={workflow.status} select sx={{width:200}} disabled={role=='Vendor'}>
                         {statuses.map((status) => (
                                             <MenuItem key={status} value={status}>
                                             {status}
@@ -170,7 +172,7 @@ function FormWorkflow(){
                                         <Chip label="Approved" color="success" />
                                     </ListItemIcon>
                                     <ListItemText primary={step.formName}></ListItemText>
- 
+
                             </ListItem>
                             
                             ))}
@@ -188,33 +190,74 @@ function FormWorkflow(){
         <Paper elevation={1} sx={{height:"100%", pt:4, pb:2, px:3, mt:4}}>
             <>
         <Steps current={current} items={stepsContent} />
-        <div style={contentStyle}>
-            {steps.length>0 && <FormPreview formData={stepsContent[current].content}/> }
 
-            <Divider light sx={{my:3}}>Approval</Divider>
+        
+        <div style={contentStyle}>
+
+            <Grid container sx={{pt:2, pr:2}}>
+                    <Grid item md={10}></Grid>
+                    <Grid item md={2}>
+                            {current < steps.length - 1 && (
+                            // <Button color="primary" variant='contained' fullWidth onClick={() => next()}>
+                            //     Next
+                            // </Button>
+                            <IconButton onClick={() => next()}>
+                            <Typography variant="body1" sx={{pl:1}}>Next</Typography> <ArrowForwardIcon/>
+                            </IconButton>
+
+                            
+                            )}
+                            
+                            {current > 0 && (
+                            // <Button
+                            //     variant='contained'
+                            //     fullWidth
+                            //     onClick={() => prev()}
+                            // >
+                            //     Previous
+                            // </Button>
+
+                        <IconButton onClick={() => prev()}>
+                                <ArrowBackIcon/> <Typography variant="body1" sx={{pl:1}}>Previous</Typography>
+                        </IconButton>
+                            )}
+                    </Grid>
+
+                </Grid>
+            {steps.length>0 && <VendorFormPreview formData={stepsContent[current].content} fakeID={stepsContent[current].key}/> }
+
+            
             <Grid container>
                 <Grid item sx={{p:2}} xs={12} sm={12} md={12}>
-                    <TextField
-                        label="Comments"
-                        fullWidth
-                        multiline
-                        rows={5}
-                        required
-                        defaultValue="Input Comments"
-                        />
+                {!workflow.status == "Pending" &&
+                <><Divider light sx={{ my: 3 }}>Approval</Divider><TextField
+                                        label="Comments"
+                                        fullWidth
+                                        multiline
+                                        rows={5}
+                                        required
+                                        defaultValue="Input Comments"
+                                        disabled={role == 'Admin' || role == 'Vendor'} /></>
+                }
+    
                 </Grid>
 
                 <Grid item sx={{p:2}} xs={6} sm={6} md={2}>
+                {role=='Approver' &&
                     <Button variant="contained" color="success" startIcon={<TaskAltIcon/>}>
                         Approve
                     </Button>
+                }
                 </Grid>
 
 
                 <Grid item sx={{p:2}} xs={6} sm={6} md={2}>
+                    {role=='Approver' &&
                     <Button variant="contained" color="error" startIcon={<CancelIcon/>}>
-                        Reject
+                    Reject
                     </Button>
+                    }
+                    
                 </Grid>
                 
 
@@ -231,27 +274,6 @@ function FormWorkflow(){
                 Done
             </Button>
             )} */}
-            <Grid container>
-                <Grid item md={10}></Grid>
-                <Grid item md={2}>
-                        {current < steps.length - 1 && (
-                        <Button color="primary" variant='contained' fullWidth onClick={() => next()}>
-                            Next
-                        </Button>
-                        )}
-                        
-                        {current > 0 && (
-                        <Button
-                            variant='contained'
-                            fullWidth
-                            onClick={() => prev()}
-                        >
-                            Previous
-                        </Button>
-                        )}
-                </Grid>
-
-            </Grid>
     
         </div>
         </>

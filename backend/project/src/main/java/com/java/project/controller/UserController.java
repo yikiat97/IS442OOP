@@ -1,6 +1,8 @@
 package com.java.project.controller;
 
 import com.java.project.model.*;
+import com.java.project.exception.DataNotFoundException;
+import com.java.project.exception.GlobalExceptionHandler;
 import com.java.project.repository.CompanyRepository;
 import com.java.project.repository.EmailRepository;
 import com.java.project.repository.UserRepository;
@@ -9,6 +11,7 @@ import com.java.project.service.UserService;
 import jakarta.mail.MessagingException;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +43,9 @@ public class UserController {
     @Autowired
     EmailRepository EmailRepository;
 
+    @Autowired
+    private GlobalExceptionHandler globalExceptionHandler;
+
     @GetMapping("/getEmails")
     public ResponseEntity getEmails(){
         List<User> userList = UserRepository.findAll();
@@ -51,7 +57,7 @@ public class UserController {
         if(userList != null){
             return ResponseEntity.ok(emailList);
         }else{
-            return new ResponseEntity<>("Something went wrong", HttpStatus.UNAUTHORIZED);
+            throw new DataNotFoundException("Emails not found");
         }
     }
     @GetMapping("/getUser")
@@ -65,7 +71,7 @@ public class UserController {
             userInfoList.add(user.getCompanyRegistrationNum());
             return ResponseEntity.ok(userInfoList);
         }else {
-            return new ResponseEntity<>("User does not exist", HttpStatus.UNAUTHORIZED);
+            throw new DataNotFoundException("User does not exist");
         }
     }
 
@@ -76,7 +82,7 @@ public class UserController {
         if(userList!=null){
             return ResponseEntity.ok(userList);
         }else {
-            return new ResponseEntity<>("No user under the company", HttpStatus.UNAUTHORIZED);
+            throw new DataNotFoundException("No user under the company");
         }
     }
 
@@ -84,7 +90,7 @@ public class UserController {
     public ResponseEntity<?> authenticateUser(@RequestBody User userDetails) {
         User user = UserRepository.findUserByEmail(userDetails.getEmail());
         if (user == null) {
-            return new ResponseEntity<>("User does not exist", HttpStatus.UNAUTHORIZED);
+            throw new DataNotFoundException("No user under the company");
         }
         if (!userService.passwordCheck(userDetails.getPassword(), user.getPassword())) {
             return new ResponseEntity<>("Password does not match", HttpStatus.UNAUTHORIZED);
@@ -160,7 +166,7 @@ public class UserController {
                 return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
             }
         }else{
-            return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
+            throw new DuplicateKeyException("User already exists");
         }
     }
 
@@ -192,7 +198,7 @@ public class UserController {
                 return new ResponseEntity<>("Messaging Exception error", HttpStatus.UNAUTHORIZED);
             }
         }else{
-            return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
+            throw new DuplicateKeyException("User already exists");
         }
     }
 
@@ -242,7 +248,7 @@ public class UserController {
                 return new ResponseEntity<>("Old password is wrong", HttpStatus.UNAUTHORIZED);
             }
         }
-        return new ResponseEntity<>("No such email found", HttpStatus.UNAUTHORIZED);
+        throw new DataNotFoundException("No such email found");
     }
 
     @PutMapping(value = "/editUser")
@@ -269,7 +275,7 @@ public class UserController {
                 return ResponseEntity.ok(savedUser);
             }
         }
-        return new ResponseEntity<>("No such email found", HttpStatus.UNAUTHORIZED);
+        throw new DataNotFoundException("No such email found");
     }
 
     @DeleteMapping("/deleteUser")
@@ -278,7 +284,7 @@ public class UserController {
             UserRepository.deleteByEmail(email);
             return ResponseEntity.ok("ok");
         }else{
-            return new ResponseEntity<>("User does not exist", HttpStatus.UNAUTHORIZED);
+            throw new DataNotFoundException("User does not exist");
         }
 
     }
@@ -297,7 +303,11 @@ public class UserController {
                 response.put(company.get().getName(), infoList);
             }
         }
+        if(response.isEmpty()){
+            throw new DataNotFoundException("No vendors exist");
+        }else{
         return ResponseEntity.ok(response);
+        }
     }
 
     @GetMapping("/getAdmins")
@@ -312,7 +322,7 @@ public class UserController {
             resultList.add(vendorList);
             return ResponseEntity.ok(resultList);
         }else{
-            return new ResponseEntity<>("Company does not exist", HttpStatus.UNAUTHORIZED);
+            throw new DataNotFoundException("Company does not exist");
         }
 
     }

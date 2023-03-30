@@ -5,6 +5,10 @@ import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
 import { Link } from 'react-router-dom';
 import StartIcon from '@mui/icons-material/Start';
 import PersonIcon from "@mui/icons-material/Person";
+import AutoAwesomeMosaicIcon from '@mui/icons-material/AutoAwesomeMosaic';
+import GradingIcon from '@mui/icons-material/Grading';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { Sidebar, Menu, MenuItem, SubMenu, useProSidebar, ProSidebarProvider} from "react-pro-sidebar";
 import {
     Typography,
@@ -57,29 +61,25 @@ const ApproverNavBar = () => {
             {role!=null ?
             <><Menu style={{ textAlign: "left" }}>
                 
-                    <SubMenu label='User Management' icon={<GroupsIcon />} component={<Link to='/UserManagement' />}>
-                        <MenuItem>Create New User</MenuItem>
-                    </SubMenu>
+                    <MenuItem icon={<AutoAwesomeMosaicIcon />} component={<Link to='/ApproverOverviewPage'/>}>Overview
+                    </MenuItem>
 
-                    <SubMenu label='Workflows' icon={<SettingsSuggestIcon />} component={<Link to='/WorkflowsAdmin' />}>
-                        <MenuItem component={<Link to='/ViewWorkflowsTemplate' />}>View Templates</MenuItem>
-                        <MenuItem component={<Link to='/CreateWorkflow' />}>Create New Template</MenuItem>
-                        <MenuItem component={<Link to='/ViewAllWorkflow' />}>View Workflows</MenuItem>
-                        <MenuItem component={<Link to='/AssignWorkflow' />}>Assign Workflow</MenuItem>
+                    <MenuItem icon={<AssignmentIcon />} component={<Link to='/Tobefillin'/>}> Awaiting Approval
+                    </MenuItem>
 
-                    </SubMenu>
+                    <MenuItem icon={<GradingIcon />} component={<Link to='/Tobefillin'/>}>Approved Worflow
+                    </MenuItem>
 
-                    <SubMenu label='Form Management' icon={<FeedIcon />} component={<Link to='/FormHomePage' />}>
-                        <MenuItem component={<Link to='/ViewDeletedForms' />}>View Deleted Forms</MenuItem>
-                        <MenuItem component={<Link to='/ViewForms' />}>View Current Forms</MenuItem>
-                        <MenuItem component={<Link to='/FormCreation' />}>Create New Form</MenuItem>
-                    </SubMenu>
+                    <MenuItem icon={<SettingsIcon />} component={<Link to='/Tobefillin'/>}>Settings
+                    </MenuItem>
 
-                </Menu><Menu sx={{}} onClick={handleAuthItemClick}>
+                </Menu><Menu sx={{}} >
                         {/* <MenuItem icon={<PersonIcon/>}> */}
                         <Grid container sx={{ mt: '10px', display: "flex", align: "center" }}>
                             <Grid item md={3}>
-                                <PersonIcon />
+                                <Link to='/ApproverInfoPage'>
+                                <PersonIcon/>
+                                </Link>
                             </Grid>
 
                             <Grid item md={6}>
@@ -91,7 +91,7 @@ const ApproverNavBar = () => {
                                 </Typography>
                             </Grid>
 
-                            <Grid item md={3}>
+                            <Grid item md={3} onClick={handleAuthItemClick}>
                                 <Typography textAlign={'center'}>
                                     <StartIcon />
                                 </Typography>

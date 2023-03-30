@@ -7,16 +7,7 @@ import AddAlertIcon from '@mui/icons-material/AddAlert';
 import {
 
     Grid, 
-    Paper, 
-    Button,
-    TableContainer,
-    Chip,
-    TextField,
-    InputBase,
-    Autocomplete,
-    InputAdornment,
-    Input,
-    Link
+
         
 } from "@mui/material";
 import axios from "axios";
@@ -67,7 +58,7 @@ function VendorAssignWorkflowPage(){
             
             <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:3}}>
                 <Grid item md={2}>
-                    <h1>Assign Workflow</h1>
+                    <h1>Pending Workflow</h1>
                 </Grid>
 
             </Grid>
