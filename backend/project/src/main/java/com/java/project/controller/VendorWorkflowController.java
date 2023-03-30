@@ -3,9 +3,8 @@ package com.java.project.controller;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-
-import javax.management.RuntimeErrorException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,9 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.java.project.exception.DataNotFoundException;
 import com.java.project.exception.GlobalExceptionHandler;
+import com.java.project.model.Form;
+import com.java.project.model.Question;
 import com.java.project.model.VendorWorkflow;
 import com.java.project.model.VendorWorkflowMappingDTO;
+import com.java.project.repository.FormRepository;
+import com.java.project.repository.QuestionRepository;
 import com.java.project.repository.VendorWorkflowRepository;
+
+
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
@@ -31,6 +36,12 @@ import com.java.project.repository.VendorWorkflowRepository;
 public class VendorWorkflowController {
     @Autowired
     VendorWorkflowRepository VendorWorkflowRepository;
+
+    @Autowired
+    FormRepository FormRepository;
+
+    @Autowired
+    QuestionRepository QuestionRepository;
 
     @Autowired
     private GlobalExceptionHandler globalExceptionHandler;
@@ -61,6 +72,17 @@ public class VendorWorkflowController {
             if(vendorWorkflowName == null || status == null || email == null || company == null || date == null || name == null){
                 throw new IllegalArgumentException("One or more of the fields is missing or incorrect"); 
             }
+
+            for (int i = 0; i < forms.size(); i++ ){
+                Optional<Form> FormData = FormRepository.findById(forms.get(i));
+                Form formTemplate = FormData.get();
+                List<Map<String, Object>> questionData = formTemplate.getQuestionData();
+                System.out.println(questionData);
+                Question question = new Question(null, questionData, null, "Pending");
+                QuestionRepository.save(question);
+            }
+
+
             VendorWorkflow _VendorWorkflow = VendorWorkflowRepository
                     .save(new VendorWorkflow(null, forms, vendorWorkflowName, status, email, company, date, name));
             // System.out.println(form);

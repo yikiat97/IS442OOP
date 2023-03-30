@@ -89,6 +89,7 @@ public class QuestionController {
           Question question = optionalQuestion.get();
           question.setQuestionData(questionData.getQuestionData());
           question.setComments(questionData.getComments());
+          question.setStatus(questionData.getStatus());
 
           QuestionRepository.save(question);
           System.out.println("========= UPDATE DATA SUCCESSFUL ===========");
@@ -96,7 +97,9 @@ public class QuestionController {
       } else {
           throw new DataNotFoundException("Question not found");
       }
-}
+    }
+
+    
 
 
     }

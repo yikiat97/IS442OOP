@@ -103,7 +103,7 @@ public class EmailController {
         }
     }
 
-    @PostMapping(value = "/resend")
+    @GetMapping(value = "/resend")
     public ResponseEntity resendEmail(@RequestParam String id) {
         Optional<Email> email = EmailRepository.findById(id);
         if (email.isPresent()) {

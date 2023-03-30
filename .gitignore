@@ -36,3 +36,6 @@ backend/project/bin/com/java/project/controller/UserController.class
 backend/project/bin/com/java/project/controller/QuestionController.class
 backend/project/bin/com/java/project/controller/EmailController.class
 backend/project/bin/com/java/project/controller/CompanyController.class
+*.class
+backend/project/bin/com/java/project/MongoDBPlayground.mongodb
+backend/project/bin/application.properties
