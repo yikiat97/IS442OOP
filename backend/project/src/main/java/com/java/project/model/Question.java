@@ -9,10 +9,15 @@ public class Question {
     private String questionID;
     private List<Map<String, Object>> QuestionData;
     private String Comments;
+    private String Status;
     
 
     public String getQuestionID() {
         return questionID;
+    }
+
+    public void setQuestionID(String questionID) {
+        this.questionID = questionID;
     }
 
 
@@ -24,10 +29,14 @@ public class Question {
         return Comments;
     }
 
-
-    public void setQuestionID(String questionID) {
-        this.questionID = questionID;
+    public void setStatus(String Status) {
+        this.Status = Status;
     }
+
+    public String getStatus() {
+        return Status;
+    }
+
 
 
     public List<Map<String, Object>> getQuestionData() {
@@ -40,11 +49,13 @@ public class Question {
     }
 
 
-    public Question( String questionID,List<Map<String, Object>> QuestionData , String Comments){
+    public Question( String questionID,List<Map<String, Object>> QuestionData , String Comments, String Status){
         //super();
         this.questionID = questionID;
         this.QuestionData = QuestionData;
         this.Comments = Comments;
+        this.Status = Status;
+        
         
     }
 
