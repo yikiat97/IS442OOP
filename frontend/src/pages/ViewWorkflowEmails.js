@@ -122,6 +122,14 @@ function ViewEmails(){
         navigate("/FormWorkflow/" + workflowID)
     }
 
+    const resendEmail = (id) =>{
+        axios.get("http://localhost:8080/email/resend?id=" + id)
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch(error => console.error(error.response));
+    };
+
         const [searchText, setSearchText] = useState('');
         const [searchedColumn, setSearchedColumn] = useState('');
         const searchInput = useRef(null);
@@ -232,9 +240,10 @@ function ViewEmails(){
             ...getColumnSearchProps('date'),
         },
         {
-            render: (_,{status}) => (
-                <Button>Resend</Button>
-    ),
+            dataIndex: "id",
+                render: (_, { id }) => (
+                <Button onClick={() => resendEmail(id)}>Resend</Button>
+                ),
         }
         ];
 
