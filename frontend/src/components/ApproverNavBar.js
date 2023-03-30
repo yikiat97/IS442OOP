@@ -20,6 +20,10 @@ import {
 const ApproverNavBar = () => {
   const role = sessionStorage.getItem("role");
   const roleText = role ? role : "Sign in";
+  const email = sessionStorage.getItem("email");
+  const companyId = sessionStorage.getItem("companyId");
+
+  const settingsRoute = "/ViewUser/" + companyId + "/" + email;
 
   const handleAuthItemClick = () => {
     if (role) {
@@ -70,7 +74,7 @@ const ApproverNavBar = () => {
                     <MenuItem icon={<GradingIcon />} component={<Link to='/ViewAllWorkflow'/>}>View All Workflows
                     </MenuItem>
 
-                    <MenuItem icon={<SettingsIcon />} component={<Link to='/Tobefillin'/>}>Settings
+                    <MenuItem icon={<SettingsIcon />} component={<Link to={settingsRoute}/>}>Settings
                     </MenuItem>
 
                 </Menu><Menu sx={{}} >
