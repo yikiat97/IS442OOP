@@ -5,7 +5,6 @@ import Paper from '@mui/material/Paper';
 
 // import Unstable_DateField from '@mui/x-date-pickers/DateField';
 import { styled } from '@mui/material/styles';
-
 // import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 // import { Unstable_DateField as DateField } from '@mui/x-date-pickers';
 import Rating from "./Rating";
@@ -26,20 +25,25 @@ const Item = styled(Paper)(({ theme }) => ({
     
 }));
 
-const FormPreview = ({ formData}) => {
-    const [formFields, setFormFields] = useState([]);
+const FormPreview = ({ formData,renderRatingsSummary ,haveRating, setHaveRating ,formFields, setFormFields, ratingsRendered, setRatingsRendered}) => {
+    // const [formFields, setFormFields] = useState([]);
+    // const [ratingsRendered, setRatingsRendered] = useState(0);
+    // const [haveRating, setHaveRating] = useState(false);
     const [totalRating, setTotalRating] = useState(0);
-    const updateTotalRating = (newRating) => {
-        console.log(newRating)
-        setTotalRating(totalRating + newRating);
+
+    
+    const updateTotalRating = (rating) => {
+        setTotalRating(totalRating + rating);
     };
 
-    let haveRating=false;
+
     console.log('form preview rendering')
     console.log(formData)
     useEffect(() => {
         if (formData && formData.jsonObject) {
             setFormFields(formData.jsonObject.fields);
+            let ratingTotal = 0;
+
             // const fields = formData.jsonObject.fields;
             // let totalRating = 0;
             // fields.forEach((field) => {
@@ -49,15 +53,20 @@ const FormPreview = ({ formData}) => {
             // });
             
             // setTotalRating(totalRating);
+            // if (haveRating) {
+            //     setRatingCount((prevCount) => prevCount + 1);
+            // }
+            // renderRatingsSummary();
+
+
         }
     }, [formData]);
     if (!formData) {
         return null;
     }
 
-    const renderField = (field) => {
 
-   
+    const renderField = (field) => {
         
         console.log(field)
         switch (field.type) {
@@ -187,23 +196,15 @@ const FormPreview = ({ formData}) => {
             );
         case "rating":
             haveRating=true;
+            setTotalRating(field.value)
             return(
-                <Rating totalRating={totalRating} updateTotalRating={updateTotalRating}></Rating>
+                <Rating totalRating={totalRating} updateTotalRating={updateTotalRating} ></Rating>
             );
         default:
             return null;
         }
     };
-    const renderRatingsSummary = () => {
-        if(haveRating){
-            return (
-            <Box sx={{ marginTop: 2 }}>
-                <Typography>Total Score:{totalRating}</Typography>
-            </Box>
-            );            
-        }
 
-    };
     return (
         <Container maxWidth="xl">
             <Typography variant="h1" component="h1" sx={{ fontWeight: 'bold' }}>
@@ -221,8 +222,13 @@ const FormPreview = ({ formData}) => {
                     )}
                     </Grid>
                 ))}
+                {haveRating && (
+                    <Grid item xs={12}>
+                        <p>Total rating: {totalRating}</p>
+                    </Grid>
+                )} 
             </Grid>
-            {renderRatingsSummary()}
+
 
         </Container>
 

@@ -1,3 +1,7 @@
 .form-wrap:not(:first-child) {
     display: none;
 }
+
+#fb-editor .fb-form-actions button.fb-get-data {
+    display: none;
+}
