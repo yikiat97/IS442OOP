@@ -18,7 +18,7 @@ import {
     Avatar,
     Chip
 } from "@mui/material";
-import CircleIcon from '@mui/icons-material/Circle';
+import EmailIcon from '@mui/icons-material/Email';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 import VendorFormPreview from '../components/VendorFormPreview';
@@ -105,34 +105,25 @@ function FormWorkflow(){
         marginTop: 10,
     };
 
-
+    console.log(workflow)
     return(
     
     <Grid sx={{mt:6, textAlign:'left', px:4}}>
         
         <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:3}}>
 
-                <Grid item md={1.5}>
+                <Grid item md={2.25} sm={4}>
                     <Typography variant='h4'>
                         {workflow.workflowName}
                     </Typography>
                     
                 </Grid>
 
-                <Grid item md={2.0} sm={1} sx={{justifyContent:"flex-end", display:'flex'}}>
-                    <Button color="primary" variant="contained" sx={{width:250, backgroundColor:"#2596BE"}} onClick={viewEmails}>
+                <Grid item md={0.75} sm={1} sx={{justifyContent:"flex-end", display:'flex'}}>
+                    <Button color="primary" variant="contained" fullWidth sx={{ backgroundColor:"#2596BE"}} startIcon={<EmailIcon/>} onClick={viewEmails}>
                             View Emails
                     </Button>
                 </Grid>
-
-                <Grid item md={0.5}></Grid>
-                { role=='Approver' &&
-                <><Grid item md={0.5} sm={6} sx={{ alignItems: "flex-end", justifyContent: "center", display: 'flex' }}>
-                        <Button variant="contained" sx={{ width: 100, backgroundColor: "#2596BE" }}>Approve</Button>
-                    </Grid><Grid item sx={{ alignItems: "center", justifyContent: "flex-end", display: 'flex' }} md={0.5} sm={6}>
-                            <Button sx={{ bgcolor: "#D3D3D3", color: "#000000", width: 100 }}>Deny</Button>
-                        </Grid></>
-                }
 
                 </Grid>
 
@@ -158,7 +149,7 @@ function FormWorkflow(){
                 <Grid item>
                     <FormControl>
                         <FormLabel htmlFor="WorkflowName" sx={{}}>Status</FormLabel>
-                        <TextField variant="filled" size='small' defaultValue={workflow.status} select sx={{width:200}}>
+                        <TextField variant="filled" size='small' value={workflow.status} select sx={{width:200}}>
                         {statuses.map((status) => (
                                             <MenuItem key={status} value={status}>
                                             {status}
