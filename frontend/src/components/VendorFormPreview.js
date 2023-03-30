@@ -26,7 +26,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
   textAlign:"left"
 }));
-const VendorFormPreview = ({ formData, fakeID }) => {
+const VendorFormPreview = ({ formData, fakeID, status }) => {
   //console.log(formData)
   const [updatedStructure, setUpdatedStructure] = useState(formData.questionData);
   const [invalidFields, setInvalidFields] = useState([]);
@@ -45,24 +45,46 @@ console.log(formData)
   // Check for invalid fields
   const invalidFields = data
   console.log(data)
-    .filter((field) => {
-      if (field.required) {
-        const isValuePresent =
-          field.type === "radio-group" || field.type === "checkbox-group"
-            ? field.values.some((option) => option.selected)
-            : field.value && field.value.trim() !== "";
-        return !isValuePresent;
-      }
-      return false;
+  let formJsonObject = { questionData: data,status: status };
+  fetch("http://localhost:8080/Question/updateQuestion/" + fakeID, {
+    method: "PUT",
+    body: JSON.stringify(formJsonObject),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      alert("Submitted");
+      window.location.reload();
     })
-    .map((field) => field.name);
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("failed");
+    });
 
-  // If any required field is not filled, display an alert and update the invalidFields state
-  if (invalidFields.length > 0) {
-    alert("Please fill all required fields.");
-    setInvalidFields(invalidFields);
-    return;
-  }
+
+  // data.filter((field) => {
+  //     if (field.required) {
+  //       const isValuePresent =
+  //         field.type === "radio-group" || field.type === "checkbox-group"
+  //           ? field.values.some((option) => option.selected)
+  //           : field.value && field.value.trim() !== "";
+  //       return !isValuePresent;
+  //     }
+  //     return false;
+  //   })
+  //   .map((field) => field.name);
+
+  //   // If any required field is not filled, display an alert and update the invalidFields state
+  //   if (invalidFields.length > 0) {
+  //     alert("Please fill all required fields.");
+  //     setInvalidFields(invalidFields);
+  //     return;
+  //   }
+  //   else {
+
+  //   }
   }
 
   const save = (data) => {
@@ -79,7 +101,7 @@ console.log(formData)
     })
       .then((response) => response.json())
       .then((data) => {
-        alert("submitted");
+        alert("Saved");
         console.log(data);
       })
       .catch((error) => {

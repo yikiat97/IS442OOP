@@ -34,7 +34,7 @@ public class WorkflowController {
   WorkflowRepository WorkflowRepository;
 
   @Autowired
-    private GlobalExceptionHandler globalExceptionHandler;
+  private GlobalExceptionHandler globalExceptionHandler;
 
   // JSON Format for creation of workflow
   // {
@@ -44,19 +44,18 @@ public class WorkflowController {
   @PostMapping("/insertWorkflow")
   public ResponseEntity<Workflow> createWorkflow(@RequestBody(required = false) WorkflowMappingDTO WorkflowDTO) {
 
-      // logic handling of the workflow json to fit object workflow
-      // Use a DTO to map forms and workflowName for creation of forms
+    // logic handling of the workflow json to fit object workflow
+    // Use a DTO to map forms and workflowName for creation of forms
 
-      List<String> forms = WorkflowDTO.getForms();
-      String workflowName = WorkflowDTO.getWorkflowName();
-      if(forms == null || workflowName == null){
-        throw new IllegalArgumentException("One or more of the fields is missing or incorrect"); 
+    List<String> forms = WorkflowDTO.getForms();
+    String workflowName = WorkflowDTO.getWorkflowName();
+    if (forms == null || workflowName == null) {
+      throw new IllegalArgumentException("One or more of the fields is missing or incorrect");
     }
-      Workflow _Workflow = WorkflowRepository.save(new Workflow(null, forms, workflowName));
-      // System.out.println(form);
-      return new ResponseEntity<>(_Workflow, HttpStatus.CREATED);
-    }
-  
+    Workflow _Workflow = WorkflowRepository.save(new Workflow(null, forms, workflowName, null));
+    // System.out.println(form);
+    return new ResponseEntity<>(_Workflow, HttpStatus.CREATED);
+  }
 
   // routing to get workflow by id
   @GetMapping("/WorkflowByID/{id}")
@@ -86,7 +85,7 @@ public class WorkflowController {
   // JSON format
   // {
   // "id" : "6412eaf10bf80f2c012bd872",
-  // "forms": ["Vendor Assessment", "Pre-Evaluation Form", "Health Performance"],
+  // "forms": ["FormID", "FormID", "FormID"],
   // "workflowName": "Vendor Onboarding",
   // }
   // id is the only mandatory field to input
@@ -106,7 +105,7 @@ public class WorkflowController {
       List<String> newForms = (forms == null) ? Workflow.get().getForms() : forms;
       String newWorkflowName = (workflowName == "") ? Workflow.get().getWorkflowName() : workflowName;
       Workflow _Workflow = WorkflowRepository
-          .save(new Workflow(Workflow.get().getId(), newForms, newWorkflowName));
+          .save(new Workflow(Workflow.get().getId(), newForms, newWorkflowName, null));
       return new ResponseEntity<>(_Workflow, HttpStatus.OK);
     } else {
       throw new DataNotFoundException("Workflow not found");
@@ -117,8 +116,8 @@ public class WorkflowController {
   }
 
   // Path to delete workflow here
-  @DeleteMapping("/deleteWorkflow/{id}")
-  public ResponseEntity<?> deleteWorkflowById(@PathVariable("id") String id) {
+  @DeleteMapping("/hardDeleteWorkflow/{id}")
+  public ResponseEntity<?> hardDeleteWorkflowById(@PathVariable("id") String id) {
     System.out.println(id);
     Optional<Workflow> Workflow = WorkflowRepository.findById(id);
 
@@ -127,6 +126,31 @@ public class WorkflowController {
       return new ResponseEntity<>("Workflow deleted", HttpStatus.NO_CONTENT);
     } else {
       throw new DataNotFoundException("Workflow not found");
+    }
+  }
+
+  // Path to soft delete workflow
+
+  // JSON format
+
+  // "6412eaf10bf80f2c012bd872",
+
+  // id is a mandatory field to input
+  @PutMapping("/softDeleteWorkflow")
+  public ResponseEntity<Workflow> softDeleteWorkflow(
+      @RequestBody(required = false) String id) {
+    Optional<Workflow> Workflow = WorkflowRepository.findById(id);
+    if (Workflow.isPresent()) {
+      // System.out.println(newStatus);
+      // System.out.println(VendorWorkflow.get().getStatus());
+      // if status changes to approve, then change the date to current date
+      Workflow _Workflow = WorkflowRepository
+          .save(new Workflow(Workflow.get().getId(), Workflow.get().getForms(),
+              Workflow.get().getWorkflowName(), "Deleted"));
+      return ResponseEntity.ok(_Workflow);
+
+    } else {
+      throw new DataNotFoundException("Workflow Not Found");
     }
   }
 }
