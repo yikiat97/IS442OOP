@@ -3,6 +3,7 @@ import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import VendorNavbar from "./components/VendorNavBar";
+import ApproverNavbar from "./components/ApproverNavBar";
 
 import CreateWorkflow from "./pages/CreateWorkflow";
 import Form from "./pages/FormCreation";
@@ -168,9 +169,11 @@ function App() {
       <header className="App-header">
         {sessionStorage.getItem("role") === "Vendor" ? (
           <VendorNavbar />
-        ) : sessionStorage.getItem("role") === "Approver" || "Admin" ? (
+        ) : sessionStorage.getItem("role") === "Admin" ? (
           <Navbar />
-        ) : (
+        ) : sessionStorage.getItem("role") === "Approver" ? (
+          <ApproverNavbar />
+        ): (
           <Navbar />
         )}
       </header>
