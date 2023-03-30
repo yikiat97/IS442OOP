@@ -5,6 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
+import javax.management.RuntimeErrorException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.java.project.exception.DataNotFoundException;
+import com.java.project.exception.GlobalExceptionHandler;
 import com.java.project.model.VendorWorkflow;
 import com.java.project.model.VendorWorkflowMappingDTO;
 import com.java.project.repository.VendorWorkflowRepository;
-import com.java.project.service.SequenceGeneratorService;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
@@ -30,7 +33,7 @@ public class VendorWorkflowController {
     VendorWorkflowRepository VendorWorkflowRepository;
 
     @Autowired
-    SequenceGeneratorService sequenceGeneratorService;
+    private GlobalExceptionHandler globalExceptionHandler;
 
     // JSON FORMAT FOR CREATING VENDORWORKFLOW
     // {
@@ -43,9 +46,8 @@ public class VendorWorkflowController {
     // "name": "elmer"
     // }
     @PostMapping("/insertVendorWorkflow")
-    public ResponseEntity<VendorWorkflow> createVendorWorkflow(
+    public ResponseEntity<?> createVendorWorkflow(
             @RequestBody(required = false) VendorWorkflowMappingDTO VendorWorkflowDTO) {
-        try {
             // logic handling of the workflow json to fit object workflow
             // Use a DTO to map forms and workflowName for creation of forms
 
@@ -56,37 +58,36 @@ public class VendorWorkflowController {
             String company = VendorWorkflowDTO.getCompany();
             String date = VendorWorkflowDTO.getDate();
             String name = VendorWorkflowDTO.getName();
-
+            if(vendorWorkflowName == null || status == null || email == null || company == null || date == null || name == null){
+                throw new IllegalArgumentException("One or more of the fields is missing or incorrect"); 
+            }
             VendorWorkflow _VendorWorkflow = VendorWorkflowRepository
                     .save(new VendorWorkflow(null, forms, vendorWorkflowName, status, email, company, date, name));
             // System.out.println(form);
             return new ResponseEntity<>(_VendorWorkflow, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     // routing to get vendorWorkflow by id
     @GetMapping("/vendorWorkflowByID/{id}")
-    public ResponseEntity<?> getVendorWorkflowById(@PathVariable("id") String id) {
+    public ResponseEntity<VendorWorkflow> getVendorWorkflowById(@PathVariable("id") String id) {
         Optional<VendorWorkflow> VendorWorkflow = VendorWorkflowRepository.findById(id);
 
         if (VendorWorkflow.isPresent()) {
-            return new ResponseEntity<>(VendorWorkflow.get(), HttpStatus.OK);
+            return ResponseEntity.ok(VendorWorkflow.get());
         } else {
-            return new ResponseEntity<>("Workflow Not Found", HttpStatus.NOT_FOUND);
+            throw new DataNotFoundException("Workflow Not Found");
         }
     }
 
     // Routing to gett all vendorWorkflows in the collection
     @GetMapping("/allVendorWorkflow")
-    public ResponseEntity<?> getAllWorkflow() {
+    public ResponseEntity<List<VendorWorkflow>> getAllWorkflow() {
         List<VendorWorkflow> VendorWorkflows = VendorWorkflowRepository.findAll();
 
         if (!VendorWorkflows.isEmpty()) {
-            return new ResponseEntity<>(VendorWorkflows, HttpStatus.OK);
+            return ResponseEntity.ok(VendorWorkflows);
         } else {
-            return new ResponseEntity<>("Workflows Not Found", HttpStatus.NOT_FOUND);
+            throw new DataNotFoundException("Workflows not found.");
         }
     }
 
@@ -98,7 +99,7 @@ public class VendorWorkflowController {
     // id is a mandatory field to input
     // status to be automatically updated, dont need for updateMappingDTO
     @PutMapping("/approveVendorWorkflow")
-    public ResponseEntity<?> approveVendorWorkflow(
+    public ResponseEntity<VendorWorkflow> approveVendorWorkflow(
             @RequestBody(required = false) String id) {
 
         // map the json object so that id, forms and workflowname can be manipulated
@@ -118,10 +119,10 @@ public class VendorWorkflowController {
                             VendorWorkflow.get().getWorkflowName(), "Approved",
                             VendorWorkflow.get().getEmail(), VendorWorkflow.get().getCompany(), formattedDate,
                             VendorWorkflow.get().getName()));
-            return new ResponseEntity<>(_VendorWorkflow, HttpStatus.OK);
+            return ResponseEntity.ok(_VendorWorkflow);
 
         } else {
-            return new ResponseEntity<>("Workflow Not Found", HttpStatus.NOT_FOUND);
+            throw new DataNotFoundException("Workflow Not Found");
         }
 
         // System.out.println(form);
@@ -135,7 +136,7 @@ public class VendorWorkflowController {
 
     // id is a mandatory field to input
     @PutMapping("/rejectVendorWorkflow")
-    public ResponseEntity<?> rejectVendorWorkflow(
+    public ResponseEntity<VendorWorkflow> rejectVendorWorkflow(
             @RequestBody(required = false) String id) {
         Optional<VendorWorkflow> VendorWorkflow = VendorWorkflowRepository.findById(id);
         if (VendorWorkflow.isPresent()) {
@@ -148,10 +149,10 @@ public class VendorWorkflowController {
                             VendorWorkflow.get().getEmail(), VendorWorkflow.get().getCompany(),
                             VendorWorkflow.get().getDate(),
                             VendorWorkflow.get().getName()));
-            return new ResponseEntity<>(_VendorWorkflow, HttpStatus.OK);
+            return ResponseEntity.ok(_VendorWorkflow);
 
         } else {
-            return new ResponseEntity<>("Workflow Not Found", HttpStatus.NOT_FOUND);
+            throw new DataNotFoundException("Workflow Not Found");
         }
     }
 
@@ -179,7 +180,7 @@ public class VendorWorkflowController {
 
     // id is a mandatory field to input
     @PutMapping("/deleteVendorWorkflow")
-    public ResponseEntity<?> deleteVendorWorkflow(
+    public ResponseEntity<VendorWorkflow> deleteVendorWorkflow(
             @RequestBody(required = false) String id) {
         Optional<VendorWorkflow> VendorWorkflow = VendorWorkflowRepository.findById(id);
         if (VendorWorkflow.isPresent()) {
@@ -192,10 +193,11 @@ public class VendorWorkflowController {
                             VendorWorkflow.get().getEmail(), VendorWorkflow.get().getCompany(),
                             VendorWorkflow.get().getDate(),
                             VendorWorkflow.get().getName()));
-            return new ResponseEntity<>(_VendorWorkflow, HttpStatus.OK);
+            return ResponseEntity.ok(_VendorWorkflow);
 
         } else {
-            return new ResponseEntity<>("Workflow Not Found", HttpStatus.NOT_FOUND);
+            throw new DataNotFoundException("Workflow Not Found");
         }
     }
+
 }

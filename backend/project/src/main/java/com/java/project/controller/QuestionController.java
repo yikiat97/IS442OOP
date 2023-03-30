@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.java.project.exception.DataNotFoundException;
+import com.java.project.exception.GlobalExceptionHandler;
 import com.java.project.model.Question;
 import com.java.project.repository.QuestionRepository;
 
@@ -24,11 +26,17 @@ public class QuestionController {
     @Autowired
     QuestionRepository QuestionRepository;    
     
-    
+    @Autowired
+    private GlobalExceptionHandler globalExceptionHandler;    
 
     @GetMapping("Question/All")
     public List<Question> getAllQuestion() {
-            return QuestionRepository.findAll();
+            if(QuestionRepository.findAll().isEmpty()){
+              throw new DataNotFoundException("Questions not found");
+            }
+            else{
+              return QuestionRepository.findAll();
+            }
         }
     //  http://localhost:8080/Question/All
     
@@ -45,7 +53,7 @@ public class QuestionController {
             
         } else {
           System.out.println("========= GET DATA FAILED ===========");
-            return ResponseEntity.notFound().build();
+            throw new DataNotFoundException("Question not found");
         }
     }
     //http://localhost:8080/getQuestion/{id}
@@ -86,7 +94,7 @@ public class QuestionController {
           System.out.println("========= UPDATE DATA SUCCESSFUL ===========");
           return new ResponseEntity<>(question, HttpStatus.OK);
       } else {
-          return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+          throw new DataNotFoundException("Question not found");
       }
 }
 

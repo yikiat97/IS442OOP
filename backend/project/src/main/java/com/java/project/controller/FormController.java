@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
+import com.java.project.exception.DataNotFoundException;
+import com.java.project.exception.GlobalExceptionHandler;
 import com.java.project.model.Form;
 import com.java.project.repository.FormRepository;
 
@@ -27,15 +29,23 @@ public class FormController {
     @Autowired
     FormRepository FormRepository;
 
+    @Autowired
+    private GlobalExceptionHandler globalExceptionHandler;
+
     // Insert new question
     @PostMapping("Form/insertForm")
-    public ResponseEntity<Form> createQuestion(@RequestBody Form FormData) {
-
-      FormRepository.save(FormData);
-      //System.out.println(FormData.getQuestionID());
-      System.out.println("========= INSERT DATA SUCCESSFUL ===========");
-        return new ResponseEntity<>(FormData, HttpStatus.CREATED);
-      }
+    public ResponseEntity<?> createQuestion(@RequestBody Form FormData) {
+      try{
+        FormRepository.save(FormData);
+        //System.out.println(FormData.getQuestionID());
+        System.out.println("========= INSERT DATA SUCCESSFUL ===========");
+          return new ResponseEntity<>(FormData, HttpStatus.CREATED);
+        } catch(Exception e){
+          return new ResponseEntity<>("Please contact system administrator", HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+      
 
      //================================== Json Structure for Below ===================================
      //http://localhost:8080/Form/insertForm    
@@ -81,7 +91,7 @@ public class FormController {
             
         } else {
           System.out.println("========= GET DATA FAILED ===========");
-            return ResponseEntity.notFound().build();
+            throw new DataNotFoundException("Form Not Found");
         }
     }
     //http://localhost:8080/getQuestion/{id}
@@ -109,7 +119,7 @@ public class FormController {
             response.put("status", "error");
             response.put("message", "Form not found");
 
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            throw new DataNotFoundException("Form Not Found");
         }
     }
 //http://localhost:8080/deleteForm/{id}
