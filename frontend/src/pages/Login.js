@@ -89,9 +89,9 @@ function Login(props) {
     if (role === "Admin") {
       window.location.replace(window.location.origin + "/WorkflowsAdmin");
     } else if (role === "Vendor") {
-      window.location.replace(window.location.origin + "/ViewWorkflows");
-    } else{
-      window.location.replace(window.location.origin + "/ViewWorkflows");
+      window.location.replace(window.location.origin + "/VendorOverviewPage");
+    } else if (role === "Approver") {
+      window.location.replace(window.location.origin + "/ApproverOverviewPage");
     }
   };
 
