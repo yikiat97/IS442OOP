@@ -24,3 +24,15 @@ yarn-error.log*
 
 .vscode
 .idea
+backend/project/bin/com/java/project/service/EmailSenderService.class
+backend/project/bin/com/java/project/scheduler/ScheduleEmail.class
+backend/project/bin/com/java/project/repository/QuestionRepository.class
+backend/project/bin/com/java/project/repository/EmailRepository.class
+backend/project/bin/com/java/project/model/SuperAdmin.class
+backend/project/bin/com/java/project/model/Question.class
+backend/project/bin/com/java/project/model/Email.class
+backend/project/bin/com/java/project/controller/VendorWorkflowController.class
+backend/project/bin/com/java/project/controller/UserController.class
+backend/project/bin/com/java/project/controller/QuestionController.class
+backend/project/bin/com/java/project/controller/EmailController.class
+backend/project/bin/com/java/project/controller/CompanyController.class

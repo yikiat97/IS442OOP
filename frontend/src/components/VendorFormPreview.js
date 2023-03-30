@@ -276,16 +276,24 @@ console.log(formData)
       case "radio-group":
         return (
           <Item sx={{ m: 2 ,display:"block"}}  class="formbuilder-radio">
-          <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
-          <RadioGroup aria-labelledby="demo-radio-buttons-group-label" name="radio-buttons-group">
-              {field.values.map((value, index) => (
-              <div key={index}>
-
-                  <FormControlLabel value={value.value} control={<Radio />} label={value.label} />
-
-              </div>
+          <Typography>{field.label}</Typography>
+          <RadioGroup
+              aria-labelledby="demo-radio-buttons-group-label"
+              name={field.name}
+              style={getStylesForField(field.name)}
+              value={field.values.find((option) => option.selected)?.value || ""}
+              onChange={(e) => handleRadioChange(field.name, e.target.value)}
+            >
+              {field.values.map((option, index) => (
+                <div key={index}>
+                  <FormControlLabel
+                    value={option.value}
+                    control={<Radio />}
+                    label={option.label}
+                  />
+                </div>
               ))}
-          </RadioGroup>
+            </RadioGroup>
           <br></br>
       </Item>
         );
@@ -321,7 +329,6 @@ console.log(formData)
             <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
 
             <TextField
-              label={field.label}
               multiline
               fullWidth
               required={field.required}
@@ -360,7 +367,7 @@ console.log(formData)
       <Grid container spacing={2} sx={{ textAlign: 'left' }}>
 
           {formData.questionData.map((field, index) => (
-              <Grid key={index} item xs={12} >
+              <Grid key={index} item xs={12}sx={{ textAlign: 'left' }} >
               {field.subtype ? (
                   renderField({ ...field, type: field.subtype })
               ) : (
@@ -368,6 +375,14 @@ console.log(formData)
               )}
               </Grid>
           ))}
+          <Grid item xs={12}>
+        <Button variant="contained" color="primary" onClick={() => save(updatedStructure)}>
+            Save
+          </Button>
+          <Button variant="contained" color="primary" onClick={() => submit(updatedStructure)}>
+            Submit
+          </Button>
+        </Grid>
       </Grid>
       {/* {renderRatingsSummary()} */}
 
