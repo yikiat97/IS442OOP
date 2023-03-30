@@ -71,11 +71,13 @@ const VendorNavbar = () => {
 
             </Menu>
 
-            <Menu sx={{}} onClick={handleAuthItemClick}>
+            <Menu sx={{}} >
                 {/* <MenuItem icon={<PersonIcon/>}> */}
                 <Grid container sx={{mt:'10px',display:"flex", align:"center"}}>
                     <Grid item md={3}>
-                    <PersonIcon/>
+                    <Link to='/VendorInfoPage'>
+                      <PersonIcon/>
+                    </Link>
                     </Grid>
 
                     <Grid item md={6}>
@@ -88,7 +90,7 @@ const VendorNavbar = () => {
                     </Grid>
 
                     <Grid item md={3}>
-                    <Typography textAlign={'center'}>
+                    <Typography textAlign={'center'} onClick={handleAuthItemClick}>
                             <StartIcon />   
                     </Typography>
                     </Grid>

@@ -41,6 +41,7 @@ import EditCompany from "./pages/EditCompany";
 import UpdateWorkflow from "./pages/UpdateWorkflow";
 import ViewEmails from "./pages/ViewEmails";
 import ViewWorkflowEmails from "./pages/ViewWorkflowEmails";
+import VendorInfoPage from "./pages/VendorInfoPage";
 
 function App() {
   const VENDOR_ROLE = "Vendor";
@@ -128,6 +129,7 @@ function App() {
         <Route path="/VendorOverviewPage" element={<VendorOverviewPage />} />
         <Route path="/VendorAssignWorkflowPage" element={<VendorAssignWorkflowPage />} />
         <Route path="/VendorPastWorkflowpage" element={<VendorPastWorkflowpage />} />
+        <Route path="/VendorInfoPage" element={<VendorInfoPage />} />
       </Routes>
     </div>
   );
