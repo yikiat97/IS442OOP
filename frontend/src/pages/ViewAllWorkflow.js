@@ -71,7 +71,7 @@ function ViewAllWorkflow(){
                 
 
                 <Grid item md={0.5} sm={6} sx={{mb:5}}>
-                <Link href='CreateWorkflow' underline='none'><Button variant="contained" sx={{width:120}} startIcon={<AddIcon/>}>Create</Button></Link>
+                <Link href='CreateWorkflow' underline='none'><Button variant="contained" sx={{width:120, backgroundColor:"#2596BE"}} startIcon={<AddIcon/>}>Create</Button></Link>
                 </Grid>
 
                 <Grid item md={0.5} sm={6} sx={{mb:5}}>
