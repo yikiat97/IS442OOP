@@ -133,7 +133,7 @@ function App() {
     "/ForgetPassword": { element: <ForgetPassword />, rolesAllowed: [] },
     "/": { element: <Home />, rolesAllowed: [] },
     "/ChangePassword": { element: <ChangePassword />, rolesAllowed: [] },
-    "/FormWorkflow/:workflowID": { element: <FormWorkflow />, rolesAllowed: [ADMIN_ROLE] },
+    "/FormWorkflow/:workflowID": { element: <FormWorkflow />, rolesAllowed: [ADMIN_ROLE, VENDOR_ROLE] },
     "/ViewDeletedForms": { element: <ViewDeletedForms />, rolesAllowed: [ADMIN_ROLE] },
     "/VendorOverviewPage": { element: <VendorOverviewPage />, rolesAllowed: [VENDOR_ROLE] },
     "/VendorAssignWorkflowPage": { element: <VendorAssignWorkflowPage />, rolesAllowed: [VENDOR_ROLE] },
