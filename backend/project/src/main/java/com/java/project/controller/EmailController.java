@@ -10,8 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
@@ -82,5 +85,33 @@ public class EmailController {
             }catch(MessagingException e){
                 return "error";
             }
+        }
+
+        @PostMapping(value="/resend")
+        public ResponseEntity resendEmail(@RequestParam String id){
+            Optional<Email> email = EmailRepository.findById(id);
+            if(email.isPresent()){
+                Email emailInfo = email.get();
+                //String toEmail, String body, String subject, String attachment, String type, String relatedId, String date
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDateTime now = LocalDateTime.now();
+                String date = dtf.format(now);
+                Email newEmail = new Email(emailInfo.getToEmail(), emailInfo.getBody(), emailInfo.getSubject(), emailInfo.getAttachment(), emailInfo.getType(), emailInfo.getRelatedId(),date);
+                try{
+                    service.sendEmail(emailInfo.getToEmail(), emailInfo.getBody(), emailInfo.getSubject(), emailInfo.getAttachment());
+                    newEmail.setStatus("Success");
+                    EmailRepository.save(newEmail);
+                    return ResponseEntity.ok("Success");
+                }catch (MailException e){
+                    newEmail.setStatus("Error");
+                    EmailRepository.save(newEmail);
+                    return new ResponseEntity<>("Maail Exception", HttpStatus.UNAUTHORIZED);
+                }catch(MessagingException e){
+                    newEmail.setStatus("Error");
+                    EmailRepository.save(newEmail);
+                    return new ResponseEntity<>("Messaging Exception", HttpStatus.UNAUTHORIZED);
+                }
+            }
+            return new ResponseEntity<>("No such email", HttpStatus.UNAUTHORIZED);
         }
 }
