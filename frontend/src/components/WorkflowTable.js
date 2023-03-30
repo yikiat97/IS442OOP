@@ -8,13 +8,12 @@ import {
     Button,
     TableContainer,
     Chip,
-    TextField,
     Link
         
 } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
-import { Table, Space } from 'antd';
+import { Table, Space, Input } from 'antd';
 import Highlighter from "react-highlight-words";
 
 
@@ -26,23 +25,20 @@ function WorkflowTable({props}){
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
+        confirm();
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
     };
-    const handleReset = (clearFilters) => {
-    clearFilters();
-    setSearchText('');
-    };
+
     const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-        <div
-        style={{
-            padding: 8,
-        }}
-        onKeyDown={(e) => e.stopPropagation()}
-        >
-        <TextField
+            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
+            <div
+                style={{
+                padding: 8,
+                }}
+                onKeyDown={(e) => e.stopPropagation()}
+            >
+        <Input
             ref={searchInput}
             placeholder={`Search ${dataIndex}`}
             value={selectedKeys[0]}
@@ -50,8 +46,8 @@ function WorkflowTable({props}){
             onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
             fullWidth 
             size="small"
-            sx={{
-            mb:2,
+            style={{
+            marginBottom:10,
             display: 'block',
             variant:"outlined",
             }}
@@ -70,17 +66,6 @@ function WorkflowTable({props}){
             Search
             </Button>
             
-            {/* <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            variant="contained"
-            color="error"
-            style={{
-                width: 90,
-            }}
-            >
-            Reset
-            </Button> */}
         </Space>
         </div>
     ),
@@ -98,6 +83,7 @@ function WorkflowTable({props}){
         setTimeout(() => searchInput.current?.select(), 100);
         }
     },
+    
     render: (text) =>
         
         searchedColumn === dataIndex ? (
