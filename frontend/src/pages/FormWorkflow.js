@@ -49,9 +49,12 @@ function FormWorkflow(){
                 
                 const ini=[]
                 const promises=[]
-                for(const id of response.data.forms){
+                console.log(response.data)
+                //response.data.questionID = ["642586cacb7791428c767469","642586cacb7791428c76746a"]
+                for(const id of response.data.questionID){
+                    
                     promises.push(
-                        axios.get("http://localhost:8080/getForm/" + id))
+                        axios.get("http://localhost:8080/getQuestion/" + id))
                         console.log(promises)
                 }
 
@@ -62,6 +65,7 @@ function FormWorkflow(){
                         console.log(response)
                         for(let obj of response){
                             ini.push(obj.data)
+                            console.log(ini)
                         }
                         setSteps(ini)
                     })
@@ -94,7 +98,7 @@ function FormWorkflow(){
         setCurrent(current - 1);
     };
     const stepsContent = steps.map((step) => ({
-        key: step.formID,
+        key: step.questionID,
         title: step.formName,
         content: step
     }));
@@ -224,7 +228,7 @@ function FormWorkflow(){
                     </Grid>
 
                 </Grid>
-            {steps.length>0 && <VendorFormPreview formData={stepsContent[current].content} fakeID={stepsContent[current].key}/> }
+            {steps.length>0 && <VendorFormPreview formData={stepsContent[current].content} fakeID={stepsContent[current].key} status={"Pending"}/> }
 
             
             <Grid container>
