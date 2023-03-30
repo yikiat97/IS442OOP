@@ -1,5 +1,5 @@
 // Main component
-import { useState,useEffect, useRef } from 'react';
+import React, { useState,useEffect, useRef } from 'react';
 import { Grid } from '@mui/material';
 import FormSelect from '../components/FormSelection';
 import VendorFormPreview from '../components/VendorFormPreview';
