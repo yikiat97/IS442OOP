@@ -21,14 +21,14 @@ import {
     TableContainer,
     Link,
     Menu,
-    MenuItem
+    MenuItem,
+    Chip
         
 } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { Table, Space } from 'antd';
 import Highlighter from "react-highlight-words";
-
 
 function ViewEmails(){
 
@@ -74,15 +74,6 @@ function ViewEmails(){
         }));
 
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-    setAnchorEl(null);
-    };
-
-
 
     useEffect(() => {
         getVendorWorkflows();
@@ -90,6 +81,15 @@ function ViewEmails(){
     }, []);
 
     const [emails, setEmails] = useState([]);
+
+    const resendEmail = (id) =>{
+        axios.get("http://localhost:8080/email/resend?id=" + id)
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch(error => console.error(error.response));
+    };
+
     const getVendorWorkflows = () =>{
         axios.get("http://localhost:8080/email")
         .then((response) => {
@@ -194,6 +194,13 @@ function ViewEmails(){
             title:"Status",
             dataIndex:"status",
             ...getColumnSearchProps('status'),
+            render:(_,{status})=> (
+                <Chip label={status} sx={{color:'#FFFFFF', 
+                                            'backgroundColor': 
+                                                status === 'Success' ? '#4caf50' : 
+                                                status === 'Error' ? '#c62828' : <></>
+                                                }}></Chip>
+                ),
         },
         {
             title:"Date",
@@ -203,7 +210,7 @@ function ViewEmails(){
         {
             dataIndex: "id",
                 render: (_, { id }) => (
-                <Button onClick={() => console.log(id)}>Resend</Button>
+                <Button onClick={() => resendEmail(id)}>Resend</Button>
                 ),
         }
         ];
