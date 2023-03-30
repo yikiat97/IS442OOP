@@ -201,9 +201,10 @@ function ViewEmails(){
             ...getColumnSearchProps('date'),
         },
         {
-            render: (_,{status}) => (
-                <Button>Resend</Button>
-    ),
+            dataIndex: "id",
+                render: (_, { id }) => (
+                <Button onClick={() => console.log(id)}>Resend</Button>
+                ),
         }
         ];
 

@@ -29,6 +29,21 @@ const theme = createTheme();
 function NotAuthorized() {
 
   const role = sessionStorage.getItem("role")
+  let linkHref = "/";
+  switch (role) {
+    case "Vendor":
+      linkHref = "/VendorOverviewPage";
+      break;
+    case "Admin":
+      linkHref = "/WorkflowsAdmin";
+      break;
+    case "Approver":
+      linkHref = "/ApproverOverviewPage";
+      break;
+    default:
+      linkHref = "/";
+      break;
+  }
   return (
     
       <Container component="main" >
@@ -42,7 +57,7 @@ function NotAuthorized() {
             </Grid>
 
             <Grid item sx={{pt:2}}>
-                <Link href="/">Return to home page</Link>
+                <Link href={linkHref}>Return to home page</Link>
             </Grid>
           </Grid>
             
