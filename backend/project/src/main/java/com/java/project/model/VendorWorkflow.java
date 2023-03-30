@@ -16,8 +16,10 @@ public class VendorWorkflow {
     private String Company;
     private String Date;
     private String Name;
+    private List<String> QuestionID;
 
-    public VendorWorkflow(String id,List<String> Forms, String WorkflowName, String Status, String Email, String Company, String Date, String Name) {
+    public VendorWorkflow(String id, List<String> Forms, String WorkflowName, String Status, String Email,
+            String Company, String Date, String Name, List<String> QuestionID) {
         super();
         this.id = id;
         this.Forms = Forms;
@@ -27,6 +29,7 @@ public class VendorWorkflow {
         this.Company = Company;
         this.Date = Date;
         this.Name = Name;
+        this.QuestionID = QuestionID;
     }
 
     public String getId() {
@@ -59,7 +62,7 @@ public class VendorWorkflow {
 
     public void setStatus(String status) {
         Status = status;
-    }    
+    }
 
     public String getEmail() {
         return Email;
@@ -93,4 +96,11 @@ public class VendorWorkflow {
         Name = name;
     }
 
+    public List<String> getQuestionID() {
+        return QuestionID;
+    }
+
+    public void setQuestionID(List<String> questionID) {
+        QuestionID = questionID;
+    }
 }
