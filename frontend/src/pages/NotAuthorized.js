@@ -42,7 +42,7 @@ function NotAuthorized() {
             </Grid>
 
             <Grid item sx={{pt:2}}>
-                <Link>Return to home page</Link>
+                <Link href="/">Return to home page</Link>
             </Grid>
           </Grid>
             
