@@ -29,6 +29,7 @@ import Approver from "./pages/Approver";
 import CompanyDetails from "./pages/CompanyDetails";
 import ForgetPassword from "./pages/ForgetPassword";
 import EditUser from "./pages/EditUser";
+import ViewUser from "./pages/ViewUser";
 import VendorViewForm from "./pages/VendorViewForm";
 import ChangePassword from "./pages/ChangePassword";
 import FormWorkflow from "./pages/FormWorkflow";
@@ -103,7 +104,11 @@ function App() {
     },
     "/EditUser/:company/:email": {
       element: <EditUser />,
-      rolesAllowed: [ADMIN_ROLE],
+      rolesAllowed: [ADMIN_ROLE, APPROVER_ROLE],
+    },
+    "/ViewUser/:company/:email": {
+      element: <ViewUser />,
+      rolesAllowed: [ADMIN_ROLE, APPROVER_ROLE],
     },
     "/FormHomePage": { element: <FormHomePage />, rolesAllowed: [ADMIN_ROLE] },
     "/FormCreation": { element: <FormCreation />, rolesAllowed: [ADMIN_ROLE] },

@@ -70,7 +70,7 @@ const VendorNavbar = () => {
                 <MenuItem icon={<GradingIcon />} component={<Link to='/VendorPastWorkflowpage'/>}> Completed Worflow
                 </MenuItem>
 
-                <MenuItem icon={<SettingsIcon />} component={<Link to='/Tobefillin'/>}>Settings
+                <MenuItem icon={<SettingsIcon />} component={<Link to='/VendorInfoPage'/>}>Settings
                 </MenuItem>
 
             </Menu>
@@ -79,9 +79,7 @@ const VendorNavbar = () => {
                 {/* <MenuItem icon={<PersonIcon/>}> */}
                 <Grid container sx={{mt:'10px',display:"flex", align:"center"}}>
                     <Grid item md={3}>
-                    <Link to='/VendorInfoPage'>
                       <PersonIcon/>
-                    </Link>
                     </Grid>
 
                     <Grid item md={6}>

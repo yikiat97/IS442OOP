@@ -48,8 +48,7 @@ function Copyright(props) {
 
 
 function ChangePassword(props) {
-  //const = "sessionStorage.getItem("email");"
-  const email = "diyanahjamal@gmail.com";
+  const email = sessionStorage.getItem("email");
   const [message, setMessage] = useState("");
   const [complete, setComplete] = useState("");
   const [oldPassword, setOldPassword] = useState("");

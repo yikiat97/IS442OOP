@@ -16,7 +16,11 @@ import {
 
 const Navbar = () => {
   const role = sessionStorage.getItem("role");
+  const email = sessionStorage.getItem("email");
+  const companyId = sessionStorage.getItem("companyId");
   const roleText = role ? role : "Sign in";
+
+  const settingsRoute = "/ViewUser/" + companyId + "/" + email; 
 
   const handleAuthItemClick = () => {
     if (role) {
@@ -76,7 +80,7 @@ const Navbar = () => {
                         <MenuItem component={<Link to='/FormCreation' />}>Create New Form</MenuItem>
                     </SubMenu>
 
-                    <MenuItem icon={<SettingsIcon />} component={<Link to='/Tobefillin'/>}>Settings
+                    <MenuItem icon={<SettingsIcon />} component={<Link to={settingsRoute}/>}>Settings
                     </MenuItem>
 
                 </Menu><Menu sx={{}} onClick={handleAuthItemClick}>
