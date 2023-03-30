@@ -73,7 +73,7 @@ function VendorInfoPage(){
         },
       }));
 
-    const registrationNum = useParams().company;
+    const registrationNum = sessionStorage.getItem("companyId");
     const [users, setUsers] = useState([]);
     const [companyDetails, setCompanyDetails] = useState([]);
     const navigate = useNavigate();
@@ -104,6 +104,11 @@ function VendorInfoPage(){
         navigate(route);
     }
 
+    const changePassword = (event) => {
+        let route = "/ChangePassword"
+        navigate(route);
+    }
+
     return(
         <Grid sx={{mt:6, textAlign:'left', px:4}}>
             
@@ -112,6 +117,10 @@ function VendorInfoPage(){
                     <h1>{companyDetails.name}</h1>
                 </Grid>
                 <Grid item md={2.0} sm={1} sx={{justifyContent:"flex-end", display:'flex'}}>
+                        <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="primary" onClick={changePassword}>
+                                Change Password
+                        </Button>
+                        
                         <Button columns={{ xs: 12, sm: 12, md: 12 }} sx={{ mt: 1, mr: 1 }} variant="contained" color="primary" onClick={editUser}>
                                 Edit
                         </Button>

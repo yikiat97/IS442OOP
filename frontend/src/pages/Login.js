@@ -72,7 +72,8 @@ function Login(props) {
       console.log(res, "res");
       sessionStorage.setItem("email", email);
       sessionStorage.setItem("user", email);
-      sessionStorage.setItem("role", res.data);
+      sessionStorage.setItem("role", res.data[0]);
+      sessionStorage.setItem("companyId", res.data[1]);
       handleReroute();
     } catch (error) {
       if (error.response.status === 401) {

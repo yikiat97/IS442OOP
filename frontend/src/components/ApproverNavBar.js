@@ -8,6 +8,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import AutoAwesomeMosaicIcon from '@mui/icons-material/AutoAwesomeMosaic';
 import GradingIcon from '@mui/icons-material/Grading';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { Sidebar, Menu, MenuItem, SubMenu, useProSidebar, ProSidebarProvider} from "react-pro-sidebar";
 import {
     Typography,
@@ -60,14 +61,17 @@ const ApproverNavBar = () => {
             {role!=null ?
             <><Menu style={{ textAlign: "left" }}>
                 
-                    <SubMenu label='Overview' icon={<AutoAwesomeMosaicIcon />} component={<Link to='/ApproverOverviewPage'/>}>
-                    </SubMenu>
+                    <MenuItem icon={<AutoAwesomeMosaicIcon />} component={<Link to='/ApproverOverviewPage'/>}>Overview
+                    </MenuItem>
 
-                    <SubMenu label='Awaiting Approval' icon={<AssignmentIcon />} component={<Link to='/Tobefillin'/>}>
-                    </SubMenu>
+                    <MenuItem icon={<AssignmentIcon />} component={<Link to='/Tobefillin'/>}> Awaiting Approval
+                    </MenuItem>
 
-                    <SubMenu label='Approved Worflow' icon={<GradingIcon />} component={<Link to='/Tobefillin'/>}>
-                    </SubMenu>
+                    <MenuItem icon={<GradingIcon />} component={<Link to='/Tobefillin'/>}>Approved Worflow
+                    </MenuItem>
+
+                    <MenuItem icon={<SettingsIcon />} component={<Link to='/Tobefillin'/>}>Settings
+                    </MenuItem>
 
                 </Menu><Menu sx={{}} >
                         {/* <MenuItem icon={<PersonIcon/>}> */}
