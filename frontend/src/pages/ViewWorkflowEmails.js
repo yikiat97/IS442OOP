@@ -8,6 +8,8 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import GridViewIcon from '@mui/icons-material/GridView';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import AddAlertIcon from '@mui/icons-material/AddAlert';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import {
 
@@ -247,9 +249,9 @@ function ViewEmails(){
                     <h4>Workflow: {workflow}</h4>
                 </Grid>
                 <Grid item md={2.0} sm={1} sx={{justifyContent:"flex-end", display:'flex'}}>
-                    <Button variant="contained" sx={{width:250, backgroundColor:"#2596BE"}} onClick={redirect}>
-                            Return to workflow
-                    </Button>
+                    <IconButton onClick={redirect}>
+                            <ArrowBackIcon/> <Typography variant="body1" sx={{pl:1}}>Return</Typography>
+                    </IconButton>
                 </Grid>
 
             </Grid>

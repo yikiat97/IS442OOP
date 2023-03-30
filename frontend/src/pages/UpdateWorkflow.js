@@ -10,6 +10,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import IconButton from '@mui/material/IconButton';
 import axios from "axios";
 import { useEffect, useState } from "react";
 import {
@@ -27,7 +30,8 @@ import {
     Button,
     Link,
     formControlClasses,
-    Select
+    Select,
+    Icon
 } from "@mui/material";
 import { useParams } from 'react-router-dom';
 
@@ -231,10 +235,10 @@ function UpdateWorkflow(){
                                 fullWidth hiddenLabel></TextField>
                 </Grid>
 
-                <Grid item md={1}></Grid>
+                <Grid item md={1.25}></Grid>
 
-                <Grid item md={1} sm={6} sx={{alignItems:"flex-end", justifyContent:"center", display:'flex'}}>
-                    <Button variant="contained" color="error" size="small" sx={{width:"75%"}}
+                <Grid item md={0.75} sm={6} sx={{alignItems:"flex-end", justifyContent:"center", display:'flex'}}>
+                    <Button variant="contained" color="error" size="small" fullWidth
                     onClick = {()=>deleteWorkflow()}>Delete Workflow</Button>
                 </Grid>
 
@@ -262,7 +266,7 @@ function UpdateWorkflow(){
                                 <Box sx={{ mb: 2 }}>
 
                                     <Grid container spacing={{ xs: 2, md: 6 }} columns={{ xs: 4, sm: 8, md: 12 }} sx={{display:"flex",alignItems:"center"}}>
-                                        <Grid item sx={{}}>
+                                        <Grid item md={6}>
                                         
                                             
                                                 <Select
@@ -275,7 +279,7 @@ function UpdateWorkflow(){
                                                         console.log(stepValue);
                                                         console.log(step);
                                                         }}
-                                                    size="medium" select sx={{width:300}}>
+                                                    size="medium" select fullWidth>
                                                     
                                                     <Button><Link underline="none" href='Form'>Create New Form</Link><AddCircleIcon color='success' sx={{pl:1}}/></Button>
                                                         
@@ -288,9 +292,10 @@ function UpdateWorkflow(){
                                         
 
                                         </Grid>
-                                        <Grid item>
-                                            <Button columns={{ xs: 12, sm: 12, md: 12 }}
+                                        <Grid item md={1}>
+                                            <IconButton 
                                                 variant="contained"
+                                                color="success"
                                                 onClick={()=> {
                                                     handleNext();
                                                     // setFormName(formName)
@@ -306,20 +311,20 @@ function UpdateWorkflow(){
                                                     
                                                 }}
                                                 sx={{ mt: 1, mr: 1 }}>
-                                                Add Step
+                                                <AddCircleOutlineIcon/>
                                             
-                                            </Button>
+                                            </IconButton>
                                         </Grid>
 
-                                        <Grid item>
-                                            <Button columns={{ xs: 12, sm: 12, md: 12 }}
+                                        <Grid item md={1}>
+                                            <IconButton 
                                                 variant="contained" color="error"
                                                 disabled={stepValue.length === 1}
                                                 onClick={() => deleteStep(index)}
                                                 sx={{ mt: 1, mr: 1 }}
                                             >
-                                                Delete
-                                            </Button>
+                                                <RemoveCircleOutlineIcon/>
+                                            </IconButton>
                                         </Grid>
 
                                         
