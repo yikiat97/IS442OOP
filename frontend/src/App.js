@@ -43,6 +43,8 @@ import UpdateWorkflow from "./pages/UpdateWorkflow";
 import ViewEmails from "./pages/ViewEmails";
 import ViewWorkflowEmails from "./pages/ViewWorkflowEmails";
 import VendorInfoPage from "./pages/VendorInfoPage";
+import ApproverOverviewPage from "./pages/ApproverOverviewPage";
+import ApproverInfoPage from "./pages/ApproverInfoPage";
 
 function App() {
   const VENDOR_ROLE = "Vendor";
@@ -148,6 +150,8 @@ function App() {
     "/ViewEmails": { element: <ViewEmails />, rolesAllowed: [ADMIN_ROLE] },
     "/ViewWorkflowEmails/:workflowId": { element: <ViewWorkflowEmails />, rolesAllowed: [ADMIN_ROLE] },
     "/VendorInfoPage/": { element: <VendorInfoPage />, rolesAllowed: [VENDOR_ROLE] },
+    "/ApproverOverviewPage/": { element: <ApproverOverviewPage />, rolesAllowed: [APPROVER_ROLE] },
+    "/ApproverInfoPage/": { element: <ApproverInfoPage />, rolesAllowed: [APPROVER_ROLE] },
   };
 
   const renderRoutes = () => {
