@@ -90,6 +90,8 @@ function Login(props) {
       window.location.replace(window.location.origin + "/WorkflowsAdmin");
     } else if (role === "Vendor") {
       window.location.replace(window.location.origin + "/ViewWorkflows");
+    } else{
+      window.location.replace(window.location.origin + "/ViewWorkflows");
     }
   };
 
