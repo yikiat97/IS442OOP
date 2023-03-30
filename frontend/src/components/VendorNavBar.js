@@ -60,14 +60,14 @@ const VendorNavbar = () => {
 
             <Menu style={{textAlign:"left"}}>
 
-                <SubMenu label='Overview' icon={<AutoAwesomeMosaicIcon />} component={<Link to='/VendorOverviewPage'/>}>
-                </SubMenu>
+                <MenuItem icon={<AutoAwesomeMosaicIcon />} component={<Link to='/VendorOverviewPage'/>}>Overview
+                </MenuItem>
 
-                <SubMenu label='Pending Workflow' icon={<AssignmentIcon />} component={<Link to='/VendorAssignWorkflowPage'/>}>
-                </SubMenu>
+                <MenuItem icon={<AssignmentIcon />} component={<Link to='/VendorAssignWorkflowPage'/>}> Pending Workflow
+                </MenuItem>
 
-                <SubMenu label='Completed Worflow' icon={<GradingIcon />} component={<Link to='/VendorPastWorkflowpage'/>}>
-                </SubMenu>
+                <MenuItem icon={<GradingIcon />} component={<Link to='/VendorPastWorkflowpage'/>}> Completed Worflow
+                </MenuItem>
 
             </Menu>
 
