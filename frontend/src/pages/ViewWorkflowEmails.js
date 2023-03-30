@@ -23,7 +23,8 @@ import {
     TableContainer,
     Link,
     Menu,
-    MenuItem
+    MenuItem,
+    Chip
         
 } from "@mui/material";
 import axios from "axios";
@@ -217,6 +218,13 @@ function ViewEmails(){
             title:"Status",
             dataIndex:"status",
             ...getColumnSearchProps('status'),
+            render:(_,{status})=> (
+                <Chip label={status} sx={{color:'#FFFFFF', 
+                                            'backgroundColor': 
+                                                status === 'Success' ? '#4caf50' : 
+                                                status === 'Error' ? '#c62828' : <></>
+                                                }}></Chip>
+                ),
         },
         {
             title:"Date",
