@@ -229,8 +229,8 @@ function FormWorkflow(){
             
             <Grid container>
                 <Grid item sx={{p:2}} xs={12} sm={12} md={12}>
-                {!workflow.status == "Pending" &&
-                <><Divider light sx={{ my: 3 }}>Approval</Divider><TextField
+                {workflow.status=='Pending' ? <></> :
+                    <><Divider light sx={{ my: 3 }}>Approval</Divider><TextField
                                         label="Comments"
                                         fullWidth
                                         multiline
@@ -239,23 +239,25 @@ function FormWorkflow(){
                                         defaultValue="Input Comments"
                                         disabled={role == 'Admin' || role == 'Vendor'} /></>
                 }
+              
+                
     
                 </Grid>
 
                 <Grid item sx={{p:2}} xs={6} sm={6} md={2}>
-                {role=='Approver' &&
+                {role=='Approver' && workflow.status=='Awaiting Approver'?
                     <Button variant="contained" color="success" startIcon={<TaskAltIcon/>}>
                         Approve
-                    </Button>
+                    </Button> : <></>
                 }
                 </Grid>
 
 
                 <Grid item sx={{p:2}} xs={6} sm={6} md={2}>
-                    {role=='Approver' &&
+                    {role=='Approver' && workflow.status=='Awaiting Approver'?
                     <Button variant="contained" color="error" startIcon={<CancelIcon/>}>
                     Reject
-                    </Button>
+                    </Button>  : <></>
                     }
                     
                 </Grid>

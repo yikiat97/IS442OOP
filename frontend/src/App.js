@@ -110,15 +110,15 @@ function App() {
     "/ViewForms": { element: <ViewForms />, rolesAllowed: [ADMIN_ROLE] },
     "/CompletedWorkflow": {
       element: <CompletedWorkflow />,
-      rolesAllowed: [ADMIN_ROLE, VENDOR_ROLE],
+      rolesAllowed: [ADMIN_ROLE, VENDOR_ROLE,APPROVER_ROLE],
     },
     "/RejectedWorkflow": {
       element: <RejectedWorkflow />,
-      rolesAllowed: [ADMIN_ROLE, VENDOR_ROLE],
+      rolesAllowed: [ADMIN_ROLE, VENDOR_ROLE,APPROVER_ROLE],
     },
     "/UncompletedWorkflow": {
       element: <UncompletedWorkflow />,
-      rolesAllowed: [ADMIN_ROLE, VENDOR_ROLE],
+      rolesAllowed: [ADMIN_ROLE, VENDOR_ROLE,APPROVER_ROLE],
     },
     "/AssignWorkflow": {
       element: <AssignWorkflow />,
@@ -130,14 +130,14 @@ function App() {
     },
     "/ViewAllWorkflow": {
       element: <ViewAllWorkflow />,
-      rolesAllowed: [ADMIN_ROLE],
+      rolesAllowed: [ADMIN_ROLE, APPROVER_ROLE],
     },
     "/Login": { element: <Login />, rolesAllowed: [] },
     "/NotAuthorized": { element: <NotAuthorized />, rolesAllowed: [] },
     "/ForgetPassword": { element: <ForgetPassword />, rolesAllowed: [] },
     "/": { element: <Home />, rolesAllowed: [] },
     "/ChangePassword": { element: <ChangePassword />, rolesAllowed: [] },
-    "/FormWorkflow/:workflowID": { element: <FormWorkflow />, rolesAllowed: [ADMIN_ROLE, VENDOR_ROLE] },
+    "/FormWorkflow/:workflowID": { element: <FormWorkflow />, rolesAllowed: [ADMIN_ROLE, VENDOR_ROLE,APPROVER_ROLE] },
     "/ViewDeletedForms": { element: <ViewDeletedForms />, rolesAllowed: [ADMIN_ROLE] },
     "/VendorOverviewPage": { element: <VendorOverviewPage />, rolesAllowed: [VENDOR_ROLE] },
     "/VendorAssignWorkflowPage": { element: <VendorAssignWorkflowPage />, rolesAllowed: [VENDOR_ROLE] },

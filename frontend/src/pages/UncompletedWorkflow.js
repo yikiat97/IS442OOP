@@ -21,24 +21,30 @@ import {
 
 function UncompletedWorkflow(){
 
-
+  const role = sessionStorage.getItem("role");
   useEffect(() => {
     getVendorWorkflows();
     ;
   }, []);
     const[vendorWorkflows, setVendorWorkflows]= React.useState([]);
+    const[awaitingWorkflows, setAwaitingWorkflows]=React.useState([]);
     const getVendorWorkflows = () =>{
         axios.get("http://localhost:8080/vendorWorkflow/allVendorWorkflow")
         .then((response) => {
             const vendorWorkflows=[]
-            
+            const awaitingWorkflows=[]
             for(let workflow of response.data){
               if(!(workflow.status=='Approved' || workflow.status=='Rejected' || workflow.status=='Deleted') ){
                 vendorWorkflows.push(workflow)
               }
+              if(workflow.status=="Awaiting Approver"){
+                awaitingWorkflows.push(workflow)
+              }
             }
 
-            // console.log(vendorWorkflows)
+            console.log(response.data)
+            console.log(awaitingWorkflows)
+            setAwaitingWorkflows(awaitingWorkflows)
             setVendorWorkflows(vendorWorkflows)
             
             
@@ -52,7 +58,7 @@ function UncompletedWorkflow(){
             
             <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:3}}>
                 <Grid item md={2}>
-                    <h1>Uncompleted Workflows</h1>
+                {role=='Approver' ? <h1>Awaiting Approvals</h1> : <h1>Uncompleted Workflows</h1>}
                 </Grid>
 
             </Grid>
@@ -63,7 +69,9 @@ function UncompletedWorkflow(){
                 
 
                 <Grid item md={0.5} sm={6} sx={{mb:5}}>
+                  {role=='Admin' &&
                     <Link href='CreateWorkflow' underline='none'><Button variant="contained" sx={{width:120}} startIcon={<AddIcon/>}>Create</Button></Link>
+                  }
                 </Grid>
 
                 <Grid item md={0.5} sm={6} sx={{mb:5}}>
@@ -80,8 +88,8 @@ function UncompletedWorkflow(){
                       </TextField> */}
                 </Grid>
             </Grid>
-
-            <WorkflowTable props={vendorWorkflows}/>
+            {role=='Approver' ? <WorkflowTable props={awaitingWorkflows}/>:  
+            <WorkflowTable props={vendorWorkflows}/>}
 
 
                 

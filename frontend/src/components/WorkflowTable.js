@@ -175,7 +175,11 @@ function WorkflowTable({props}){
                         <Link href={'FormWorkflow/' + id} underline='none'>
                             <ArrowForwardIosIcon  /> 
                         </Link> :
-            role=='Admin' | role=='Approver'?
+            role=='Admin' ?
+                        <Link href={'FormWorkflow/' + id} underline='none'>
+                        <ArrowForwardIosIcon  /> 
+                        </Link> :
+            role=='Approver' && !(status=='Pending' || status=='In Progress') ?
                         <Link href={'FormWorkflow/' + id} underline='none'>
                         <ArrowForwardIosIcon  /> 
                         </Link> : null

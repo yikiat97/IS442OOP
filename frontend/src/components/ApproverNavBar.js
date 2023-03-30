@@ -64,10 +64,10 @@ const ApproverNavBar = () => {
                     <MenuItem icon={<AutoAwesomeMosaicIcon />} component={<Link to='/ApproverOverviewPage'/>}>Overview
                     </MenuItem>
 
-                    <MenuItem icon={<AssignmentIcon />} component={<Link to='/Tobefillin'/>}> Awaiting Approval
+                    <MenuItem icon={<AssignmentIcon />} component={<Link to='/UncompletedWorkflow'/>}> Awaiting Approval
                     </MenuItem>
 
-                    <MenuItem icon={<GradingIcon />} component={<Link to='/Tobefillin'/>}>Approved Worflow
+                    <MenuItem icon={<GradingIcon />} component={<Link to='/ViewAllWorkflow'/>}>View All Workflows
                     </MenuItem>
 
                     <MenuItem icon={<SettingsIcon />} component={<Link to='/Tobefillin'/>}>Settings

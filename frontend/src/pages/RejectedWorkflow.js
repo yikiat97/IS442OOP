@@ -21,7 +21,7 @@ import {
 
 function RejectedWorkflow(){
 
-
+  const role = sessionStorage.getItem("role");
   useEffect(() => {
     getVendorWorkflows();
     ;
@@ -53,7 +53,7 @@ function RejectedWorkflow(){
             
             <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:3}}>
                 <Grid item md={2}>
-                    <h1>Uncompleted Workflows</h1>
+                    <h1>Rejected Workflows</h1>
                 </Grid>
 
             </Grid>
@@ -64,7 +64,9 @@ function RejectedWorkflow(){
                 
 
                 <Grid item md={0.5} sm={6} sx={{mb:5}}>
+                  {role=='Admin' &&
                     <Link href='CreateWorkflow' underline='none'><Button variant="contained" sx={{width:120}} startIcon={<AddIcon/>}>Create</Button></Link>
+                  }
                 </Grid>
 
                 <Grid item md={0.5} sm={6} sx={{mb:5}}>

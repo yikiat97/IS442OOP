@@ -25,7 +25,7 @@ import { useEffect, useState, useRef } from "react";
 import WorkflowTable from "../components/WorkflowTable"
 
 function ViewAllWorkflow(){
-
+    const role = sessionStorage.getItem("role");
     useEffect(() => {
         getVendorWorkflows();
         ;
@@ -71,7 +71,9 @@ function ViewAllWorkflow(){
                 
 
                 <Grid item md={0.5} sm={6} sx={{mb:5}}>
+                    {role=='Admin' &&
                 <Link href='CreateWorkflow' underline='none'><Button variant="contained" sx={{width:120, backgroundColor:"#2596BE"}} startIcon={<AddIcon/>}>Create</Button></Link>
+                    }
                 </Grid>
 
                 <Grid item md={0.5} sm={6} sx={{mb:5}}>
