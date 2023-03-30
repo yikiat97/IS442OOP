@@ -58,7 +58,7 @@ const Navbar = () => {
             <><Menu style={{ textAlign: "left" }}>
                 
                     <SubMenu label='User Management' icon={<GroupsIcon />} component={<Link to='/UserManagement' />}>
-                        <MenuItem>Create New User</MenuItem>
+                        <MenuItem component={<Link to='/CreateCompany' />}>Create New Company</MenuItem>
                     </SubMenu>
 
                     <SubMenu label='Workflows' icon={<SettingsSuggestIcon />} component={<Link to='/WorkflowsAdmin' />}>

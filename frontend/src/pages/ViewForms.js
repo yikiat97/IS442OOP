@@ -32,11 +32,12 @@ function ViewForms() {
     console.log('Deleting form');
   };
   return (
-		<Container maxWidth="md" sx={{ textAlign: 'left' }}>
+		<Container maxWidth="md" sx={{ textAlign: 'left', my:5 }}>
       <FormSelect forms={forms} handleFormSelect={handleFormSelect} selectedForm={selectedForm} setSelectedForm={setSelectedForm} />
+      {selectedForm.formName &&
       <Button variant="outlined" color="error" sx={{ float: 'right',marginTop:'25px' }} onClick={handleDeleteForm}>
         Delete form
-      </Button>
+      </Button>}
       {selectedForm.formName ? (
         <FormPreview formData={selectedForm} />
       ) : (

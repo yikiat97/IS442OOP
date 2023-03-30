@@ -141,7 +141,7 @@ function UserManagement(){
             };
     
     return(
-        <Grid sx={{mt:6, textAlign:'left', px:4}}>
+        <Grid sx={{my:6, textAlign:'left', px:4}}>
             
             <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:4}} sx={{display:"flex", justifyContent:"space-between", alignItems:"center"}}>
             <Grid item md={2.0} sm={2.5}>
