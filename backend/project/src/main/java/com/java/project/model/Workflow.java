@@ -11,12 +11,15 @@ public class Workflow {
     private String id;
     private List<String> Forms;
     private String WorkflowName;
-    
-    public Workflow(String id, List<String> Forms, String WorkflowName) {
+    private String Status;
+
+
+    public Workflow(String id, List<String> Forms, String WorkflowName, String Status) {
         super();
         this.id = id;
         this.Forms = Forms;
         this.WorkflowName = WorkflowName;
+        this.Status = Status;
     }
 
     public String getId() {
@@ -41,5 +44,13 @@ public class Workflow {
 
     public void setWorkflowName(String workflowName) {
         WorkflowName = workflowName;
+    }
+    
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
     }
 }

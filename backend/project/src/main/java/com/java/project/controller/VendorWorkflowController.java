@@ -2,6 +2,7 @@ package com.java.project.controller;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,8 +28,6 @@ import com.java.project.model.VendorWorkflowMappingDTO;
 import com.java.project.repository.FormRepository;
 import com.java.project.repository.QuestionRepository;
 import com.java.project.repository.VendorWorkflowRepository;
-
-
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
@@ -59,34 +58,37 @@ public class VendorWorkflowController {
     @PostMapping("/insertVendorWorkflow")
     public ResponseEntity<?> createVendorWorkflow(
             @RequestBody(required = false) VendorWorkflowMappingDTO VendorWorkflowDTO) {
-            // logic handling of the workflow json to fit object workflow
-            // Use a DTO to map forms and workflowName for creation of forms
+        // logic handling of the workflow json to fit object workflow
+        // Use a DTO to map forms and workflowName for creation of forms
 
-            List<String> forms = VendorWorkflowDTO.getForms();
-            String vendorWorkflowName = VendorWorkflowDTO.getVendorWorkflowName();
-            String status = VendorWorkflowDTO.getStatus();
-            String email = VendorWorkflowDTO.getEmail();
-            String company = VendorWorkflowDTO.getCompany();
-            String date = VendorWorkflowDTO.getDate();
-            String name = VendorWorkflowDTO.getName();
-            if(vendorWorkflowName == null || status == null || email == null || company == null || date == null || name == null){
-                throw new IllegalArgumentException("One or more of the fields is missing or incorrect"); 
-            }
+        List<String> forms = VendorWorkflowDTO.getForms();
+        String vendorWorkflowName = VendorWorkflowDTO.getVendorWorkflowName();
+        String status = VendorWorkflowDTO.getStatus();
+        String email = VendorWorkflowDTO.getEmail();
+        String company = VendorWorkflowDTO.getCompany();
+        String date = VendorWorkflowDTO.getDate();
+        String name = VendorWorkflowDTO.getName();
+        if (vendorWorkflowName == null || status == null || email == null || company == null || date == null
+                || name == null) {
+            throw new IllegalArgumentException("One or more of the fields is missing or incorrect");
+        }
+        System.out.print("status");
+        List<String> questionIDs = new ArrayList<String>();
+        for (int i = 0; i < forms.size(); i++) {
+            Optional<Form> FormData = FormRepository.findById(forms.get(i));
+            Form formTemplate = FormData.get();
+            List<Map<String, Object>> questionData = formTemplate.getQuestionData();
+            System.out.println(questionData);
+            Question question = new Question(null, questionData, null, null);
+            Question questionCreated = QuestionRepository.save(question);
+            questionIDs.add(questionCreated.getQuestionID());
+        }
 
-            for (int i = 0; i < forms.size(); i++ ){
-                Optional<Form> FormData = FormRepository.findById(forms.get(i));
-                Form formTemplate = FormData.get();
-                List<Map<String, Object>> questionData = formTemplate.getQuestionData();
-                System.out.println(questionData);
-                Question question = new Question(null, questionData, null, "Pending");
-                QuestionRepository.save(question);
-            }
-
-
-            VendorWorkflow _VendorWorkflow = VendorWorkflowRepository
-                    .save(new VendorWorkflow(null, forms, vendorWorkflowName, status, email, company, date, name));
-            // System.out.println(form);
-            return new ResponseEntity<>(_VendorWorkflow, HttpStatus.CREATED);
+        VendorWorkflow _VendorWorkflow = VendorWorkflowRepository
+                .save(new VendorWorkflow(null, forms, vendorWorkflowName, status, email, company, date, name,
+                        questionIDs));
+        // System.out.println(form);
+        return new ResponseEntity<>(_VendorWorkflow, HttpStatus.CREATED);
     }
 
     // routing to get vendorWorkflow by id
@@ -140,7 +142,7 @@ public class VendorWorkflowController {
                     .save(new VendorWorkflow(VendorWorkflow.get().getId(), VendorWorkflow.get().getForms(),
                             VendorWorkflow.get().getWorkflowName(), "Approved",
                             VendorWorkflow.get().getEmail(), VendorWorkflow.get().getCompany(), formattedDate,
-                            VendorWorkflow.get().getName()));
+                            VendorWorkflow.get().getName(), VendorWorkflow.get().getQuestionID()));
             return ResponseEntity.ok(_VendorWorkflow);
 
         } else {
@@ -170,7 +172,7 @@ public class VendorWorkflowController {
                             VendorWorkflow.get().getWorkflowName(), "Rejected",
                             VendorWorkflow.get().getEmail(), VendorWorkflow.get().getCompany(),
                             VendorWorkflow.get().getDate(),
-                            VendorWorkflow.get().getName()));
+                            VendorWorkflow.get().getName(), VendorWorkflow.get().getQuestionID()));
             return ResponseEntity.ok(_VendorWorkflow);
 
         } else {
@@ -214,7 +216,7 @@ public class VendorWorkflowController {
                             VendorWorkflow.get().getWorkflowName(), "Deleted",
                             VendorWorkflow.get().getEmail(), VendorWorkflow.get().getCompany(),
                             VendorWorkflow.get().getDate(),
-                            VendorWorkflow.get().getName()));
+                            VendorWorkflow.get().getName(), VendorWorkflow.get().getQuestionID()));
             return ResponseEntity.ok(_VendorWorkflow);
 
         } else {

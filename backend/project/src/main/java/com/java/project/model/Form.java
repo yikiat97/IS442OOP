@@ -14,15 +14,18 @@ public class Form {
     private String FormType;
     private String FormName;
     private List<Map<String, Object>> QuestionData;
+    private String Status;
 
 
-    public Form(String formID, String WorkflowID,  String FormType, String FormName, List<Map<String, Object>> QuestionData) {
+
+    public Form(String formID, String WorkflowID,  String FormType, String FormName, List<Map<String, Object>> QuestionData, String Status) {
         super();
         this.formID = formID;
         this.WorkflowID = WorkflowID;
         this.FormType = FormType;
         this.FormName = FormName;
         this.QuestionData = QuestionData;
+        this.Status = Status;
     }
 
 
@@ -73,6 +76,16 @@ public class Form {
 
     public void setQuestionData(List<Map<String, Object>> questionData) {
         QuestionData = questionData;
+    }
+
+
+    public String getStatus() {
+        return Status;
+    }
+
+
+    public void setStatus(String status) {
+        Status = status;
     }
 
 }
