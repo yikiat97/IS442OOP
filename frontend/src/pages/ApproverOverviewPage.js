@@ -91,7 +91,6 @@ function ApproverOverviewPage(){
     }, []);
     const[vendorWorkflows, setVendorWorkflows]= React.useState([]);
     const [completedWorkflow, setCompletedWorkflow]=React.useState([])
-    const [uncompletedWorkflow, setUncompletedWorkflow]=React.useState([])
     const [rejectedWorkflow, setRejectedWorkflow]=React.useState([])
     const getVendorWorkflows = () =>{
         axios.get("http://localhost:8080/vendorWorkflow/allVendorWorkflow")
@@ -101,7 +100,6 @@ function ApproverOverviewPage(){
             
 
             const completedWorkflows=[]
-            const uncompletedWorkflows=[]
             const rejectedWorkflows=[]
             const awaitingWorkflows=[]
 
@@ -109,9 +107,7 @@ function ApproverOverviewPage(){
                 if(workflow.status=='Approved'){
                     completedWorkflows.push(workflow)
                 }
-                else if(!(workflow.status=='Approved' || workflow.status=='Rejected' || workflow.status=='Deleted') ){
-                    uncompletedWorkflows.push(workflow)
-                }  
+                
                 else if(workflow.status=='Rejected'){
                     rejectedWorkflows.push(workflow)
                 }
@@ -124,7 +120,6 @@ function ApproverOverviewPage(){
             console.log(awaitingWorkflows)
             setVendorWorkflows(awaitingWorkflows)
             setCompletedWorkflow(completedWorkflows)
-            setUncompletedWorkflow(uncompletedWorkflows)
             setRejectedWorkflow(rejectedWorkflows)
             
         })
@@ -190,7 +185,7 @@ function ApproverOverviewPage(){
                     <Card sx={{ borderRadius: '16px' }} style={{backgroundColor: "#FEDBC2"}}>
                         <CardContent align="center">
                                 <Typography variant="h2" component="div" fontWeight="Bold" color={"#8A3C03"}>
-                                {uncompletedWorkflow.length}
+                                {vendorWorkflows.length}
                                 </Typography>
                                 <Typography variant="body2" fontWeight="Bold" color={"#8A3C03"}>
                                     <Grid container sx={{alignContent:"center", justifyContent:"center", pt:3}}>
