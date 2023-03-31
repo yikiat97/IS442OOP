@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 function Rating(props) {
-  const [rating, setRating] = useState(3);
 
   const handleChange = (event) => {
     console.log(event.target.value)
-    props.updateTotalRating(event.target.value);
-    setRating(event.target.value);
-
+    props.setRating(event.target.value)
+    if (props.onRatingChange) {
+      props.onRatingChange(event.target.value);
+    }
   };
 
   return (
@@ -19,7 +19,6 @@ function Rating(props) {
         labelId="rating-label"
         id="rating-select"
         class="rating"
-        value={rating}
         onChange={handleChange}
       >
         <MenuItem value={1}>1 (Poor)</MenuItem>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import {
   Grid,
   Typography,
@@ -17,9 +17,7 @@ import {
 } from "@mui/material";
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import Divider from '@mui/material/Divider';
-
-
+import Rating from "./Rating";
 import Canvas from "./canvas";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -28,11 +26,16 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
   textAlign:"left"
 }));
-const VendorFormPreview = ({ formData, fakeID, status,role, form}) => {
-  
+
+
+const VendorFormPreview = ({ formData, fakeID, status,role }) => {
+  //console.log(formData)
   const [updatedStructure, setUpdatedStructure] = useState(formData.questionData);
   const [invalidFields, setInvalidFields] = useState([]);
+  const [signature, setSignature] = useState(null)
+  const [rating,setRating] = useState(null)
 
+console.log(formData)
   if (formData == undefined) {
     return (
       
@@ -43,8 +46,6 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form}) => {
     );
   }
 
-
-  
 
 
   const submit = (data) => {
@@ -117,7 +118,9 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form}) => {
   };
 
   const renderField = (field) => {
-
+    // useEffect(() => {
+  
+    // }, [signature]);
     // Add this function to get the styles for a field based on its validity
     const getStylesForField = (fieldName) => {
       if (invalidFields.includes(fieldName)) {
@@ -129,6 +132,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form}) => {
 
     // Add and update the field handling functions here
     const handleTextareaChange = (fieldId, newValue) => {
+      
       // Clone the updatedStructure array to avoid modifying the original state
       const updatedFields = [...updatedStructure];
     
@@ -137,10 +141,33 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form}) => {
     
       // Update the value of the textarea
       updatedFields[fieldIndex].value = newValue;
-    
+      updatedFields[fieldIndex].src = newValue;
+      
+      console.log(updatedFields)
       // Update the updatedStructure state using setUpdatedStructure
       setUpdatedStructure(updatedFields);
     };
+
+
+
+    const handleRatingChange = (fieldId, selectedValue) => {
+      // Find the field index
+      const fieldIndex = updatedStructure.findIndex((field) => field.name === fieldId);
+      let value = null;
+    
+      // Create a new structure array with the updated field value
+      const newStructure = updatedStructure.map((field, index) => {
+        if (index === fieldIndex) {
+          value = selectedValue;
+          return { ...field, value };
+        }
+        return field;
+      });
+    
+      // Update the fields state using setUpdatedStructure
+      setUpdatedStructure(newStructure);
+    };
+
 
 
       
@@ -376,20 +403,35 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form}) => {
         );
 
       case "canvas":
+        console.log(field.role)
           return (
             <Item sx={{ opacity: field.role === role ? 1 : 0 }}>
               <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
               <div style={{ position: 'relative' }}>
-                <Canvas role={role} assignedRole={field.role}/>
-                
+                <Canvas role={role} assignedRole={field.role} signature={signature} setSignature={setSignature}/>
+                <br></br>
+                <img id={field.name} value={field.value}
+                //onChange={(e) => handleTextareaChange(field.name, e.target.src)}
+                onLoad={(e) => handleTextareaChange(field.name, e.target.src)}
+                 src={ signature == null ? field.value :signature } alt="Signature" />
+                  {/* <img id={field.name} value={field.value}
+                //onChange={(e) => handleTextareaChange(field.name, e.target.src)}
+               // onLoad={(e) => handleTextareaChange(field.name, e.signature)}
+                 src={field.value} alt="Signature" /> */}
               </div>
             </Item>
           );
       case "rating":
         // haveRating=true;
-        // return(
-        //     <Rating totalRating={totalRating} updateTotalRating={updateTotalRating}></Rating>
-        // );
+        console.log(rating)
+        return(
+            <Rating rating={rating} 
+            setRating={setRating}  
+            
+            onRatingChange={(newRating) => handleRatingChange(field.name, newRating)}>
+
+            </Rating>
+        );
       default:
         return null;
 
@@ -397,13 +439,12 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form}) => {
   };
 
   return (
-    <Container maxWidth="xl" sx={{pt:5}}>
-      <Divider/>
-      <Typography variant="h4" component="h4" sx={{ fontWeight: 'bold', py:2}}>
-          {form}
+    <Container maxWidth="xl">
+      <Typography variant="h1" component="h1" sx={{ fontWeight: 'bold' }}>
+          {formData.FormName}
           <br />
       </Typography>
-      <Grid container sx={{ textAlign: 'left' }}>
+      <Grid container spacing={2} sx={{ textAlign: 'left' }}>
 
           {formData.questionData.map((field, index) => (
               <Grid key={index} item xs={12}sx={{ textAlign: 'left' }} >
@@ -414,20 +455,13 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form}) => {
               )}
               </Grid>
           ))}
-          <Grid item xs={1.5} >
-            {(role=='Admin' || role=='Vendor') &&
-              <Button variant="contained" color="primary" onClick={() => save(updatedStructure)}>
-              Save
-            </Button>
-            }
-            
-          </Grid>
-          <Grid item xs={1.5}>
-          {(role=='Admin' || role=='Vendor') &&
-            <Button variant="contained" color="primary" onClick={() => submit(updatedStructure)}>
-              Submit
-            </Button>
-          }
+          <Grid item xs={12}>
+        <Button variant="contained" color="primary" onClick={() => save(updatedStructure)}>
+            Save
+          </Button>
+          <Button variant="contained" color="primary" onClick={() => submit(updatedStructure)}>
+            Submit
+          </Button>
         </Grid>
       </Grid>
       {/* {renderRatingsSummary()} */}
