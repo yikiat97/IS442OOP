@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import GroupsIcon from "@mui/icons-material/Groups";
 import FeedIcon from "@mui/icons-material/Feed";
+import EmailIcon from '@mui/icons-material/Email';
 import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
 import { Link } from 'react-router-dom';
 import StartIcon from '@mui/icons-material/Start';
@@ -78,6 +79,10 @@ const Navbar = () => {
                         <MenuItem component={<Link to='/ViewDeletedForms' />}>View Deleted Forms</MenuItem>
                         <MenuItem component={<Link to='/ViewForms' />}>View Current Forms</MenuItem>
                         <MenuItem component={<Link to='/FormCreation' />}>Create New Form</MenuItem>
+                    </SubMenu>
+
+                    <SubMenu label='Email Logs' icon={<EmailIcon />} component={<Link to='/ViewEmails' />}>
+                        <MenuItem component={<Link to='/ViewErrorEmails' />}>View Error Emails</MenuItem>
                     </SubMenu>
 
                     <MenuItem icon={<SettingsIcon />} component={<Link to={settingsRoute}/>}>Settings

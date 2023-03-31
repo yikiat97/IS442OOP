@@ -104,15 +104,6 @@ function Approver(){
             <Paper elevation={1} sx={{height:"100%", pt:1,pl:2,pb:2, my:3}} md={{}}>
                 <Grid sx={{mx:2, mb:4}} columns={{ xs: 12, sm: 12, md: 12 }}>
                     <h2>{companyDetails.name} Approvers</h2>
-                    <TextField
-                        sx={{background:"#eeeeee"}}
-                        size='small'
-                        InputProps={{ 
-                            endAdornment:(
-                            <InputAdornment position='end'>
-                            <SearchIcon/>
-                        </InputAdornment>)}}>
-                    </TextField>
                 </Grid>
 
                 <Grid sx={{mx:2, mb:4}} columns={{ xs: 12, sm: 12, md: 12 }}>

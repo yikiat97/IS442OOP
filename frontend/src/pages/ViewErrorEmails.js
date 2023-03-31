@@ -30,7 +30,7 @@ import { useEffect, useState, useRef } from "react";
 import { Table, Space } from 'antd';
 import Highlighter from "react-highlight-words";
 
-function ViewEmails(){
+function ViewErrorEmails(){
 
         const StyledMenu = styled((props) => (
             <Menu
@@ -76,7 +76,7 @@ function ViewEmails(){
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     useEffect(() => {
-        getVendorWorkflows();
+        getErrorEmails();
         ;
     }, []);
 
@@ -90,8 +90,8 @@ function ViewEmails(){
         .catch(error => console.error(error.response));
     };
 
-    const getVendorWorkflows = () =>{
-        axios.get("http://localhost:8080/email")
+    const getErrorEmails = () =>{
+        axios.get("http://localhost:8080/email/error")
         .then((response) => {
             setEmails(response.data);
         })
@@ -224,7 +224,7 @@ function ViewEmails(){
             
             <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:4}} sx={{display:"flex", justifyContent:"space-between", alignItems:"center"}}>
                 <Grid item md={2.0} sm={2.5}>
-                    <h1>Email Logs</h1>
+                    <h1>Email Error Logs</h1>
                 </Grid>
 
             </Grid>
@@ -240,5 +240,5 @@ function ViewEmails(){
     
 }
 
-export default ViewEmails;
+export default ViewErrorEmails;
 

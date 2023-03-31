@@ -14,4 +14,7 @@ public interface EmailRepository extends MongoRepository<Email, String> {
 
     @Query("{type:'?0'}")
     List<Email> findEmailByType(String type);
+
+    @Query("{status:'?0'}")
+    List<Email> findEmailByStatus(String status);
 }

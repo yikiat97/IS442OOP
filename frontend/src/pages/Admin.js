@@ -33,7 +33,7 @@ import {
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from 'react-router-dom';
-
+import QuantumDetailTable from "../components/QuantumDetailTable";
 
 function Admin(){
 
@@ -104,47 +104,10 @@ function Admin(){
             <Paper elevation={1} sx={{height:"100%", pt:1,pl:2,pb:2, my:3}} md={{}}>
                 <Grid sx={{mx:2, mb:4}} columns={{ xs: 12, sm: 12, md: 12 }}>
                     <h2>{companyDetails.name} Admins</h2>
-                    <TextField
-                        sx={{background:"#eeeeee"}}
-                        size='small'
-                        InputProps={{ 
-                            endAdornment:(
-                            <InputAdornment position='end'>
-                            <SearchIcon/>
-                        </InputAdornment>)}}>
-                    </TextField>
                 </Grid>
 
-                <Grid sx={{mx:2, mb:4}} columns={{ xs: 12, sm: 12, md: 12 }}>
-                   <Table size="small" aria-label="contacts">
-                        <TableHead>
-                        <StyledTableRow>
-                            <StyledTableCell align="left">Contact Name</StyledTableCell>
-                            <StyledTableCell align="left">Email</StyledTableCell>
-                            <StyledTableCell align="left">Contact Number</StyledTableCell>
-                            <StyledTableCell align="left">User Role</StyledTableCell>
-                            <StyledTableCell align="right"></StyledTableCell>
-                            <StyledTableCell align="right"></StyledTableCell>
-                        </StyledTableRow>
-                        </TableHead>
-                        <TableBody>
-                            {users
-                                .map((user) => (
-                                    <StyledTableRow key={user.name}>
-                                        <StyledTableCell component="th" scope="row">
-                                            {user.name}
-                                        </StyledTableCell>
-                                        <StyledTableCell align="left">{user.email}</StyledTableCell>
-                                        <StyledTableCell align="left">{user.contactNumber == null ? "Not available" : user.contactNumber}</StyledTableCell>
-                                        <StyledTableCell align="left">{user.role}</StyledTableCell>
-                                        <StyledTableCell align="right"><DeleteOutlineIcon sx={{color:'#c62828'}}/></StyledTableCell>
-                                        <Link href={'../EditUser/' + companyDetails.registrationNum + "/" + user.email} underline='none'>
-                                            <StyledTableCell align="left"><EditIcon sx={{color:'#1565c0'}} /></StyledTableCell>
-                                        </Link>
-                                    </StyledTableRow>
-                            ))}
-                        </TableBody>
-                    </Table> 
+                <Grid sx={{ mx: 2, mb: 4 }} columns={{ xs: 12, sm: 12, md: 12 }}>
+                    <QuantumDetailTable props={{ users, companyDetails }} />
                 </Grid>
             </Paper>
         </Grid>

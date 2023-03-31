@@ -46,6 +46,7 @@ import ViewWorkflowEmails from "./pages/ViewWorkflowEmails";
 import VendorInfoPage from "./pages/VendorInfoPage";
 import ApproverOverviewPage from "./pages/ApproverOverviewPage";
 import ApproverInfoPage from "./pages/ApproverInfoPage";
+import ViewErrorEmails from "./pages/ViewErrorEmails";
 
 function App() {
   const VENDOR_ROLE = "Vendor";
@@ -153,6 +154,7 @@ function App() {
     "/EditCompany/:company": { element: <EditCompany />, rolesAllowed: [ADMIN_ROLE] },
     "/UpdateWorkflow/:workflowID": { element: <UpdateWorkflow />, rolesAllowed: [ADMIN_ROLE] },
     "/ViewEmails": { element: <ViewEmails />, rolesAllowed: [ADMIN_ROLE] },
+    "/ViewErrorEmails": { element: <ViewErrorEmails />, rolesAllowed: [ADMIN_ROLE] },
     "/ViewWorkflowEmails/:workflowId": { element: <ViewWorkflowEmails />, rolesAllowed: [ADMIN_ROLE] },
     "/VendorInfoPage/": { element: <VendorInfoPage />, rolesAllowed: [VENDOR_ROLE] },
     "/ApproverOverviewPage/": { element: <ApproverOverviewPage />, rolesAllowed: [APPROVER_ROLE] },

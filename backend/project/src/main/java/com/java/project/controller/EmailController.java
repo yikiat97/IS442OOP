@@ -42,6 +42,17 @@ public class EmailController {
         }
     }
 
+    @GetMapping("/error")
+    public ResponseEntity getErrorEmails() {
+        List<Email> emailList = EmailRepository.findEmailByStatus("Error");
+        if (emailList.isEmpty()) {
+            throw new DataNotFoundException("No emails found");
+        } else {
+            emailList.sort(Comparator.comparing(Email::getDate).reversed());
+            return ResponseEntity.ok(emailList);
+        }
+    }
+
     @GetMapping("/accountCreation")
     public ResponseEntity getAccountCreationEmails() {
         List<Email> emailList = EmailRepository.findEmailByType("Account Creation");
