@@ -1,11 +1,11 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect,useState } from "react";
 import { Button } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const Canvas = (role,assign) => {
+const Canvas = ({role,assignedRole,signature,setSignature}) => {
     const canvasRef = useRef(null);
     console.log(role)
-    console.log(assign)
+    console.log(assignedRole)
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return; // Return early if canvas is not yet available in the DOM
@@ -49,9 +49,15 @@ const Canvas = (role,assign) => {
         const context = canvas.getContext("2d");
         context.clearRect(0, 0, canvas.width, canvas.height);
     };
-    if (role !== assign) {
+    if (role !== assignedRole) {
         return null; // hide the canvas if role !== assignedRole
     }
+
+    const saveSignature = () => {
+        const canvas = canvasRef.current;
+        const base64 = canvas.toDataURL();
+        setSignature(base64);
+    };
 
     return (
         <div>
@@ -59,7 +65,16 @@ const Canvas = (role,assign) => {
             <br></br>
             <Button onClick={clearCanvas} variant="outlined" color="error" startIcon={<DeleteIcon />}>
                 Clear Canvas
+            </Button>            
+            <Button onClick={saveSignature} variant="outlined" color="primary" startIcon={<DeleteIcon />}>
+                Save Signature
             </Button>
+            {signature && (
+                <div>
+                    <br />
+                   
+                </div>
+            )}
         </div>
     );
 };
