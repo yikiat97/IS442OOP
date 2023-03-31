@@ -102,8 +102,9 @@ function CreateWorkflow(){
         axios.get("http://localhost:8080/getForm/All")
         .then((response) => {
             const ini={}
-            const data=response.data
-            
+            const data = response.data.filter(item => item.status !== 'Deleted');
+
+            console.log(data)
             for(let i=0; i<data.length; i++){
                 // ini.push(data[i].formID)
                 ini[data[i].formID]= [data[i].formName]

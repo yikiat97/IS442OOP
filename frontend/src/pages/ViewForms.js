@@ -37,7 +37,12 @@ function ViewForms() {
   useEffect(() => {
     fetch("http://localhost:8080/getForm/All")
       .then((res) => res.json())
-      .then((data) => setForms(data));
+      .then((data) => {
+        
+        data = data.filter(data => data.status !== 'Deleted');
+        console.log(data)
+        setForms(data)
+      });
   
     let count = 0;
     formFields.forEach((field) => {
