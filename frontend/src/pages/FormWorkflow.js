@@ -37,7 +37,7 @@ function FormWorkflow(){
     const workflowID = useParams().workflowID;
     const[workflow, setWorkflow]=React.useState([])
     const[steps, setSteps]=React.useState([])
-
+    const[forms, setForms]=React.useState([])
 
     const getWorkflow = () => {
 
@@ -46,6 +46,7 @@ function FormWorkflow(){
                 
                 const ini=[]
                 const promises=[]
+                const forms =[]
                 console.log(response.data)
                 //response.data.questionID = ["642586cacb7791428c767469","642586cacb7791428c76746a"]
                 for(const id of response.data.questionID){
@@ -55,6 +56,18 @@ function FormWorkflow(){
                         console.log(promises)
                 }
 
+                for(const formID of response.data.forms){
+                    
+                    
+                        axios.get("http://localhost:8080/getForm/" + formID)
+                        .then((response)=>{
+                            forms.push(response.data.formName)
+                        })
+                    
+                }
+
+            
+                setForms(forms)
                 setWorkflow(response.data);
 
                 Promise.all(promises)
@@ -94,10 +107,10 @@ function FormWorkflow(){
     const prev = () => {
         setCurrent(current - 1);
     };
-    const stepsContent = steps.map((step) => ({
+    const stepsContent = steps.map((step, index) => ({
         key: step.questionID,
-        title: step.formName,
-        content: step
+        content: step,
+        title: forms[index]
     }));
     const contentStyle = {
         
@@ -109,6 +122,11 @@ function FormWorkflow(){
     };
 
     console.log(stepsContent)
+
+    const handleStatusChange = (e) =>{
+        const newStatus = e.target.value
+    }
+
     return(
     
     <Grid sx={{my:6, textAlign:'left', px:4}}>
@@ -155,7 +173,11 @@ function FormWorkflow(){
                 <Grid item>
                     <FormControl>
                         <FormLabel htmlFor="WorkflowName" sx={{}}>Status</FormLabel>
-                        <TextField variant="filled" size='small' value={workflow.status} select sx={{width:200}} disabled={role=='Vendor'}>
+                        <TextField variant="filled" size='small' value={workflow.status} select 
+                        sx={{width:200}} disabled={role=='Vendor'}
+                        onChange={(e) =>{
+                            handleStatusChange(e)
+                        }}>
                         {statuses.map((status) => (
                                             <MenuItem key={status} value={status}>
                                             {status}
@@ -170,12 +192,17 @@ function FormWorkflow(){
                 <Grid container>
                     <Grid item>
                         <List>
-                            {steps.map((step) =>(
+                            {stepsContent.map((step) =>(
                             <ListItem>
                                     <ListItemIcon sx={{pr:2}}>
-                                        <Chip label="Approved" color="success" />
+                                        {   step.content.status=='Pendings' ? <Chip label={step.content.status} sx={{backgroundColor:"#ffb74d", width:"100px" }}/> :
+                                            step.content.status=='Approved' ? <Chip label={step.content.status}  sx={{ width:"100px" }} color="success"/> :
+                                            step.content.status=='Rejected' ? <Chip label={step.content.status} sx={{ width:"100px" }} color="error"/> :
+                                            step.content.status==null ? <Chip label="Incomplete" sx={{backgroundColor:"#e0e0e0", width:"100px" }}/> : <></>
+                                        }
+                                        
                                     </ListItemIcon>
-                                    <ListItemText primary={step.formName}></ListItemText>
+                                    <ListItemText primary={step.title}></ListItemText>
 
                             </ListItem>
                             
@@ -223,7 +250,7 @@ function FormWorkflow(){
                     </Grid>
 
                 </Grid>
-            {steps.length>0 && <VendorFormPreview formData={stepsContent[current].content} fakeID={stepsContent[current].key} status={"Pending"} role={role}/> }
+            {steps.length>0 && <VendorFormPreview formData={stepsContent[current].content} fakeID={stepsContent[current].key} status={"Pending"} role={role} form={forms[current]}/> }
 
             
             <Grid container>

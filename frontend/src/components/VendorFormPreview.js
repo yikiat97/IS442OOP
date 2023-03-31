@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Typography,
@@ -17,6 +17,8 @@ import {
 } from "@mui/material";
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
+import Divider from '@mui/material/Divider';
+
 
 import Canvas from "./canvas";
 const Item = styled(Paper)(({ theme }) => ({
@@ -26,11 +28,11 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
   textAlign:"left"
 }));
-const VendorFormPreview = ({ formData, fakeID, status,role }) => {
-  //console.log(formData)
+const VendorFormPreview = ({ formData, fakeID, status,role, form}) => {
+  
   const [updatedStructure, setUpdatedStructure] = useState(formData.questionData);
   const [invalidFields, setInvalidFields] = useState([]);
-console.log(formData)
+
   if (formData == undefined) {
     return (
       
@@ -40,6 +42,10 @@ console.log(formData)
   
     );
   }
+
+
+  
+
 
   const submit = (data) => {
   // Check for invalid fields
@@ -391,12 +397,13 @@ console.log(formData)
   };
 
   return (
-    <Container maxWidth="xl">
-      <Typography variant="h1" component="h1" sx={{ fontWeight: 'bold' }}>
-          {formData.FormName}
+    <Container maxWidth="xl" sx={{pt:5}}>
+      <Divider/>
+      <Typography variant="h4" component="h4" sx={{ fontWeight: 'bold', py:2}}>
+          {form}
           <br />
       </Typography>
-      <Grid container spacing={2} sx={{ textAlign: 'left' }}>
+      <Grid container sx={{ textAlign: 'left' }}>
 
           {formData.questionData.map((field, index) => (
               <Grid key={index} item xs={12}sx={{ textAlign: 'left' }} >
@@ -407,13 +414,20 @@ console.log(formData)
               )}
               </Grid>
           ))}
-          <Grid item xs={12}>
-        <Button variant="contained" color="primary" onClick={() => save(updatedStructure)}>
-            Save
-          </Button>
-          <Button variant="contained" color="primary" onClick={() => submit(updatedStructure)}>
-            Submit
-          </Button>
+          <Grid item xs={1.5} >
+            {(role=='Admin' || role=='Vendor') &&
+              <Button variant="contained" color="primary" onClick={() => save(updatedStructure)}>
+              Save
+            </Button>
+            }
+            
+          </Grid>
+          <Grid item xs={1.5}>
+          {(role=='Admin' || role=='Vendor') &&
+            <Button variant="contained" color="primary" onClick={() => submit(updatedStructure)}>
+              Submit
+            </Button>
+          }
         </Grid>
       </Grid>
       {/* {renderRatingsSummary()} */}
