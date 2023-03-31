@@ -9,64 +9,73 @@ window.$ = $;
 require("jquery-ui-sortable");
 require("formBuilder");
 require('formBuilder/dist/form-render.min.js')
-
 function ViewForms() {
   const [forms, setForms] = useState([]);
   const [selectedForm, setSelectedForm] = useState({});
   const [haveRating, setHaveRating] = useState(false);
   const [formFields, setFormFields] = useState([]);
   const [ratingsRendered, setRatingsRendered] = useState(0);
-  const [totalRating, setTotalRating] = useState(0);
-  const [useEffectDone, setUseEffectDone] = useState(false); // Add state variable
+  const [useEffectDone, setUseEffectDone] = useState(false);
   const [jsonDataToPass,setJsonDataToPass]=useState(null);
   const [selectedFormData,setSelectedFormData]=useState(null);
+  const [selectedFormID,setSelectedFormID]=useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [idToPass,setIdToPass] = useState(null);
 
-  const renderRatingsSummary = () => {
-    if(useEffectDone && haveRating){ // Wait until useEffectDone is true
-        return (
-        <Box sx={{ marginTop: 2 }}>
-            <Typography>Total Score:{totalRating}</Typography>
-        </Box>
-        );            
+  useEffect(() => {
+    if (selectedFormID !== null) {
+      setIsLoading(true);
+      fetch(`http://localhost:8080/getForm/${selectedFormID}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setSelectedForm(data);
+          setIsLoading(false);
+        });
     }
-  };
+  }, [selectedFormID]);
+
   useEffect(() => {
     fetch("http://localhost:8080/getForm/All")
       .then((res) => res.json())
-      .then((data) => setForms(data));
+      .then((data) => {
+        
+        data = data.filter(data => data.status !== 'Deleted');
+        console.log(data)
+        setForms(data)
+      });
   
     let count = 0;
-    console.log(formFields);
     formFields.forEach((field) => {
       if (field.type === "rating") {
-        alert("theres rating field");
         setHaveRating(true);
         count += 1;
       }
     });
     setRatingsRendered(count);
     setJsonDataToPass(selectedForm)
-    console.log(selectedForm)
     setUseEffectDone(true);
-  }, [selectedForm, formFields]); // Add selectedForm as a dependency
-
+  }, [selectedForm, formFields]);
 
   const handleFormSelect = (formId) => {
-    fetch(`http://localhost:8080/getForm/${formId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setSelectedForm(data);
-        setIsLoading(false);
-
-      });
-      
+    setSelectedFormID(formId);
   };
 
   const handleDeleteForm = () => {
-    // TODO: implement delete functionality
-    console.log('Deleting form');
+    if (selectedFormID !== null) {
+      console.log('Deleting form:', selectedFormID);
+      fetch(`http://localhost:8080/softDeleteForm/${selectedFormID}`, {
+        method: 'PUT',
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log('Form deleted successfully:', data);
+          setSelectedForm({});
+          setSelectedFormID(null);
+        })
+        .catch((error) => {
+          console.error('Error deleting form:', error);
+        });
+    }
   };
   
   return (
@@ -79,7 +88,7 @@ function ViewForms() {
         selectedForm={selectedForm}
         setSelectedForm={setSelectedForm}
       />
-      {selectedForm.formName && (
+      {useEffectDone && selectedForm.formName && (
         <Button
           variant="outlined"
           color="error"
@@ -90,14 +99,17 @@ function ViewForms() {
         </Button>
       )}
       {isLoading ? (
-          <p>No form selected</p>
-        ) : selectedForm.formName ? (
+        <p>No form selected</p>
+      ) : selectedForm.formName ? (
         <FormCreationComponent
           idToPass={idToPass}
           jsonDataToPass={jsonDataToPass.questionData}
+          set
+
           setJsonDataToPass={setJsonDataToPass}
           formFields={formFields}
           setFormFields={setFormFields}
+          
         />
       ) : (
         <p>No form selected</p>

@@ -26,7 +26,7 @@ const FormCreationComponent = (props) => {
     // const [fieldsStored, setFieldsStored] = useState(props.formFields);
 	console.log(idToPass);
 	const formData = jsonDataToPass
-	console.log(jsonDataToPass)
+	console.log(formData)
 	// const passedInFormName = jsonDataToPass.formName
 	// console.log(passedInFormName)
 	let fields = [
@@ -187,7 +187,6 @@ const FormCreationComponent = (props) => {
 
 			<TextField id="formName" variant="outlined" onChange={(event) => setFormName(event.target.value)} value={0}></TextField>				
 				<div id="fb-editor" ref={fb} />	
-				{/* <Modal open={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}> sx={{textAlign:center}}*/}
 					<form onSubmit={handleSubmit} sx={{ width: "100%" }}>
 						<Box sx={{ border: 1, borderRadius: 1,padding:"15px", mt:3 }}>
 							
@@ -198,7 +197,6 @@ const FormCreationComponent = (props) => {
 					<Button type="submit"  variant='contained' sx={{float:'right', mb:5}}>Submit</Button> {/* Add submit button */}
 					</form>
 
-				{/* </Modal> */}
 					
 		</Container>
 	);
