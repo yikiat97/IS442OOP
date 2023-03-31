@@ -223,7 +223,7 @@ function FormWorkflow(){
                     </Grid>
 
                 </Grid>
-            {steps.length>0 && <VendorFormPreview formData={stepsContent[current].content} fakeID={stepsContent[current].key} status={"Pending"}/> }
+            {steps.length>0 && <VendorFormPreview formData={stepsContent[current].content} fakeID={stepsContent[current].key} status={"Pending"} role={role}/> }
 
             
             <Grid container>

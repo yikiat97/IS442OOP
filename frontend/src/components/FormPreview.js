@@ -196,7 +196,7 @@ const FormPreview = ({ formData,renderRatingsSummary ,haveRating, setHaveRating 
             );
         case "rating":
             haveRating=true;
-            setTotalRating(field.value)
+            // setTotalRating(field.value)
             return(
                 <Rating totalRating={totalRating} updateTotalRating={updateTotalRating} ></Rating>
             );

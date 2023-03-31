@@ -2,11 +2,14 @@ import React, { useRef, useEffect } from "react";
 import { Button } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const Canvas = () => {
+const Canvas = (role,assign) => {
     const canvasRef = useRef(null);
-
+    console.log(role)
+    console.log(assign)
     useEffect(() => {
         const canvas = canvasRef.current;
+        if (!canvas) return; // Return early if canvas is not yet available in the DOM
+
         const context = canvas.getContext("2d");
 
         // Set canvas dimensions
@@ -46,6 +49,9 @@ const Canvas = () => {
         const context = canvas.getContext("2d");
         context.clearRect(0, 0, canvas.width, canvas.height);
     };
+    if (role !== assign) {
+        return null; // hide the canvas if role !== assignedRole
+    }
 
     return (
         <div>

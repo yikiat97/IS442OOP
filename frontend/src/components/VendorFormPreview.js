@@ -26,7 +26,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
   textAlign:"left"
 }));
-const VendorFormPreview = ({ formData, fakeID, status }) => {
+const VendorFormPreview = ({ formData, fakeID, status,role }) => {
   //console.log(formData)
   const [updatedStructure, setUpdatedStructure] = useState(formData.questionData);
   const [invalidFields, setInvalidFields] = useState([]);
@@ -202,7 +202,7 @@ console.log(formData)
           setUpdatedStructure(newStructure);
           
       };
-      
+      console.log(field)
       
       switch (field.type) {
       case "h2":
@@ -226,26 +226,27 @@ console.log(formData)
           );
       case "checkbox-group":
         return (
-          <Item>
-            <Typography>{field.label}</Typography>
-            <FormGroup>
-              {field.values.map((option, index) => (
-                <FormControlLabel
-                  key={index}
-                  value={option.value}
-                  
-                  control={
-                    <Checkbox
-                      checked={option.selected}
-                      onChange={() => handleCheckboxChange(field, option)}
-                      
-                    />
-                  }
-                  label={option.label}
-                />
-              ))}
-            </FormGroup>
-          </Item>
+        <Item>
+          <Typography>{field.label}</Typography>
+          <FormGroup>
+            {field.values.map((option, index) => (
+              <FormControlLabel
+                key={index}
+                value={option.value}
+                control={
+                  <Checkbox
+                    checked={option.selected}
+                    onChange={() => handleCheckboxChange(field, option)}
+                    required={field.required}
+                    disabled={field.disabled || (field.role !== role)}
+                  />
+                }
+                label={option.label}
+              />
+            ))}
+          </FormGroup>
+        </Item>
+
         );
       case "date":
         return (
@@ -253,10 +254,11 @@ console.log(formData)
             <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
 
             <input 
+              disabled={role !== field.role}
+              required={field.role === role}
               style={getStylesForField(field.name)}
               type="date"
               className={field.className}
-              required={field.required}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -276,6 +278,8 @@ console.log(formData)
               <FormGroup>
                   <br></br>
                   <input
+                      disabled={role !== field.role}
+                      required={field.role === role}
                       id="standard-number"
                       label="Number"
                       type="number"
@@ -288,6 +292,7 @@ console.log(formData)
                       variant="standard"
                       sx={{ display: 'block' }}
                       onChange={(e) => handleFieldChange(field.name, e.target.value)}
+
                   />                    
               </FormGroup>
 
@@ -311,6 +316,9 @@ console.log(formData)
                     value={option.value}
                     control={<Radio />}
                     label={option.label}
+                    required={field.required}
+                    disabled={field.disabled || (field.role !== role)}
+          
                   />
                 </div>
               ))}
@@ -320,29 +328,29 @@ console.log(formData)
         );
       case "select":
         return (
-        <Item>
+          <Item>
             <FormControl fullWidth>
-
-            <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
- 
-            <Select
-              labelId={field.name}
-              id={field.name}
-              style={getStylesForField(field.name)}
-              className={field.className}
-              required={field.required}
-              multiple={field.multiple}
-              value={field.values.find((option) => option.selected)?.value || ""}
-              onChange={(e) => handleRadioChange(field.name, e.target.value)}
-            >
-              {field.values.map((option, index) => (
-                <MenuItem key={index} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
+              <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
+              <Select
+                labelId={field.name}
+                id={field.name}
+                style={getStylesForField(field.name)}
+                className={field.className}
+                multiple={field.multiple}
+                value={field.values.find((option) => option.selected)?.value || ""}
+                onChange={(e) => handleRadioChange(field.name, e.target.value)}
+                disabled={field.role !== role}
+                required={field.role === role}
+              >
+                {field.values.map((option, index) => (
+                  <MenuItem key={index} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
             </FormControl>
           </Item>
+
         );
       case "textarea":
         return (
@@ -352,7 +360,8 @@ console.log(formData)
             <TextField
               multiline
               fullWidth
-              required={field.required}
+              disabled={field.role !== role}
+              required={field.role === role}              
               style={getStylesForField(field.name)}
               value={field.value}
               onChange={(e) => handleTextareaChange(field.name, e.target.value)}
@@ -362,10 +371,12 @@ console.log(formData)
 
       case "canvas":
           return (
-            <Item >
-                <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
-                <Canvas sx={{ m: 2, float: 'left',display:'block'  }}/>
-                <br></br>
+            <Item sx={{ opacity: field.role === role ? 1 : 0 }}>
+              <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
+              <div style={{ position: 'relative' }}>
+                <Canvas role={role} assignedRole={field.role}/>
+                
+              </div>
             </Item>
           );
       case "rating":

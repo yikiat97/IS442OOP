@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Grid,Container,Button,Box,Typography } from '@mui/material';
 import FormSelect from '../components/FormSelection';
 import FormPreview from '../components/FormPreview';
+import FormCreationComponent from "../components/FormCreationComponent";
 window.jQuery = $;
 window.$ = $;
 require("jquery-ui-sortable");
@@ -17,6 +18,10 @@ function ViewForms() {
   const [ratingsRendered, setRatingsRendered] = useState(0);
   const [totalRating, setTotalRating] = useState(0);
   const [useEffectDone, setUseEffectDone] = useState(false); // Add state variable
+  const [jsonDataToPass,setJsonDataToPass]=useState(null);
+  const [selectedFormData,setSelectedFormData]=useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [idToPass,setIdToPass] = useState(null);
 
   const renderRatingsSummary = () => {
     if(useEffectDone && haveRating){ // Wait until useEffectDone is true
@@ -42,18 +47,20 @@ function ViewForms() {
       }
     });
     setRatingsRendered(count);
-  
-    setUseEffectDone(true); // Set useEffectDone to true when useEffect finishes
-  }, [selectedForm, formFields]);
-  
+    setJsonDataToPass(selectedForm)
+    console.log(selectedForm)
+    setUseEffectDone(true);
+  }, [selectedForm, formFields]); // Add selectedForm as a dependency
+
 
   const handleFormSelect = (formId) => {
     fetch(`http://localhost:8080/getForm/${formId}`)
       .then((res) => res.json())
       .then((data) => {
-        setSelectedForm(data)
-        
-      })
+        setSelectedForm(data);
+        setIsLoading(false);
+
+      });
       
   };
 
@@ -63,18 +70,39 @@ function ViewForms() {
   };
   
   return (
-		<Container maxWidth="md" sx={{ textAlign: 'left', my:5 }}>
-      <FormSelect forms={forms} handleFormSelect={handleFormSelect} selectedForm={selectedForm} setSelectedForm={setSelectedForm} />
-      {selectedForm.formName &&
-      <Button variant="outlined" color="error" sx={{ float: 'right',marginTop:'25px' }} onClick={handleDeleteForm}>
-        Delete form
-      </Button>}
-      {selectedForm.formName ? (
-        <FormPreview formData={selectedForm} renderRatingsSummary={renderRatingsSummary} haveRating={haveRating} setHaveRating={setHaveRating} formFields={formFields} setFormFields={setFormFields} ratingsRendered={ratingsRendered} setRatingsRendered={setRatingsRendered} totalRating={totalRating} setTotalRating={setTotalRating}/>
+    <Container maxWidth="md" sx={{ textAlign: "left", my: 5 }}>
+      <FormSelect
+        forms={forms}
+        idToPass={idToPass}
+        setIdToPass={setIdToPass}
+        handleFormSelect={handleFormSelect}
+        selectedForm={selectedForm}
+        setSelectedForm={setSelectedForm}
+      />
+      {selectedForm.formName && (
+        <Button
+          variant="outlined"
+          color="error"
+          sx={{ float: "right", marginTop: "25px" }}
+          onClick={handleDeleteForm}
+        >
+          Delete form
+        </Button>
+      )}
+      {isLoading ? (
+          <p>No form selected</p>
+        ) : selectedForm.formName ? (
+        <FormCreationComponent
+          idToPass={idToPass}
+          jsonDataToPass={jsonDataToPass.questionData}
+          setJsonDataToPass={setJsonDataToPass}
+          formFields={formFields}
+          setFormFields={setFormFields}
+        />
       ) : (
         <p>No form selected</p>
       )}
-		</Container>
+    </Container>
   );
 }
 

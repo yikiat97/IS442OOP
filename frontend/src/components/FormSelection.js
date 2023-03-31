@@ -1,12 +1,13 @@
 import { FormControl, MenuItem, Select } from '@mui/material';
 import React, { useState } from 'react';
 function FormSelect(props) {
-    const { forms, handleFormSelect } = props;
+    const { forms, handleFormSelect,idToPass,setIdToPass } = props;
     const [selectedFormID, setSelectedFormID] = useState(null);
 
     const handleChange = (event) => {
         handleFormSelect(event.target.value);
         setSelectedFormID(event.target.value);
+        setIdToPass(event.target.value)
 
     };
     const selectedForm = forms.find((form) => form.formID === selectedFormID);
