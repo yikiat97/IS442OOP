@@ -186,8 +186,7 @@ const FormCreation = () => {
 	return (
 		<Container maxWidth="lg" sx={{ textAlign: 'left', mt:5 }}>
 			
-			<TextField id="formName" label="Form Name" variant="outlined" onChange={(event) => setFormName(event.target.value)}
-/>				<div id="fb-editor" ref={fb} />	
+			<TextField id="formName" label="Form Name" variant="outlined" onChange={(event) => setFormName(event.target.value)} sx={{mb:2}}/>				<div id="fb-editor" ref={fb} />	
 				{/* <Modal open={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}> sx={{textAlign:center}}*/}
 					<form onSubmit={handleSubmit} sx={{ width: "100%" }}>
 						<Box sx={{ border: 1, borderRadius: 1,padding:"15px", mt:3 }}>

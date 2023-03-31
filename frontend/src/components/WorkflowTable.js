@@ -115,15 +115,15 @@ function WorkflowTable({props}){
         defaultSortOrder:'descend',
         ...getColumnSearchProps('date'),
     },
-    {
-        render:()=>(
+    // {
+    //     render:()=>(
 
-            role=='Admin' ?
-                <Button variant='contained' size='small' sx={{ml:5, background:"#90a4ae"}} endIcon={<AddAlertIcon/>}>
-                    Send</Button> :null
+    //         role=='Admin' ?
+    //             <Button variant='contained' size='small' sx={{ml:5, background:"#90a4ae"}} endIcon={<AddAlertIcon/>}>
+    //                 Send</Button> :null
 
-        ),
-    },
+    //     ),
+    // },
     {
         title:"Assignee",
         dataIndex:"name",

@@ -14,8 +14,6 @@ import {
     ListItem,
     ListItemText,
     ListItemIcon,
-    ListItemAvatar,
-    Avatar,
     Chip, 
     IconButton
 } from "@mui/material";
@@ -23,7 +21,6 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import EmailIcon from '@mui/icons-material/Email';
 import Divider from '@mui/material/Divider';
-import Box from '@mui/material/Box';
 import VendorFormPreview from '../components/VendorFormPreview';
 import { useParams, useNavigate } from 'react-router-dom';
 import FormPreview from '../components/FormPreview';
@@ -122,9 +119,12 @@ function FormWorkflow(){
                 </Grid>
 
                 <Grid item md={0.75} sm={1} sx={{justifyContent:"flex-end", display:'flex'}}>
-                    <Button color="primary" variant="contained" fullWidth sx={{ backgroundColor:"#2596BE"}} startIcon={<EmailIcon/>} onClick={viewEmails}>
-                            View Emails
-                    </Button>
+                    {role=="Approver" || role=='Admin' &&
+                        <Button color="primary" variant="contained" fullWidth sx={{ backgroundColor:"#2596BE"}} startIcon={<EmailIcon/>} onClick={viewEmails}>
+                        View Emails
+                        </Button>
+                    }
+                    
                 </Grid>
 
                 </Grid>
@@ -190,37 +190,32 @@ function FormWorkflow(){
         <Paper elevation={1} sx={{height:"100%", pt:4, pb:2, px:3, mt:4}}>
             <>
         <Steps current={current} items={stepsContent} />
-
+                        
         
         <div style={contentStyle}>
 
-            <Grid container sx={{pt:2, pr:2}}>
-                    <Grid item md={10}></Grid>
-                    <Grid item md={2}>
-                            {current < steps.length - 1 && (
-                            // <Button color="primary" variant='contained' fullWidth onClick={() => next()}>
-                            //     Next
-                            // </Button>
-                            <IconButton onClick={() => next()}>
-                            <Typography variant="body1" sx={{pl:1}}>Next</Typography> <ArrowForwardIcon/>
-                            </IconButton>
+            <Grid container sx={{pt:2, pr:2}} columns={{xs:12, sm:12,md:12}} spacing={2}>
+                    <Grid item md={9}></Grid>
+                    <Grid item md={1.5} sx={{}}>
+    
+                            <Button sx={{backgroundColor:"#fafafa", color:"#212121"}} variant='contained' fullWidth onClick={() => next()} 
+                            disabled={current==steps.length-1}>
+                                Next
+                            </Button>
 
                             
-                            )}
-                            
-                            {current > 0 && (
-                            // <Button
-                            //     variant='contained'
-                            //     fullWidth
-                            //     onClick={() => prev()}
-                            // >
-                            //     Previous
-                            // </Button>
+                            </Grid>
+                    <Grid item md={1.5}>
+                            <Button
+                            sx={{backgroundColor:"#fafafa", color:"#212121"}}
+                                variant='contained'
+                                fullWidth
+                                onClick={() => prev()}
+                                disabled={current==0}>
+                                Previous
+                            </Button>
 
-                        <IconButton onClick={() => prev()}>
-                                <ArrowBackIcon/> <Typography variant="body1" sx={{pl:1}}>Previous</Typography>
-                        </IconButton>
-                            )}
+            
                     </Grid>
 
                 </Grid>
@@ -239,7 +234,6 @@ function FormWorkflow(){
                                         defaultValue="Input Comments"
                                         disabled={role == 'Admin' || role == 'Vendor'} /></>
                 }
-              
                 
     
                 </Grid>
