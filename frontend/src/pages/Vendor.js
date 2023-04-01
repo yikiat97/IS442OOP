@@ -123,8 +123,8 @@ function Row(props) {
 function Vendor() {
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
-          backgroundColor: theme.palette.info.dark,
-          color: theme.palette.common.white,
+          backgroundColor: '#fafafa',
+          color: theme.palette.common.black,
           fontWeight: theme.typography.fontWeightBold,
           fontSize: 14,
         },
@@ -178,20 +178,6 @@ function Vendor() {
                                 Create New Company 
                         </Button>
                     </Link>
-                </Grid>
-
-                <Grid item md={0.5} sm={6} sx={{mb:5}}>
-
-                    <TextField
-                        sx={{background:"#eeeeee"}}
-                        size='small'
-                        InputProps={{ 
-                          endAdornment:(
-                            <InputAdornment position='end'>
-                          <SearchIcon/>
-                        </InputAdornment>)}}>
-                    
-                      </TextField>
                 </Grid>
             </Grid>
 
