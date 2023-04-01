@@ -2,10 +2,9 @@ import React, { useRef, useEffect,useState } from "react";
 import { Button } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const Canvas = ({role,assignedRole,signature,setSignature}) => {
+const Canvas = ({required,signature,setSignature,disabled}) => {
     const canvasRef = useRef(null);
-    console.log(role)
-    console.log(assignedRole)
+
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return; // Return early if canvas is not yet available in the DOM
@@ -49,9 +48,7 @@ const Canvas = ({role,assignedRole,signature,setSignature}) => {
         const context = canvas.getContext("2d");
         context.clearRect(0, 0, canvas.width, canvas.height);
     };
-    if (role !== assignedRole) {
-        return null; // hide the canvas if role !== assignedRole
-    }
+
 
     const saveSignature = () => {
         const canvas = canvasRef.current;
@@ -61,22 +58,27 @@ const Canvas = ({role,assignedRole,signature,setSignature}) => {
 
     return (
         <div>
-            <canvas style={{ border: "1px solid black" }}  ref={canvasRef} />
-            <br></br>
-            <Button onClick={clearCanvas} variant="outlined" color="error" startIcon={<DeleteIcon />}>
-                Clear Canvas
-            </Button>            
-            <Button onClick={saveSignature} variant="outlined" color="primary" startIcon={<DeleteIcon />}>
-                Save Signature
-            </Button>
-            {signature && (
-                <div>
-                    <br />
-                   
-                </div>
-            )}
+          <canvas 
+            style={{ border: "1px solid black" }}  
+            ref={canvasRef} 
+            required={required}
+            disabled={disabled}
+          />
+          <br></br>
+          <Button onClick={clearCanvas} variant="outlined" color="error" disabled={disabled}>
+            Clear Canvas
+          </Button>            
+          <Button onClick={saveSignature} variant="outlined" color="primary"  disabled={!disabled}>
+            Save Signature
+          </Button>
+          {signature && (
+            <div>
+              <br />
+              {/* signature display logic */}
+            </div>
+          )}
         </div>
-    );
+      );
 };
 
 

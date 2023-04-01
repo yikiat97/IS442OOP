@@ -2,11 +2,7 @@ import React, { useState, useEffect } from "react";
 import $ from "jquery";
 import {Grid,Input,Box,Button,Container, FormControl,FormControlLabel,FormGroup, FormLabel, RadioGroup, Radio, Checkbox, Select, MenuItem, InputLabel, TextField, TextareaAutosize } from '@mui/material';
 import Paper from '@mui/material/Paper';
-
-// import Unstable_DateField from '@mui/x-date-pickers/DateField';
 import { styled } from '@mui/material/styles';
-// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-// import { Unstable_DateField as DateField } from '@mui/x-date-pickers';
 import Rating from "./Rating";
 import "../styles/formPreview.css" 
 import Canvas from "./canvas";
@@ -157,18 +153,6 @@ const FormPreview = ({ formData,renderRatingsSummary ,haveRating, setHaveRating 
                         <MenuItem value={value.value}>{value.label}</MenuItem>
                     ))}
                 </Select>
-                        {/* <label class="field-label">{field.label}</label>
-                        <select
-                        className={field.className}
-                        name={field.name}
-                        multiple={field.multiple}
-                        sx={{ width: '200px' }}
-
-                        >
-                            {field.values.map((value, index) => (
-                                <option value={value.value}>{value.label}</option>
-                            ))}
-                        </select> */}
                 </FormControl>
                 <br></br>
             </Item>
@@ -198,7 +182,11 @@ const FormPreview = ({ formData,renderRatingsSummary ,haveRating, setHaveRating 
             haveRating=true;
             // setTotalRating(field.value)
             return(
-                <Rating></Rating>
+                <Item>
+                    <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>                    
+                    <Rating></Rating>
+
+                </Item>
             );
         default:
             return null;
@@ -222,11 +210,6 @@ const FormPreview = ({ formData,renderRatingsSummary ,haveRating, setHaveRating 
                     )}
                     </Grid>
                 ))}
-                {haveRating && (
-                    <Grid item xs={12}>
-                        <p>Total rating: {totalRating}</p>
-                    </Grid>
-                )} 
             </Grid>
 
 

@@ -288,8 +288,8 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
                   <Checkbox
                     checked={option.selected}
                     onChange={() => handleCheckboxChange(field, option)}
-                    required={field.role === role}
-                    disabled={field.disabled || (field.role !== role)}
+                    required={field.role.includes(role) || field.role.toLowerCase().includes(role.toLowerCase())}
+                    disabled={!field.role.toLowerCase().includes(role.toLowerCase())}
                   />
                 }
                 label={option.label}
@@ -305,8 +305,8 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
             <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
 
             <input 
-              disabled={role !== field.role}
-              required={field.role === role}
+                    disabled={!field.role.toLowerCase().includes(role.toLowerCase())}
+                    required={field.role.includes(role) || field.role.toLowerCase().includes(role.toLowerCase())}
               style={getStylesForField(field.name)}
               type="date"
               className={field.className}
@@ -329,8 +329,8 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
               <FormGroup>
                   <br></br>
                   <input
-                      disabled={role !== field.role}
-                      required={field.role === role}
+                    disabled={!field.role.toLowerCase().includes(role.toLowerCase())}
+                    required={field.role.includes(role) || field.role.toLowerCase().includes(role.toLowerCase())}
                       id="standard-number"
                       label="Number"
                       type="number"
@@ -367,8 +367,8 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
                     value={option.value}
                     control={<Radio />}
                     label={option.label}
-                    required={field.role === role}
-                    disabled={field.disabled || (field.role !== role)}
+                    required={field.role.includes(role) || field.role.toLowerCase().includes(role.toLowerCase())}
+                    disabled={!field.role.toLowerCase().includes(role.toLowerCase())}
           
                   />
                 </div>
@@ -390,8 +390,8 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
                 multiple={field.multiple}
                 value={field.values.find((option) => option.selected)?.value || ""}
                 onChange={(e) => handleRadioChange(field.name, e.target.value)}
-                disabled={field.role !== role}
-                required={field.role === role}
+                disabled={!field.role.toLowerCase().includes(role.toLowerCase())}
+                required={field.role.includes(role) || field.role.toLowerCase().includes(role.toLowerCase())}
                 
               >
                 {field.values.map((option, index) => (
@@ -412,8 +412,8 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
             <TextField
               multiline
               fullWidth
-              disabled={field.role !== role}
-              required={field.role === role}              
+              disabled={!field.role.toLowerCase().includes(role.toLowerCase())}
+              required={field.role.includes(role) || field.role.toLowerCase().includes(role.toLowerCase())}
               style={getStylesForField(field.name)}
               value={field.value}
               onChange={(e) => handleTextareaChange(field.name, e.target.value)}
@@ -424,10 +424,10 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
       case "canvas":
        // console.log(field.role)
           return (
-            <Item sx={{ opacity: field.role === role ? 1 : 0 }}>
+            <Item sx={{ opacity: field.role.includes(role) || field.role.toLowerCase().includes(role.toLowerCase()) ? 1 : 0 }}>
               <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
               <div style={{ position: 'relative' }}>
-                <Canvas role={role} assignedRole={field.role} signature={signature} setSignature={setSignature}/>
+                <Canvas role={role} assignedRole={field.role}  disabled={!field.role.toLowerCase().includes(role.toLowerCase())}  signature={signature} setSignature={setSignature}/>
                 <br></br>
                 <img id={field.name} value={field.value}
                 //onChange={(e) => handleTextareaChange(field.name, e.target.src)}
@@ -440,12 +440,17 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
         // haveRating=true;
         console.log(field.value)
         return(
-            <Rating rating={rating} value={field.value}
-            setRating={setRating}  
-            
-            onRatingChange={(newRating) => handleRatingChange(field.name, newRating)}>
+          <Item>
+              <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>                    
 
-            </Rating>
+              <Rating rating={rating} value={field.value}
+              setRating={setRating}  
+              disabled={!field.role.toLowerCase().includes(role.toLowerCase())}
+              required={field.role.includes(role) || field.role.toLowerCase().includes(role.toLowerCase())}
+              onRatingChange={(newRating) => handleRatingChange(field.name, newRating)}>
+
+              </Rating>
+          </Item>
         );
       default:
         return null;

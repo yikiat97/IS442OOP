@@ -46,3 +46,7 @@
     transform: rotate(360deg);
   }
 }
+.disabled-canvas {
+  pointer-events: none;
+  opacity: 0.5;
+}

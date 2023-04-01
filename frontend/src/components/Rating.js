@@ -18,6 +18,8 @@ function Rating(props) {
         labelId="rating-label"
         id="rating-select"
         class="rating"
+        disabled={props.disabled}
+        required={props.required}
         onChange={handleChange}
         defaultValue={props.value || ''}
       >
