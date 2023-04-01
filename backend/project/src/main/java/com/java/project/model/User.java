@@ -18,6 +18,7 @@ public class User{
         private String role;
         private String companyRegistrationNum;
         private String userName;
+        private Boolean deleted = false;
 
         public User(){
 
@@ -104,4 +105,20 @@ public class User{
                     .toString();
             return password;
         }
+
+    public void setCompanyRegistrationNum(String companyRegistrationNum) {
+        this.companyRegistrationNum = companyRegistrationNum;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 }

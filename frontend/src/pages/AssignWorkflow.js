@@ -95,14 +95,8 @@ function AssignWorkflow(){
         .then((response) => {
             const ini_comp = {}
 
-            // FILTER OUT COMPANIES WITHOUT ACTIVE VENDORS
-            // console.log(assignees, "assignees")
-            // const assigneesCompany = assignees.map(a => a.companyRegistrationNum)
-            // const filteredCompanies = response.data.filter(company => assigneesCompany.includes( company.registrationNum))
 
             console.log(response.data, "response.data")
-            // console.log(assigneesCompany, "assigneesCompany")
-            // console.log(filteredCompanies, "filteredCompanies")
 
             
             for(let comp of response.data){
@@ -110,7 +104,6 @@ function AssignWorkflow(){
                 ini_comp[comp.name]=comp.registrationNum
             }
 
-            console.log(ini_comp, "INI_COMP")
             setCompanies(ini_comp)
         
         })

@@ -24,6 +24,10 @@ public interface UserRepository extends MongoRepository<User, String> {
     @Query("{role:'?0'}")
     List<User> findByRole(String role);
 
+    @Query("{role:'?0'}")
+    List<User> findByRoleAndDeletedIsFalse(String role);
+
     @Query
     Long deleteByEmail(String email);
+
 }
