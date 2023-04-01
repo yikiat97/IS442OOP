@@ -65,7 +65,7 @@ function RejectedWorkflow(){
 
                 <Grid item md={0.5} sm={6} sx={{mb:5}}>
                   {role=='Admin' &&
-                    <Link href='CreateWorkflow' underline='none'><Button variant="contained" sx={{width:120}} startIcon={<AddIcon/>}>Create</Button></Link>
+                    <Link href='AssignWorkflow' underline='none'><Button variant="contained" sx={{width:120}} startIcon={<AddIcon/>}>Create</Button></Link>
                   }
                 </Grid>
 
