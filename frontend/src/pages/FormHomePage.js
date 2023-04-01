@@ -39,9 +39,9 @@ function FormHomePage() {
             <Grid container spacing={4} sx={{pt:4}}>
                 <Grid item xs={4}>
                     <Link href='ViewForms' underline='none'>
-                    <Card sx={{ borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}} style={{backgroundColor: "#E7F9DD", width: '300px', height: '400px'}} >
+                    <Card sx={{ borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}} style={{backgroundColor: "#E7F9DD", width: '300px', height: '300px'}} >
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }} >
-                                <DraftsIcon  sx={{color:"#054322"}} style={{ width: '150px', height: '150px' }}></DraftsIcon>
+                                <DraftsIcon  sx={{color:"#054322"}} style={{ width: '100px', height: '100px' }}></DraftsIcon>
                                 <Typography variant="body1" fontWeight="Bold" color={"#054322"}>
                                     <Grid container sx={{alignContent:"center", justifyContent:"center", pt:3}}>
                                         <Grid item>
@@ -61,9 +61,9 @@ function FormHomePage() {
 
                 <Grid item xs={4}>
                     <Link href='FormCreation' underline='none'>
-                    <Card sx={{ borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}} style={{backgroundColor: "#FEDBC2" , width: '300px', height: '400px'}}>
+                    <Card sx={{ borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}} style={{backgroundColor: "#FEDBC2" , width: '300px', height: '300px'}}>
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                                <CreateIcon  sx={{color:"#8A3C03"}} style={{ width: '150px', height: '150px' }}></CreateIcon>
+                                <CreateIcon  sx={{color:"#8A3C03"}} style={{ width: '100px', height: '100px' }}></CreateIcon>
                                 <Typography variant="body1" fontWeight="Bold" color={"#8A3C03"}>
                                     <Grid container sx={{alignContent:"center", justifyContent:"center", pt:3}}>
                                         <Grid item>
@@ -81,9 +81,9 @@ function FormHomePage() {
 
                 <Grid item xs={4}>
                     <Link href='ViewDeletedForms' underline='none'>
-                    <Card sx={{ borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}} style={{backgroundColor: "#FFD9D9" , width: '300px', height: '400px'}}>
+                    <Card sx={{ borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}} style={{backgroundColor: "#FFD9D9" , width: '300px', height: '300px'}}>
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                                <DeleteOutlineIcon sx={{color:"#790202"}} style={{ width: '150px', height: '150px' }}></DeleteOutlineIcon>
+                                <DeleteOutlineIcon sx={{color:"#790202"}} style={{ width: '100px', height: '100px' }}></DeleteOutlineIcon>
                                 <Typography variant="body1" fontWeight="Bold" color={"#790202"}>
                                     <Grid container sx={{alignContent:"center", justifyContent:"center", pt:3}}>
                                             <Grid item>
