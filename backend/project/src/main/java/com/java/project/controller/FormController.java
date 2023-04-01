@@ -127,7 +127,7 @@ public class FormController {
   public ResponseEntity<?> softDeleteFormById(@PathVariable("id") String id) {
     Optional<Form> Form = FormRepository.findById(id);
     if (Form.isPresent()) {
-      Form updatedForm = FormRepository.save(new Form(id, Form.get().getFormType(),
+      Form updatedForm = FormRepository.save(new Form(id, 
           Form.get().getFormName(), Form.get().getQuestionData(), "Deleted"));
       // System.out.println("========= DELETE DATA SUCCESSFUL ===========");
 
@@ -152,7 +152,7 @@ public class FormController {
   public ResponseEntity<?> restoreFormById(@PathVariable("id") String id) {
     Optional<Form> form = FormRepository.findById(id);
     if (form.isPresent()) {
-      Form updatedForm = FormRepository.save(new Form(id, form.get().getFormType(),
+      Form updatedForm = FormRepository.save(new Form(id,
           form.get().getFormName(), form.get().getQuestionData(), "Not Deleted"));
 
       Map<String, String> response = new HashMap<>();
@@ -168,4 +168,25 @@ public class FormController {
       throw new DataNotFoundException("Form Not Found");
     }
   }
+
+  @PutMapping("/Form/updateFormById/{id}")
+  public ResponseEntity<Form> updateQuestionById(@PathVariable(value = "id") String FormId,
+                                                @RequestBody Form FormData) {
+  Optional<Form> optionalForm = FormRepository.findById(FormId);
+  
+
+  if (optionalForm.isPresent()) {
+    Form Form = optionalForm.get();
+    Form.setFormName(FormData.getFormName());
+    Form.setQuestionData(FormData.getQuestionData());
+    Form.setStatus(FormData.getStatus());
+  
+    FormRepository.save(Form);
+      System.out.println("========= UPDATE DATA SUCCESSFUL ===========");
+      return new ResponseEntity<>(Form, HttpStatus.OK);
+  } else {
+      throw new DataNotFoundException("Form not found");
+  }
+  }
+
 }

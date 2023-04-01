@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.java.project.exception.DataNotFoundException;
@@ -44,6 +45,29 @@ public class VendorWorkflowController {
 
     @Autowired
     private GlobalExceptionHandler globalExceptionHandler;
+
+    @PutMapping("/updateVendorWorkflowStatus")
+    public ResponseEntity<?> updateWorkflowStatus(
+        @RequestBody VendorWorkflow VendorWorkflow) {
+    
+      Optional<VendorWorkflow> optionalVendorWorkflow = VendorWorkflowRepository.findById(VendorWorkflow.getId());
+    
+      if (optionalVendorWorkflow.isPresent()) {
+        VendorWorkflow vendorWorkflow = optionalVendorWorkflow.get();
+        vendorWorkflow.setStatus(VendorWorkflow.getStatus());
+        VendorWorkflow updatedWorkflow = VendorWorkflowRepository.save(vendorWorkflow);
+        return new ResponseEntity<>(updatedWorkflow, HttpStatus.OK);
+      } else {
+        throw new DataNotFoundException("Workflow not found");
+      }
+    }
+    
+    
+
+
+
+
+
 
     // JSON FORMAT FOR CREATING VENDORWORKFLOW
     // {

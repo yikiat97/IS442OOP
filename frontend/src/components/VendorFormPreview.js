@@ -488,7 +488,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
           {form}
           <br />
       </Typography>
-
+    <form>
       <Grid container sx={{ textAlign: 'left' }}>
 
           {formData.questionData.map((field, index) => (
@@ -555,7 +555,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
         </Grid>
       </Grid>
       {/* {renderRatingsSummary()} */}
-
+    </form>
   </Container>
   );
 };

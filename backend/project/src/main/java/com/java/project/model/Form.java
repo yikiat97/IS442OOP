@@ -10,17 +10,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Form {
     @Id
     private String formID;
-    private String FormType;
     private String FormName;
     private List<Map<String, Object>> QuestionData;
     private String Status;
 
 
 
-    public Form(String formID, String FormType, String FormName, List<Map<String, Object>> QuestionData, String Status) {
+    public Form(String formID, String FormName, List<Map<String, Object>> QuestionData, String Status) {
         super();
         this.formID = formID;
-        this.FormType = FormType;
         this.FormName = FormName;
         this.QuestionData = QuestionData;
         this.Status = Status;
@@ -36,14 +34,6 @@ public class Form {
         formID = formID;
     }
 
-    public String getFormType() {
-        return FormType;
-    }
-
-
-    public void setFormType(String formType) {
-        FormType = formType;
-    }
 
 
     public String getFormName() {
