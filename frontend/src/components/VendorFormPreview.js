@@ -26,20 +26,20 @@ import Canvas from "./canvas";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
-  padding: theme.spacing(1),
+  padding: theme.spacing(2),
   color: theme.palette.text.secondary,
   textAlign:"left"
 }));
 
 
-const VendorFormPreview = ({ formData, fakeID, status,role, form }) => {
+const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}) => {
   //console.log(formData)
   const [updatedStructure, setUpdatedStructure] = useState(formData.questionData);
   const [invalidFields, setInvalidFields] = useState([]);
   const [signature, setSignature] = useState(null)
   const [rating,setRating] = useState(null)
 
-  
+  console.log(workflowStatus)
   const [updateStatus, setStatus]=useState(status)
   const [comments, setComments]=useState(formData.comments);
   console.log(updateStatus)
@@ -60,6 +60,12 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form }) => {
   // Check for invalid fields
   const invalidFields = data
   console.log(data)
+  
+  if(role=='Vendor'){
+    status="Pending"
+  } else if(role=='Admin'){
+    status="Awaiting Approval"
+  }
   let formJsonObject = { questionData: data,status: status };
   fetch("http://localhost:8080/Question/updateQuestion/" + fakeID, {
     method: "PUT",
@@ -401,7 +407,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form }) => {
             <FormControl fullWidth>
               <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
               <Select
-                labelId={field.name}
+                label={field.name}
                 id={field.name}
                 style={getStylesForField(field.name)}
                 className={field.className}
@@ -410,6 +416,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form }) => {
                 onChange={(e) => handleRadioChange(field.name, e.target.value)}
                 disabled={field.role !== role}
                 required={field.role === role}
+                
               >
                 {field.values.map((option, index) => (
                   <MenuItem key={index} value={option.value}>
@@ -495,19 +502,21 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form }) => {
           ))}
 
           <Grid item sx={{py:2}} xs={12} sm={12} md={12}>
-          
-              <><Divider light sx={{ my: 3 }}>Approval</Divider><TextField
-                                  label="Comments"
-                                  fullWidth
-                                  multiline
-                                  rows={5}
-                                  required
-                                  value={comments}
-                                  disabled={role == 'Admin' || role == 'Vendor'}
-                                  onChange={(e)=>{
-                                    console.log(e.target.value)
-                                                setComments(e.target.value)
-                                            }} /></>
+          {workflowStatus!="Pending Approver" &&
+            <><Divider light sx={{ my: 3 }}>Approval</Divider><TextField
+            label="Comments"
+            fullWidth
+            multiline
+            rows={5}
+            required
+            value={comments}
+            disabled={role == 'Admin' || role == 'Vendor'}
+            onChange={(e)=>{
+              console.log(e.target.value)
+                          setComments(e.target.value)
+                      }} /></>
+          }
+            
           
           
 
