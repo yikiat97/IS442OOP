@@ -81,9 +81,7 @@ const ApproverNavBar = () => {
                         {/* <MenuItem icon={<PersonIcon/>}> */}
                         <Grid container sx={{ mt: '10px', display: "flex", align: "center" }}>
                             <Grid item md={3}>
-                                <Link to='/ApproverInfoPage'>
                                 <PersonIcon/>
-                                </Link>
                             </Grid>
 
                             <Grid item md={6}>

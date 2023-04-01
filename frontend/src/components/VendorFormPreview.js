@@ -306,7 +306,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form }) => {
                   <Checkbox
                     checked={option.selected}
                     onChange={() => handleCheckboxChange(field, option)}
-                    required={field.required}
+                    required={field.role === role}
                     disabled={field.disabled || (field.role !== role)}
                   />
                 }
@@ -385,7 +385,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form }) => {
                     value={option.value}
                     control={<Radio />}
                     label={option.label}
-                    required={field.required}
+                    required={field.role === role}
                     disabled={field.disabled || (field.role !== role)}
           
                   />

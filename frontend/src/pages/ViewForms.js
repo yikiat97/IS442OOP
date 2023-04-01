@@ -103,9 +103,7 @@ function ViewForms() {
       ) : selectedForm.formName ? (
         <FormCreationComponent
           idToPass={idToPass}
-          jsonDataToPass={jsonDataToPass.questionData}
-          set
-
+          jsonDataToPass={jsonDataToPass}
           setJsonDataToPass={setJsonDataToPass}
           formFields={formFields}
           setFormFields={setFormFields}

@@ -21,8 +21,8 @@ import QuantumDetailTable from "../components/QuantumDetailTable";
 function QuantumDetails() {
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.info.dark,
-      color: theme.palette.common.white,
+      backgroundColor: '#fafafa',
+      color: theme.palette.common.black,
       fontWeight: theme.typography.fontWeightBold,
       fontSize: 14,
     },

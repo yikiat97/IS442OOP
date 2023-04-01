@@ -184,7 +184,7 @@ function WorkflowTable({props}){
         
 
             <TableContainer component={Paper}>
-                <Table columns={columns} dataSource={props} onChange={onChange} />;
+                <Table columns={columns} dataSource={props} onChange={onChange} />
             </TableContainer>
 
     )

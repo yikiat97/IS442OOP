@@ -373,7 +373,7 @@ function WorkflowsAdmin(){
             </Grid>
 
             
-            <WorkflowTable props={vendorWorkflows} />;
+            <WorkflowTable props={vendorWorkflows} />
             
 
 
