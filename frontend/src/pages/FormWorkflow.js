@@ -180,7 +180,7 @@ function FormWorkflow(){
         for(let step of steps){
             if(role=='Approver' && (step.status=='Rejected')){
                 approverComplete=false;
-            } else if(role=='Approver' && (step.status=='Approved' ||step.status=='Rejected')){
+            } else if(role=='Approver' && (step.status!='Approved' ||step.status!='Rejected')){
                 approverComplete=null
                 alert("Form has not been reviewed!")
                 break;
