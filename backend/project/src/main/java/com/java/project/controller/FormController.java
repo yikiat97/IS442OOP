@@ -147,29 +147,25 @@ public class FormController {
     }
   }
   // http://localhost:8080/deleteForm/{id}
-  
 
+  @PutMapping("restoreForm/{id}")
+  public ResponseEntity<?> restoreFormById(@PathVariable("id") String id) {
+    Optional<Form> form = FormRepository.findById(id);
+    if (form.isPresent()) {
+      Form updatedForm = FormRepository.save(new Form(id, form.get().getFormType(),
+          form.get().getFormName(), form.get().getQuestionData(), "Not Deleted"));
 
+      Map<String, String> response = new HashMap<>();
+      response.put("status", "success");
+      response.put("message", "Form restored successfully");
 
+      return ResponseEntity.status(HttpStatus.OK).body(response);
+    } else {
+      Map<String, String> response = new HashMap<>();
+      response.put("status", "error");
+      response.put("message", "Form not found");
 
-@PutMapping("restoreForm/{id}")
-public ResponseEntity<?> restoreFormById(@PathVariable("id") String id) {
-  Optional<Form> form = FormRepository.findById(id);
-  if (form.isPresent()) {
-    Form updatedForm = FormRepository.save(new Form(id, form.get().getWorkflowID(), form.get().getFormType(),
-        form.get().getFormName(), form.get().getQuestionData(), "Not Deleted"));
-
-    Map<String, String> response = new HashMap<>();
-    response.put("status", "success");
-    response.put("message", "Form restored successfully");
-
-    return ResponseEntity.status(HttpStatus.OK).body(response);
-  } else {
-    Map<String, String> response = new HashMap<>();
-    response.put("status", "error");
-    response.put("message", "Form not found");
-
-    throw new DataNotFoundException("Form Not Found");
+      throw new DataNotFoundException("Form Not Found");
+    }
   }
-}
 }
