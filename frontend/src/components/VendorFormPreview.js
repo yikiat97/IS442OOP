@@ -54,8 +54,6 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
     );
   }
 
-
-
   const submit = (data) => {
   // Check for invalid fields
   const invalidFields = data
@@ -83,40 +81,18 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
       console.error("Error:", error);
       alert("failed");
     });
-
-
-  // data.filter((field) => {
-  //     if (field.required) {
-  //       const isValuePresent =
-  //         field.type === "radio-group" || field.type === "checkbox-group"
-  //           ? field.values.some((option) => option.selected)
-  //           : field.value && field.value.trim() !== "";
-  //       return !isValuePresent;
-  //     }
-  //     return false;
-  //   })
-  //   .map((field) => field.name);
-
-  //   // If any required field is not filled, display an alert and update the invalidFields state
-  //   if (invalidFields.length > 0) {
-  //     alert("Please fill all required fields.");
-  //     setInvalidFields(invalidFields);
-  //     return;
-  //   }
-  //   else {
-
-  //   }
   }
 
 
 
-  const updateForm = (data) => {
+  const updateForm = (data,stat) => {
 
       // Check for invalid fields
     const invalidFields = data
     console.log(data)
-    let formJsonObject = { questionData: data,status: updateStatus, comments: comments };
+    let formJsonObject = { questionData: data, status: stat, comments: comments };
     console.log(formJsonObject)
+    alert(stat)
     fetch("http://localhost:8080/Question/updateQuestion/" + fakeID, {
       method: "PUT",
       body: JSON.stringify(formJsonObject),
@@ -127,7 +103,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
       .then((response) => response.json())
       .then((data) => {
         alert("Submitted");
-        window.location.reload();
+        //window.location.reload();
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -138,7 +114,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
 
   const save = (data) => {
  
-    alert(fakeID);
+    //alert(fakeID);
     console.log(data);
     let formJsonObject = { questionData: data };
     fetch("http://localhost:8080/Question/updateQuestion/" + fakeID, {
@@ -457,10 +433,6 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
                 //onChange={(e) => handleTextareaChange(field.name, e.target.src)}
                 onLoad={(e) => handleTextareaChange(field.name, e.target.src)}
                  src={ signature == null ? field.value :signature } alt="Signature" />
-                  {/* <img id={field.name} value={field.value}
-                //onChange={(e) => handleTextareaChange(field.name, e.target.src)}
-               // onLoad={(e) => handleTextareaChange(field.name, e.signature)}
-                 src={field.value} alt="Signature" /> */}
               </div>
             </Item>
           );
@@ -529,8 +501,9 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
             </Button> :
             role=="Approver" ?
               <Button variant="contained" color="success" startIcon={<TaskAltIcon/>} 
-                onClick={() => {  setStatus("Approved")
-                                  updateForm(updatedStructure)
+                onClick={() => { 
+                                  updateForm(updatedStructure, "Approved")
+                                  console.log(fakeID)
                                   }}>
                 Approve
               </Button>  : <></>
@@ -545,8 +518,8 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
             </Button> :
             role=="Approver" ?
             <Button variant="contained" color="error" startIcon={<CancelIcon/>} 
-            onClick={()=> { setStatus("Rejected")
-                            updateForm(updatedStructure)
+            onClick={()=> { 
+                            updateForm(updatedStructure, "Rejected")
                             
                     }}>
                     Reject
