@@ -176,17 +176,18 @@ function FormWorkflow(){
 
     const finalApproval = () =>{
         let approverComplete=true;
-        
+        console.log(steps)
         for(let step of steps){
             if(role=='Approver' && (step.status=='Rejected')){
                 approverComplete=false;
-            } else if(role=='Approver' && (step.status!='Approved' ||step.status!='Rejected')){
+            } else if(role=='Approver' && (step.status=='Pending' ||step.status=='Incomplete')){
                 approverComplete=null
-                alert("Form has not been reviewed!")
+                // alert("Form has not been reviewed!")
                 break;
             }
             
         }
+        console.log(approverComplete)
 
         if(role=='Approver' && approverComplete){
             axios.put("http://localhost:8080/vendorWorkflow/approveVendorWorkflow/" + workflowID)
@@ -310,11 +311,11 @@ function FormWorkflow(){
                             {stepsContent.map((step) =>(
                             <ListItem>
                                     <ListItemIcon sx={{pr:2}}>
-                                        {   step.content.status=='Pending' ? <Chip label={step.content.status} sx={{backgroundColor:"#ffb74d", width:"100px" }}/> :
-                                            step.content.status=='Approved' ? <Chip label={step.content.status}  sx={{ width:"100px" }} color="success"/> :
-                                            step.content.status=='Rejected' ? <Chip label={step.content.status} sx={{ width:"100px" }} color="error"/> :
+                                        {   step.content.status=='Pending' ? <Chip label={step.content.status} sx={{backgroundColor:"#ffb74d", width:"150px" }}/> :
+                                            step.content.status=='Approved' ? <Chip label={step.content.status}  sx={{ width:"150px" }} color="success"/> :
+                                            step.content.status=='Rejected' ? <Chip label={step.content.status} sx={{ width:"150px" }} color="error"/> :
                                             step.content.status==null ? <Chip label="Incomplete" sx={{backgroundColor:"#e0e0e0", width:"100px" }}/> : 
-                                            step.content.status=="Awaiting Approval" ? <Chip label="Awaiting Approval" sx={{backgroundColor:"#bbdefb", width:"100px" }}/> :<></>
+                                            step.content.status=="Awaiting Approval" ? <Chip label="Awaiting Approval" sx={{backgroundColor:"#bbdefb", width:"150px" }}/> :<></>
                                         }
                                         
                                     </ListItemIcon>
