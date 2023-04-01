@@ -139,19 +139,12 @@ function FormWorkflow(){
 
 
     }
-    const updateWorkflow = () =>{
 
-        const vendorComplete=true;
-        const adminComplete=true
-        const approverComplete=true
-
+    const vendortoAdmin = () =>{
+        let vendorComplete=true;
         for(let step of steps){
             if(role=='Vendor' && step.status!='Pending'){
-                vendorComplete=false
-            } else if(role=='Admin' && step.status!='Awaiting Approval'){
-                adminComplete=false
-            } else if(role=='Approver' && (step.status!='Approved'||step.status!='Rejected')){
-                approverComplete=false
+                vendorComplete=false;
             }
         }
 
@@ -161,13 +154,35 @@ function FormWorkflow(){
                                 console.log(response.status, response.data.token);
                             })
             
-        } else if (adminComplete && role=='Admin'){
-            console.log('execute')
+        }
+    }
+
+    const admintoApprover = () =>{
+        let adminComplete=true;
+        for(let step of steps){
+            if(role=='Admin' && step.status!='Awaiting Approval'){
+                adminComplete=false;
+            }
+        }
+
+        if(adminComplete && role=='Admin'){
             axios.put("http://localhost:8080/vendorWorkflow/vendorWorkflowToApprover/" + workflowID)
-                        .then((response)=>{
-                            console.log(response.status, response.data.token);
-                        })
-        }   else if(role=='Approver' && approverComplete){
+                    .then((response)=>{
+                        console.log(response.status, response.data.token);
+                    })
+            
+        }
+    }
+
+    const finalApproval = () =>{
+        let approverComplete=true;
+        for(let step of steps){
+            if(role=='Approver' && (step.status!='Approved'||step.status!='Rejected')){
+                approverComplete=false;
+            }
+        }
+
+        if(role=='Approver' && approverComplete){
             axios.put("http://localhost:8080/vendorWorkflow/approveVendorWorkflow/" + workflowID)
                             .then((response)=>{
                                 console.log(response.status, response.data.token);
@@ -181,7 +196,21 @@ function FormWorkflow(){
                             
                         })
         }
+    }
 
+    if(role=='Vendor'){
+        if(steps.length!=0){
+            vendortoAdmin()
+            
+        }
+    } else if(role=='Admin'){
+        if(steps.length!=0){
+            admintoApprover()
+        }
+    } else if(role=='Approver'){
+        if(steps.length!=0){
+            finalApproval()
+        }
     }
     
     return(
