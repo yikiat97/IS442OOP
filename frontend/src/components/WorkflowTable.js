@@ -129,6 +129,7 @@ function WorkflowTable({props}){
         dataIndex:"name",
         key:"name",
         ...getColumnSearchProps('name'),
+        // render: (_, user) => (<span>{user.name} {user.deleted ? "(deleted)" : ""} {console.log(user)}</span>)
     },
     {
         title:"Company",

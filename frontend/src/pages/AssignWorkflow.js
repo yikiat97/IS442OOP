@@ -50,7 +50,8 @@ function AssignWorkflow(){
     const [error, setError] = useState([]);
     
     const[companies, setCompanies]= useState([]);
-    const[assignees, setAssignees] = useState({});
+    const[assignees, setAssignees] = useState([]);
+    const[activeAssignees, setActiveAssignees] = useState([]);
     const[forms, setForms] = useState([]);
     const [name, setAssigneeName] = useState("");
     const [email, setAssigneeEmail] = useState("");
@@ -58,11 +59,20 @@ function AssignWorkflow(){
 
     //set form values
     useEffect(() => {
+        setActiveAssignees();
         getWorkflows();
         getCompanies();
-        // getAssignees();
         
     }, []);
+
+    // const getAssignees = () => {
+    //     axios.get("http://localhost:8080/company/getActiveCompanies")
+    //     .then((response) => {
+    //         setActiveAssignees(response.data)
+            
+    //     })
+    //     .catch(error => console.error(error.response));
+    // }
 
     const getWorkflows = () =>{
         axios.get("http://localhost:8080/workflow/allWorkflow")
@@ -81,22 +91,31 @@ function AssignWorkflow(){
     }
 
     const getCompanies = () =>{
-        axios.get("http://localhost:8080/company")
+        axios.get("http://localhost:8080/company/getActiveCompanies")
         .then((response) => {
-            const ini_comp={}
+            const ini_comp = {}
+
+            // FILTER OUT COMPANIES WITHOUT ACTIVE VENDORS
+            // console.log(assignees, "assignees")
+            // const assigneesCompany = assignees.map(a => a.companyRegistrationNum)
+            // const filteredCompanies = response.data.filter(company => assigneesCompany.includes( company.registrationNum))
+
+            console.log(response.data, "response.data")
+            // console.log(assigneesCompany, "assigneesCompany")
+            // console.log(filteredCompanies, "filteredCompanies")
+
             
             for(let comp of response.data){
                 console.log(comp)
                 ini_comp[comp.name]=comp.registrationNum
-                
             }
+
+            console.log(ini_comp, "INI_COMP")
             setCompanies(ini_comp)
         
         })
         .catch(error => console.error(error));
     }
-    console.log(assignees)
-    console.log(companies)
 
     const getAssigneeFromCompany = (company)=>{
         console.log(company)
@@ -104,16 +123,12 @@ function AssignWorkflow(){
                 {params:{"registrationNum":company}})
         .then(response=>{
             const data = response.data[0]
-            console.log(data)
+            console.log(data, "getAssigneeFromCompany")
             setAssigneeEmail(data.email)
             setAssigneeName(data.name)
 
         })
     }
-
-    console.log(email)
-    console.log(name)
-    console.log(company)
 
     const navigate= useNavigate();
     const handleSubmit= async (e) =>{
@@ -161,6 +176,7 @@ function AssignWorkflow(){
                     console.log( error);
                 }
     };
+
 
     
     return(

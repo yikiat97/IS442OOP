@@ -33,6 +33,8 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}) => {
+  console.log(role, "role")
+
   //console.log(formData)
   const [updatedStructure, setUpdatedStructure] = useState(formData.questionData);
   const [invalidFields, setInvalidFields] = useState([]);

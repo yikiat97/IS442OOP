@@ -56,6 +56,7 @@ function EditCompanyDetails(){
     const [email, setEmail] = useState("");
     const [contactNumber, setContactNumber] = useState("");
     const [role, setRole] = useState("Vendor");
+    const [deleted, setDeleted] = useState();
     const password = "";
 
     const navigate = useNavigate();
@@ -118,6 +119,10 @@ function EditCompanyDetails(){
         setContactNumber(event.target.value);
     };
 
+    const handleDeletedStatusChange = (event) => {
+        setDeleted(event.target.value);
+    };
+
     const saveCompany = async (e) => {
         e.preventDefault();
 
@@ -163,7 +168,8 @@ function EditCompanyDetails(){
                         email,
                         contactNumber,
                         role,
-                        companyRegistrationNum: registrationNum              
+                        companyRegistrationNum: registrationNum,
+                        deleted: deleted          
                     },
                     {
                         headers: {
@@ -293,6 +299,13 @@ function EditCompanyDetails(){
                                     <MenuItem value="Admin">Admin</MenuItem>
                                     <MenuItem value="Approver">Approver</MenuItem>
                                     <MenuItem value="Vendor">Vendor</MenuItem>
+                                    </Select>
+                            </FormControl>
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined" onChange={handleDeletedStatusChange}>
+                                <FormHelperText id="outlined-weight-helper-text">Deleted Status</FormHelperText>
+                                    <Select value={deleted} >
+                                    <MenuItem value={true}>Yes</MenuItem>
+                                    <MenuItem value={false}>No</MenuItem>
                                     </Select>
                             </FormControl>
                         </div>
