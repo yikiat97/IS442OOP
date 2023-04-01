@@ -127,7 +127,7 @@ public class FormController {
   public ResponseEntity<?> softDeleteFormById(@PathVariable("id") String id) {
     Optional<Form> Form = FormRepository.findById(id);
     if (Form.isPresent()) {
-      Form updatedForm = FormRepository.save(new Form(id, Form.get().getWorkflowID(), Form.get().getFormType(),
+      Form updatedForm = FormRepository.save(new Form(id, Form.get().getFormType(),
           Form.get().getFormName(), Form.get().getQuestionData(), "Deleted"));
       // System.out.println("========= DELETE DATA SUCCESSFUL ===========");
 
@@ -147,6 +147,7 @@ public class FormController {
     }
   }
   // http://localhost:8080/deleteForm/{id}
+  
 
 
 
@@ -171,5 +172,4 @@ public ResponseEntity<?> restoreFormById(@PathVariable("id") String id) {
     throw new DataNotFoundException("Form Not Found");
   }
 }
-
 }

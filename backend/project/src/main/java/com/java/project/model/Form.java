@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Form {
     @Id
     private String formID;
-    private String WorkflowID;
     private String FormType;
     private String FormName;
     private List<Map<String, Object>> QuestionData;
@@ -18,10 +17,9 @@ public class Form {
 
 
 
-    public Form(String formID, String WorkflowID,  String FormType, String FormName, List<Map<String, Object>> QuestionData, String Status) {
+    public Form(String formID, String FormType, String FormName, List<Map<String, Object>> QuestionData, String Status) {
         super();
         this.formID = formID;
-        this.WorkflowID = WorkflowID;
         this.FormType = FormType;
         this.FormName = FormName;
         this.QuestionData = QuestionData;
@@ -37,17 +35,6 @@ public class Form {
     public void setFormID(String formID) {
         formID = formID;
     }
-
-
-    public String getWorkflowID() {
-        return WorkflowID;
-    }
-
-
-    public void setWorkflowID(String workflowID) {
-        WorkflowID = workflowID;
-    }
-
 
     public String getFormType() {
         return FormType;
