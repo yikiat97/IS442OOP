@@ -68,7 +68,7 @@ function ViewForms() {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log('Form deleted successfully:', data);
+          alert('Form deleted successfully:', data);
           setSelectedForm({});
           setSelectedFormID(null);
         })
