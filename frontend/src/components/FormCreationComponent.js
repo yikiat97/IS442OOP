@@ -170,14 +170,20 @@ const FormCreationComponent = (props) => {
 		
 
 	useEffect(() => {
-        console.log(formData)
-		$(fb.current).formBuilder({
+        console.log(jsonDataToPass)
+		fetch(`http://localhost:8080/getForm/${idToPass}`)
+        .then((res) => res.json())
+        .then((data) => {
+			console.log(data)
+			$(fb.current).formBuilder({
 
-			fields,
-			templates,
-			jsonDataToPass,
-			...options
-		});
+				fields,
+				templates,
+				jsonDataToPass,
+				...options
+			});
+        });
+
 		}, [jsonDataToPass]);
 
 
@@ -185,7 +191,7 @@ const FormCreationComponent = (props) => {
 		<Container maxWidth="lg" sx={{ textAlign: 'left', mt:5 }}>
 			
 
-			<TextField id="formName" variant="outlined" onChange={(event) => setFormName(event.target.value)} value={0}></TextField>				
+			<TextField id="formName" variant="outlined" onChange={(event) => setFormName(event.target.value)} value={jsonDataToPass.formName}></TextField>				
 				<div id="fb-editor" ref={fb} />	
 					<form onSubmit={handleSubmit} sx={{ width: "100%" }}>
 						<Box sx={{ border: 1, borderRadius: 1,padding:"15px", mt:3 }}>
