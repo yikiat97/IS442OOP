@@ -22,51 +22,83 @@ import Create from '@mui/icons-material/Create';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import Container from '@mui/material/Container';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-const styles = {
-    container: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-    },
-};
+import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
+
 function FormHomePage() {
     return (
         
-        <Container maxWidth="md" style={styles.container}>
-            <Grid container spacing={2}>
-                <Grid item xs={4}>
-                    <Card variant="outlined" sx={{ borderRadius: '16px'  }}>
-                        <a href="ViewForms">
-                            <DraftsIcon></DraftsIcon>
-                            <Typography variant="body1">View current forms</Typography>                        
-                        </a>                        
-                    </Card>
-
-
+        <Grid sx={{mt:6, mb:6, textAlign:'left', px:4}}>
+            
+            <Grid container spacing={{ md: 6 }} columns={{xs:12, sm:4,md:4}} sx={{display:"flex", justifyContent:"space-between", alignItems:"center"}}>
+                <Grid item md={2.0} sm={2.5}>
+                    <h1>Form Management</h1>
                 </Grid>
+
+            </Grid>
+
+            <Grid container spacing={4} sx={{pt:4}}>
                 <Grid item xs={4}>
-                    <Card variant="outlined" sx={{ borderRadius: '16px'  }}>
-                        <a href="ViewDeletedForms">
-                            <DeleteOutlineIcon></DeleteOutlineIcon>
-                            <Typography variant="body1">View deleted forms</Typography>                        
-                        </a>                        
+                    <Link href='ViewForms' underline='none'>
+                    <Card sx={{ borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}} style={{backgroundColor: "#E7F9DD", width: '300px', height: '400px'}} >
+                        <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }} >
+                                <DraftsIcon  sx={{color:"#054322"}} style={{ width: '150px', height: '150px' }}></DraftsIcon>
+                                <Typography variant="body1" fontWeight="Bold" color={"#054322"}>
+                                    <Grid container sx={{alignContent:"center", justifyContent:"center", pt:3}}>
+                                        <Grid item>
+                                        View Current Forms
+                                        </Grid>
+                                        <Grid item sx={{pl:1}}>
+                                        <ArrowCircleRightOutlinedIcon  />
+                                        </Grid>
+                                    </Grid>
+                                </Typography>
+                        </CardContent>
                     </Card>
-
-
+                    </Link>
                 </Grid>
+
                 <Grid item xs={4}>
-                    <Card variant="outlined" sx={{ borderRadius: '16px' }}>
-                        <a href="FormCreation">
-                            <CreateIcon></CreateIcon>
-                            <Typography variant="body1">Create forms</Typography>
-                        </a>                        
+                    <Link href='ViewDeletedForms' underline='none'>
+                    <Card sx={{ borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}} style={{backgroundColor: "#FEDBC2" , width: '300px', height: '400px'}}>
+                        <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                <DeleteOutlineIcon  sx={{color:"#8A3C03"}} style={{ width: '150px', height: '150px' }}></DeleteOutlineIcon>
+                                <Typography variant="body1" fontWeight="Bold" color={"#8A3C03"}>
+                                    <Grid container sx={{alignContent:"center", justifyContent:"center", pt:3}}>
+                                        <Grid item>
+                                        View Deleted Forms
+                                        </Grid>
+                                        <Grid item sx={{pl:1}}>
+                                        <ArrowCircleRightOutlinedIcon  />
+                                        </Grid>
+                                    </Grid>
+                                </Typography>
+                        </CardContent>
                     </Card>
-
-
+                    </Link>
                 </Grid>
-            </Grid>               
-        </Container>
+
+                <Grid item xs={4}>
+                    <Link href='FormCreation' underline='none'>
+                    <Card sx={{ borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}} style={{backgroundColor: "#FFD9D9" , width: '300px', height: '400px'}}>
+                        <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                <CreateIcon sx={{color:"#790202"}} style={{ width: '150px', height: '150px' }}></CreateIcon>
+                                <Typography variant="body1" fontWeight="Bold" color={"#790202"}>
+                                    <Grid container sx={{alignContent:"center", justifyContent:"center", pt:3}}>
+                                            <Grid item>
+                                            Create Forms
+                                            </Grid>
+                                            <Grid item sx={{pl:1}}>
+                                            <ArrowCircleRightOutlinedIcon  />
+                                            </Grid>
+                                    </Grid>
+                                </Typography>
+                        </CardContent>
+                    </Card>
+                    </Link>
+                </Grid>
+                
+            </Grid> 
+        </Grid>
  
     );
 }
