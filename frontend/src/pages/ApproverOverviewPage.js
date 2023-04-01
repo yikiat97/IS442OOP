@@ -112,7 +112,7 @@ function ApproverOverviewPage(){
                     rejectedWorkflows.push(workflow)
                 }
 
-                if(workflow.status=="Awaiting Approver"){
+                if(workflow.status=="Pending Approver"){
                     awaitingWorkflows.push(workflow)
                 }
             }

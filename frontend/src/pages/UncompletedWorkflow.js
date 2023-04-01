@@ -37,7 +37,7 @@ function UncompletedWorkflow(){
               if(!(workflow.status=='Approved' || workflow.status=='Rejected' || workflow.status=='Deleted') ){
                 vendorWorkflows.push(workflow)
               }
-              if(workflow.status=="Awaiting Approver"){
+              if(workflow.status=="Pending Approver" || workflow.status=="Pending Admin"){
                 awaitingWorkflows.push(workflow)
               }
             }

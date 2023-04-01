@@ -28,6 +28,7 @@ import { message, Steps, theme } from 'antd';
 function FormWorkflow(){
     useEffect(() => {
         getWorkflow();
+        handleStatusChange();
     }, []);
     const role = sessionStorage.getItem("role");
     const workflowID = useParams().workflowID;
@@ -86,6 +87,7 @@ function FormWorkflow(){
     console.log(status)
     console.log(forms)
     console.log(steps)
+    console.log(workflow)
     const navigate = useNavigate();
     const viewEmails = (event) =>{
         navigate("/ViewWorkflowEmails/" + workflowID)
@@ -93,8 +95,8 @@ function FormWorkflow(){
     
     const statuses = [
         "Pending",
-        "Awaiting Admin",
-        "Awaiting Approver",
+        "Pending Admin",
+        "Pending Approver",
         "Approved",
         "Rejected",
         "Deleted"
@@ -125,70 +127,93 @@ function FormWorkflow(){
 
     console.log(typeof workflowID)
 
-    const updateWorkflow = ()=>{
+    // const updateWorkflow = ()=>{
 
-        console.log(workflowID)
-        let check = true;
+    //     console.log(workflowID)
+    //     let check = true;
         
 
+    //     for(let step of stepsContent){
+
+    //         if(step.content.status=="Pending"){
+    //             alert("Form has not been reviewed!")
+    //             break;
+    //         }
+    //         if(step.content.status!="Approved"){
+    //             check=false;
+    //         }
+    //     }
+
+    //     if(check){
+    //         axios.put("http://localhost:8080/vendorWorkflow/approveVendorWorkflow/" + workflowID)
+    //                         .then((response)=>{
+    //                             console.log(response.status, response.data.token);
+    //                             alert("Vendor Workflow has been updated!")
+    //                             window.location.reload();
+    //                         })
+            
+    //     } else{
+    //         axios.put("http://localhost:8080/vendorWorkflow/rejectVendorWorkflow/" + workflowID)
+    //                     .then((response)=>{
+    //                         console.log(response.status, response.data.token);
+    //                         alert("Vendor Workflow has been updated!")
+    //                         window.location.reload();
+    //                     })
+    //     }
+    // }
+
+    const handleStatusChange = () =>{
+
+        let vendorComplete = true;
+        let adminComplete =true;
+        let approverComplete = true
         for(let step of stepsContent){
 
-            if(step.content.status=="Pending"){
-                alert("Form has not been reviewed!")
-                break;
+            if(role=='Vendor' && step.content.status!="Pending"){
+                vendorComplete=false;
             }
-            if(step.content.status!="Approved"){
-                check=false;
-            }
+
+            if(role=='Admin' && step.content.status!="Awaiting Approval"){
+                vendorComplete=false;
+            } 
+
+            if(role=='Approver' && (step.content.status!="Approve" || step.content.status!="Reject" )){
+                approverComplete=false;
+            } 
+
         }
 
-        if(check){
+        if(vendorComplete && role=='Vendor'){
+            axios.put("http://localhost:8080/vendorWorkflow/vendorWorkflowToAdmin/" + workflowID)
+                            .then((response)=>{
+                                console.log(response.status, response.data.token);
+                            })
+            
+        } else if (adminComplete && role=='Admin'){
+            axios.put("http://localhost:8080/vendorWorkflow/vendorWorkflowToApprover/" + workflowID)
+                        .then((response)=>{
+                            console.log(response.status, response.data.token);
+                        })
+        }
+
+
+        if(approverComplete){
             axios.put("http://localhost:8080/vendorWorkflow/approveVendorWorkflow/" + workflowID)
                             .then((response)=>{
                                 console.log(response.status, response.data.token);
-                                alert("Vendor Workflow has been updated!")
-                                window.location.reload();
+                                
                             })
             
         } else{
             axios.put("http://localhost:8080/vendorWorkflow/rejectVendorWorkflow/" + workflowID)
                         .then((response)=>{
                             console.log(response.status, response.data.token);
-                            alert("Vendor Workflow has been updated!")
-                            window.location.reload();
+                            
                         })
         }
     }
 
-    const handleStatusChange = (e) =>{
-        setStatus(e.target.value)
-        let complete = true;
-
-        for(let step of stepsContent){
-
-            if(step.content.status!="Pending"){
-                complete=false;
-            }
-
-        }
-
-        if(complete && role=='Vendor'){
-            axios.put("http://localhost:8080/vendorWorkflow/vendorWorkflowToAdmin/" + workflowID)
-                            .then((response)=>{
-                                console.log(response.status, response.data.token);
-                                alert("Vendor Workflow has been updated!")
-                                window.location.reload();
-                            })
-            
-        } else if (complete && role=='Admin'){
-            axios.put("http://localhost:8080/vendorWorkflow/vendorWorkflowToApprover/" + workflowID)
-                        .then((response)=>{
-                            console.log(response.status, response.data.token);
-                            alert("Vendor Workflow has been updated!")
-                            window.location.reload();
-                        })
-        }
-    }
+    
 
 
     return(
@@ -211,7 +236,7 @@ function FormWorkflow(){
 
 
                 <Grid item md={0.75} sm={1.5} sx={{justifyContent:"flex-end", display:'flex'}}>
-                    {role=='Admin'?
+                    {/* {role=='Admin'?
                         <Button color="primary" variant="contained" fullWidth sx={{ backgroundColor:"#2596BE"}} startIcon={<EmailIcon/>} onClick={viewEmails}>
                         View Emails
                         </Button> : 
@@ -221,7 +246,11 @@ function FormWorkflow(){
                         >
                         Update Workflow
                         </Button> : <></>
-                    }
+                    } */}
+
+                        <Button color="primary" variant="contained" fullWidth sx={{ backgroundColor:"#2596BE"}} startIcon={<EmailIcon/>} onClick={viewEmails}>
+                        View Emails
+                        </Button>
                     
                 </Grid>
 
@@ -252,7 +281,7 @@ function FormWorkflow(){
                         <Select variant="filled" size='small' value={status} select 
                         sx={{width:200}} disabled={role=='Vendor'}
                         onChange={(e) =>{
-                            handleStatusChange(e)
+                            setStatus(e.target.value)
                         }}>
                         {statuses.map((status, index) => (
                                             <MenuItem key={index} value={status}>
@@ -331,7 +360,7 @@ function FormWorkflow(){
                                     fakeID={stepsContent[current].key} 
                                     status={stepsContent[current].content.status} 
                                     role={role} form={forms[current]}
-                                    /> }
+                                    workflowStatus={status}/> }
 
             
         

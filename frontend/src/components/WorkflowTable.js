@@ -147,7 +147,7 @@ function WorkflowTable({props}){
                                         status === 'Approved' ? '#4caf50' : 
                                         status === 'Rejected' ? '#c62828' :
                                         status === 'Deleted' ? '#c62828' :
-                                        status === 'Awaiting Approver' ? '#ff9800' :
+                                        status === 'Pending Approver' ? '#ff9800' :
                                         status === 'Pending' ? '#ff9800' : '#03a9f4'}}></Chip>
         ),
     
