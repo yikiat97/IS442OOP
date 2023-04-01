@@ -264,7 +264,7 @@ function FormWorkflow(){
 
         <Paper elevation={1} sx={{height:"30%", pt:2, pb:2, px:3, mt:4}}>
             <Divider light sx={{mb:2}}>Workflow Details</Divider>
-            <Grid container spacing={6} sx={{display:"flex", justifyContent:"flex-start"}}>  
+            <Grid container spacing={6} sx={{display:"flex", justifyContent:"flex-start", alignItems:"center"}}>  
                 <Grid item>
                     <FormControl>
                         <FormLabel htmlFor="WorkflowName" sx={{}}>Company</FormLabel>
@@ -313,7 +313,8 @@ function FormWorkflow(){
                                         {   step.content.status=='Pending' ? <Chip label={step.content.status} sx={{backgroundColor:"#ffb74d", width:"100px" }}/> :
                                             step.content.status=='Approved' ? <Chip label={step.content.status}  sx={{ width:"100px" }} color="success"/> :
                                             step.content.status=='Rejected' ? <Chip label={step.content.status} sx={{ width:"100px" }} color="error"/> :
-                                            step.content.status==null ? <Chip label="Incomplete" sx={{backgroundColor:"#e0e0e0", width:"100px" }}/> : <></>
+                                            step.content.status==null ? <Chip label="Incomplete" sx={{backgroundColor:"#e0e0e0", width:"100px" }}/> : 
+                                            step.content.status=="Awaiting Approval" ? <Chip label="Awaiting Approval" sx={{backgroundColor:"#bbdefb", width:"100px" }}/> :<></>
                                         }
                                         
                                     </ListItemIcon>
