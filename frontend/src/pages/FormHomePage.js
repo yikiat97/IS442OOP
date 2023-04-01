@@ -57,15 +57,17 @@ function FormHomePage() {
                     </Link>
                 </Grid>
 
+                
+
                 <Grid item xs={4}>
-                    <Link href='ViewDeletedForms' underline='none'>
+                    <Link href='FormCreation' underline='none'>
                     <Card sx={{ borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}} style={{backgroundColor: "#FEDBC2" , width: '300px', height: '400px'}}>
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                                <DeleteOutlineIcon  sx={{color:"#8A3C03"}} style={{ width: '150px', height: '150px' }}></DeleteOutlineIcon>
+                                <CreateIcon  sx={{color:"#8A3C03"}} style={{ width: '150px', height: '150px' }}></CreateIcon>
                                 <Typography variant="body1" fontWeight="Bold" color={"#8A3C03"}>
                                     <Grid container sx={{alignContent:"center", justifyContent:"center", pt:3}}>
                                         <Grid item>
-                                        View Deleted Forms
+                                        Create Forms
                                         </Grid>
                                         <Grid item sx={{pl:1}}>
                                         <ArrowCircleRightOutlinedIcon  />
@@ -78,14 +80,14 @@ function FormHomePage() {
                 </Grid>
 
                 <Grid item xs={4}>
-                    <Link href='FormCreation' underline='none'>
+                    <Link href='ViewDeletedForms' underline='none'>
                     <Card sx={{ borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}} style={{backgroundColor: "#FFD9D9" , width: '300px', height: '400px'}}>
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                                <CreateIcon sx={{color:"#790202"}} style={{ width: '150px', height: '150px' }}></CreateIcon>
+                                <DeleteOutlineIcon sx={{color:"#790202"}} style={{ width: '150px', height: '150px' }}></DeleteOutlineIcon>
                                 <Typography variant="body1" fontWeight="Bold" color={"#790202"}>
                                     <Grid container sx={{alignContent:"center", justifyContent:"center", pt:3}}>
                                             <Grid item>
-                                            Create Forms
+                                            View Deleted Forms
                                             </Grid>
                                             <Grid item sx={{pl:1}}>
                                             <ArrowCircleRightOutlinedIcon  />
