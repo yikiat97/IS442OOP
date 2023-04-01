@@ -122,9 +122,9 @@ public class VendorWorkflowController {
 
     // id is a mandatory field to input
     // status to be automatically updated, dont need for updateMappingDTO
-    @PutMapping("/approveVendorWorkflow")
+    @PutMapping("/approveVendorWorkflow/{id}")
     public ResponseEntity<VendorWorkflow> approveVendorWorkflow(
-            @RequestBody(required = false) String id) {
+            @PathVariable String id) {
 
         // map the json object so that id, forms and workflowname can be manipulated
         // List<String> forms = VendorWorkflowUpdateMappingDTO.getForms();
@@ -159,9 +159,9 @@ public class VendorWorkflowController {
     // "6412eaf10bf80f2c012bd872",
 
     // id is a mandatory field to input
-    @PutMapping("/rejectVendorWorkflow")
+    @PutMapping("/rejectVendorWorkflow/{id}")
     public ResponseEntity<VendorWorkflow> rejectVendorWorkflow(
-            @RequestBody(required = false) String id) {
+            @PathVariable String id) {
         Optional<VendorWorkflow> VendorWorkflow = VendorWorkflowRepository.findById(id);
         if (VendorWorkflow.isPresent()) {
             // System.out.println(newStatus);
@@ -203,9 +203,9 @@ public class VendorWorkflowController {
     // "6412eaf10bf80f2c012bd872",
 
     // id is a mandatory field to input
-    @PutMapping("/deleteVendorWorkflow")
+    @PutMapping("/deleteVendorWorkflow/{id}")
     public ResponseEntity<VendorWorkflow> deleteVendorWorkflow(
-            @RequestBody(required = false) String id) {
+            @PathVariable String id) {
         Optional<VendorWorkflow> VendorWorkflow = VendorWorkflowRepository.findById(id);
         if (VendorWorkflow.isPresent()) {
             // System.out.println(newStatus);
@@ -224,4 +224,88 @@ public class VendorWorkflowController {
         }
     }
 
+    // Path after approval of all forms
+    // Path variable to include status to change vendorWorkflow to
+    // JSON format
+
+    // "6412eaf10bf80f2c012bd872",
+
+    // id is a mandatory field to input
+    // @PutMapping("/updateVendorWorkflowStatus/{status}")
+    // public ResponseEntity<VendorWorkflow>
+    // updateVendorWorkflowStatus(@PathVariable String status,
+    // @RequestBody(required = false) String id) {
+    // Optional<VendorWorkflow> VendorWorkflow =
+    // VendorWorkflowRepository.findById(id);
+    // if (VendorWorkflow.isPresent()) {
+    // // System.out.println(newStatus);
+    // // System.out.println(VendorWorkflow.get().getStatus());
+    // // if status changes to approve, then change the date to current date
+    // VendorWorkflow _VendorWorkflow = VendorWorkflowRepository
+    // .save(new VendorWorkflow(VendorWorkflow.get().getId(),
+    // VendorWorkflow.get().getForms(),
+    // VendorWorkflow.get().getWorkflowName(), status,
+    // VendorWorkflow.get().getEmail(), VendorWorkflow.get().getCompany(),
+    // VendorWorkflow.get().getDate(),
+    // VendorWorkflow.get().getName(), VendorWorkflow.get().getQuestionID()));
+    // return ResponseEntity.ok(_VendorWorkflow);
+
+    // } else {
+    // throw new DataNotFoundException("Workflow Not Found");
+    // }
+    // }
+
+    // Path for pending admin
+    // JSON format
+
+    // "6412eaf10bf80f2c012bd872",
+
+    // id is a mandatory field to input
+    @PutMapping("/vendorWorkflowToAdmin/{id}")
+    public ResponseEntity<VendorWorkflow> vendorWorkflowToAdmin(
+            @PathVariable String id) {
+        Optional<VendorWorkflow> VendorWorkflow = VendorWorkflowRepository.findById(id);
+        if (VendorWorkflow.isPresent()) {
+            // System.out.println(newStatus);
+            // System.out.println(VendorWorkflow.get().getStatus());
+            // if status changes to approve, then change the date to current date
+            VendorWorkflow _VendorWorkflow = VendorWorkflowRepository
+                    .save(new VendorWorkflow(VendorWorkflow.get().getId(), VendorWorkflow.get().getForms(),
+                            VendorWorkflow.get().getWorkflowName(), "Pending Admin",
+                            VendorWorkflow.get().getEmail(), VendorWorkflow.get().getCompany(),
+                            VendorWorkflow.get().getDate(),
+                            VendorWorkflow.get().getName(), VendorWorkflow.get().getQuestionID()));
+            return ResponseEntity.ok(_VendorWorkflow);
+
+        } else {
+            throw new DataNotFoundException("Workflow Not Found");
+        }
+    }
+
+    // Path to pending approver
+    // JSON format
+
+    // "6412eaf10bf80f2c012bd872",
+
+    // id is a mandatory field to input
+    @PutMapping("/vendorWorkflowToApprover/{id}")
+    public ResponseEntity<VendorWorkflow> vendorWorkflowToApprover(
+            @PathVariable String id) {
+        Optional<VendorWorkflow> VendorWorkflow = VendorWorkflowRepository.findById(id);
+        if (VendorWorkflow.isPresent()) {
+            // System.out.println(newStatus);
+            // System.out.println(VendorWorkflow.get().getStatus());
+            // if status changes to approve, then change the date to current date
+            VendorWorkflow _VendorWorkflow = VendorWorkflowRepository
+                    .save(new VendorWorkflow(VendorWorkflow.get().getId(), VendorWorkflow.get().getForms(),
+                            VendorWorkflow.get().getWorkflowName(), "Pending Approver",
+                            VendorWorkflow.get().getEmail(), VendorWorkflow.get().getCompany(),
+                            VendorWorkflow.get().getDate(),
+                            VendorWorkflow.get().getName(), VendorWorkflow.get().getQuestionID()));
+            return ResponseEntity.ok(_VendorWorkflow);
+
+        } else {
+            throw new DataNotFoundException("Workflow Not Found");
+        }
+    }
 }
