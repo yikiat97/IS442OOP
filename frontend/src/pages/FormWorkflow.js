@@ -123,13 +123,41 @@ function FormWorkflow(){
     };
 
 
-    console.log(typeof workflowID)
+    console.log(steps)
 
     const handleStatusChange =()=>{
         let statusUpdate={
             id:workflowID,
             status:status
         }
+
+        if(status=="Pending"){
+            for(let step of steps){
+                
+                console.log(step)
+                let formJsonObject = {questionData: step.questionData, status: "Pending", comments:step.comments};
+                console.log(step.questionID)
+                
+                fetch("http://localhost:8080/Question/updateQuestion/" + step.questionID, {
+                method: "PUT",
+                body: JSON.stringify(formJsonObject),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    alert("Submitted");
+                    //window.location.reload();
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    alert("failed");
+                });
+            }
+        }
+
+        
 
         axios.put("http://localhost:8080/vendorWorkflow/updateVendorWorkflowStatus", statusUpdate)
                             .then((response)=>{
