@@ -49,6 +49,17 @@ function FormWorkflow(){
                 const forms =[]
                 console.log(response.data)
                 //response.data.questionID = ["642586cacb7791428c767469","642586cacb7791428c76746a"]
+
+                for(const formID of response.data.forms){
+                    
+                    
+                    axios.get("http://localhost:8080/getForm/" + formID)
+                    .then((response)=>{
+                        forms.push(response.data.formName)
+                    })
+                
+                }
+
                 for(const id of response.data.questionID){
                     
                     promises.push(
@@ -56,15 +67,7 @@ function FormWorkflow(){
                         console.log(promises)
                 }
 
-                for(const formID of response.data.forms){
-                    
-                    
-                        axios.get("http://localhost:8080/getForm/" + formID)
-                        .then((response)=>{
-                            forms.push(response.data.formName)
-                        })
-                    
-                }
+            
 
             
                 setForms(forms)
@@ -83,7 +86,7 @@ function FormWorkflow(){
         })
         .catch(error => console.error(error));
     };
-
+    console.log(forms)
     console.log(steps)
     const navigate = useNavigate();
     const viewEmails = (event) =>{
@@ -195,7 +198,7 @@ function FormWorkflow(){
                             {stepsContent.map((step) =>(
                             <ListItem>
                                     <ListItemIcon sx={{pr:2}}>
-                                        {   step.content.status=='Pendings' ? <Chip label={step.content.status} sx={{backgroundColor:"#ffb74d", width:"100px" }}/> :
+                                        {   step.content.status=='Pending' ? <Chip label={step.content.status} sx={{backgroundColor:"#ffb74d", width:"100px" }}/> :
                                             step.content.status=='Approved' ? <Chip label={step.content.status}  sx={{ width:"100px" }} color="success"/> :
                                             step.content.status=='Rejected' ? <Chip label={step.content.status} sx={{ width:"100px" }} color="error"/> :
                                             step.content.status==null ? <Chip label="Incomplete" sx={{backgroundColor:"#e0e0e0", width:"100px" }}/> : <></>
@@ -250,10 +253,10 @@ function FormWorkflow(){
                     </Grid>
 
                 </Grid>
-            {steps.length>0 && <VendorFormPreview formData={stepsContent[current].content} fakeID={stepsContent[current].key} status={"Pending"} role={role} form={forms[current]}/> }
+            {steps.length>0 && <VendorFormPreview formData={stepsContent[current].content} fakeID={stepsContent[current].key} status={stepsContent[current].content.status} role={role} form={forms[current]}/> }
 
             
-            <Grid container>
+            {/* <Grid container>
                 <Grid item sx={{p:2}} xs={12} sm={12} md={12}>
                 {workflow.status=='Pending' ? <></> :
                     <><Divider light sx={{ my: 3 }}>Approval</Divider><TextField
@@ -288,7 +291,7 @@ function FormWorkflow(){
                 </Grid>
                 
 
-            </Grid>
+            </Grid> */}
         
         </div>
         <div

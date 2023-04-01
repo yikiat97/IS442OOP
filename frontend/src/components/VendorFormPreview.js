@@ -18,6 +18,10 @@ import {
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import Rating from "./Rating";
+import Divider from '@mui/material/Divider';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import CancelIcon from '@mui/icons-material/Cancel';
+
 import Canvas from "./canvas";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -36,6 +40,9 @@ const VendorFormPreview = ({ formData, fakeID, status,role }) => {
   const [rating,setRating] = useState(null)
 
 console.log(formData)
+  const [updateStatus, setStatus]=useState(status)
+  const [comments, setComments]=useState("");
+  // console.log(updateStatus)
   if (formData == undefined) {
     return (
       
@@ -92,6 +99,34 @@ console.log(formData)
   //   else {
 
   //   }
+  }
+
+
+
+  const updateForm = (data) => {
+
+      // Check for invalid fields
+    const invalidFields = data
+    console.log(data)
+    let formJsonObject = { questionData: data,status: updateStatus, comments: comments };
+    console.log(formJsonObject)
+    fetch("http://localhost:8080/Question/updateQuestion/" + fakeID, {
+      method: "PUT",
+      body: JSON.stringify(formJsonObject),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        alert("Submitted");
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("failed");
+      });
+
   }
 
   const save = (data) => {
@@ -439,12 +474,14 @@ console.log(formData)
   };
 
   return (
-    <Container maxWidth="xl">
-      <Typography variant="h1" component="h1" sx={{ fontWeight: 'bold' }}>
-          {formData.FormName}
+    <Container maxWidth="xl" sx={{py:5}}>
+      <Divider/>
+      <Typography variant="h4" component="h4" sx={{ fontWeight: 'bold', py:2}}>
+          {form}
           <br />
       </Typography>
-      <Grid container spacing={2} sx={{ textAlign: 'left' }}>
+
+      <Grid container sx={{ textAlign: 'left' }}>
 
           {formData.questionData.map((field, index) => (
               <Grid key={index} item xs={12}sx={{ textAlign: 'left' }} >
@@ -455,13 +492,56 @@ console.log(formData)
               )}
               </Grid>
           ))}
-          <Grid item xs={12}>
-        <Button variant="contained" color="primary" onClick={() => save(updatedStructure)}>
-            Save
-          </Button>
-          <Button variant="contained" color="primary" onClick={() => submit(updatedStructure)}>
-            Submit
-          </Button>
+
+          <Grid item sx={{py:2}} xs={12} sm={12} md={12}>
+          
+              <><Divider light sx={{ my: 3 }}>Approval</Divider><TextField
+                                  label="Comments"
+                                  fullWidth
+                                  multiline
+                                  rows={5}
+                                  required
+                                  defaultValue={comments}
+                                  disabled={role == 'Admin' || role == 'Vendor'}
+                                  onChange={(e)=>{
+                                    console.log(e.target.value)
+                                                setComments(e.target.value)
+                                            }} /></>
+          
+          
+
+          </Grid>
+          
+          <Grid item xs={2} sx={{pt:2}} >
+            {(role=='Admin' || role=='Vendor')?
+              <Button variant="contained" color="primary" onClick={() => save(updatedStructure)}>
+              Save
+            </Button> :
+            role=="Approver" ?
+              <Button variant="contained" color="success" startIcon={<TaskAltIcon/>} 
+                onClick={() => {  setStatus("Approved")
+                                  updateForm(updatedStructure)
+                                  }}>
+                Approve
+              </Button>  : <></>
+
+            }
+            
+          </Grid>
+          <Grid item xs={2} sx={{pt:2}}>
+          {(role=='Admin' || role=='Vendor') ?
+            <Button variant="contained" color="primary" onClick={() => submit(updatedStructure)}>
+              Submit
+            </Button> :
+            role=="Approver" ?
+            <Button variant="contained" color="error" startIcon={<CancelIcon/>} 
+            onClick={()=> { setStatus("Rejected")
+                            updateForm(updatedStructure)
+                            
+                    }}>
+                    Reject
+            </Button>  : <></>
+          }
         </Grid>
       </Grid>
       {/* {renderRatingsSummary()} */}
