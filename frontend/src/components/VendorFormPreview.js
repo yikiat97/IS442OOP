@@ -39,10 +39,11 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form }) => {
   const [signature, setSignature] = useState(null)
   const [rating,setRating] = useState(null)
 
-console.log(form)
+  
   const [updateStatus, setStatus]=useState(status)
-  const [comments, setComments]=useState("");
-  // console.log(updateStatus)
+  const [comments, setComments]=useState(formData.comments);
+  console.log(updateStatus)
+  console.log(formData)
   if (formData == undefined) {
     return (
       
@@ -501,7 +502,7 @@ console.log(form)
                                   multiline
                                   rows={5}
                                   required
-                                  defaultValue={comments}
+                                  value={comments}
                                   disabled={role == 'Admin' || role == 'Vendor'}
                                   onChange={(e)=>{
                                     console.log(e.target.value)

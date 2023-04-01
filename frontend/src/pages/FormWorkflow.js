@@ -15,17 +15,13 @@ import {
     ListItemText,
     ListItemIcon,
     Chip, 
-    IconButton
+    IconButton,
+    Select
 } from "@mui/material";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import EmailIcon from '@mui/icons-material/Email';
 import Divider from '@mui/material/Divider';
 import VendorFormPreview from '../components/VendorFormPreview';
 import { useParams, useNavigate } from 'react-router-dom';
-import FormPreview from '../components/FormPreview';
-import TaskAltIcon from '@mui/icons-material/TaskAlt';
-import CancelIcon from '@mui/icons-material/Cancel';
 import { message, Steps, theme } from 'antd';
 
 function FormWorkflow(){
@@ -38,6 +34,7 @@ function FormWorkflow(){
     const[workflow, setWorkflow]=React.useState([])
     const[steps, setSteps]=React.useState([])
     const[forms, setForms]=React.useState([])
+    const [status, setStatus]=React.useState("")
 
     const getWorkflow = () => {
 
@@ -49,7 +46,7 @@ function FormWorkflow(){
                 const forms =[]
                 console.log(response.data)
                 //response.data.questionID = ["642586cacb7791428c767469","642586cacb7791428c76746a"]
-
+                setStatus(response.data.status)
                 for(const formID of response.data.forms){
                     
                     
@@ -86,6 +83,7 @@ function FormWorkflow(){
         })
         .catch(error => console.error(error));
     };
+    console.log(status)
     console.log(forms)
     console.log(steps)
     const navigate = useNavigate();
@@ -126,9 +124,8 @@ function FormWorkflow(){
 
     console.log(stepsContent)
 
-    const handleStatusChange = (e) =>{
-        const newStatus = e.target.value
-    }
+
+    
 
     return(
     
@@ -176,17 +173,17 @@ function FormWorkflow(){
                 <Grid item>
                     <FormControl>
                         <FormLabel htmlFor="WorkflowName" sx={{}}>Status</FormLabel>
-                        <TextField variant="filled" size='small' value={workflow.status} select 
+                        <Select variant="filled" size='small' value={status} select 
                         sx={{width:200}} disabled={role=='Vendor'}
                         onChange={(e) =>{
-                            handleStatusChange(e)
+                            setStatus(e.target.value)
                         }}>
-                        {statuses.map((status) => (
-                                            <MenuItem key={status} value={status}>
+                        {statuses.map((status, index) => (
+                                            <MenuItem key={index} value={status}>
                                             {status}
                                             </MenuItem>
                                         ))}
-                        </TextField>
+                        </Select>
                     </FormControl>
                 </Grid>
             </Grid> 
@@ -253,45 +250,13 @@ function FormWorkflow(){
                     </Grid>
 
                 </Grid>
-            {steps.length>0 && <VendorFormPreview formData={stepsContent[current].content} fakeID={stepsContent[current].key} status={stepsContent[current].content.status} role={role} form={forms[current]}/> }
+            {steps.length>0 && 
+                <VendorFormPreview formData={stepsContent[current].content} 
+                                    fakeID={stepsContent[current].key} 
+                                    status={stepsContent[current].content.status} 
+                                    role={role} form={forms[current]}/> }
 
             
-            {/* <Grid container>
-                <Grid item sx={{p:2}} xs={12} sm={12} md={12}>
-                {workflow.status=='Pending' ? <></> :
-                    <><Divider light sx={{ my: 3 }}>Approval</Divider><TextField
-                                        label="Comments"
-                                        fullWidth
-                                        multiline
-                                        rows={5}
-                                        required
-                                        defaultValue="Input Comments"
-                                        disabled={role == 'Admin' || role == 'Vendor'} /></>
-                }
-                
-    
-                </Grid>
-
-                <Grid item sx={{p:2}} xs={6} sm={6} md={2}>
-                {role=='Approver' && workflow.status=='Awaiting Approver'?
-                    <Button variant="contained" color="success" startIcon={<TaskAltIcon/>}>
-                        Approve
-                    </Button> : <></>
-                }
-                </Grid>
-
-
-                <Grid item sx={{p:2}} xs={6} sm={6} md={2}>
-                    {role=='Approver' && workflow.status=='Awaiting Approver'?
-                    <Button variant="contained" color="error" startIcon={<CancelIcon/>}>
-                    Reject
-                    </Button>  : <></>
-                    }
-                    
-                </Grid>
-                
-
-            </Grid> */}
         
         </div>
         <div
