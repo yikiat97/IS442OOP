@@ -5,7 +5,6 @@ function Rating(props) {
 
   const handleChange = (event) => {
     console.log(event.target.value)
-    props.setRating(event.target.value)
     if (props.onRatingChange) {
       props.onRatingChange(event.target.value);
     }

@@ -18,17 +18,28 @@ const FormCreationComponent = (props) => {
 	const [formJsonObject, setFormJsonObject] = useState(null);
 	const [jsonObjectToReturn, setJsonObjectToReturn] = useState(null);
 	const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-	const [formName, setFormName] = useState(null);
+	const [formNameValue, setFormNameValue] = useState(props.initialValue || '');
     const [ratings, setRatings] = useState([]);
     
 	const { jsonDataToPass, setJsonDataToPass, formFields, setFormFields,idToPass } = props;
     // const [jsonData, setJsonData] = useState(props.jsonDataToPass);
     // const [fieldsStored, setFieldsStored] = useState(props.formFields);
 	console.log(idToPass);
-	const formData = jsonDataToPass
+	const formData = jsonDataToPass.questionData
 	console.log(formData)
 	// const passedInFormName = jsonDataToPass.formName
 	// console.log(passedInFormName)
+	console.log(formNameValue)
+	useEffect(() => {
+		$(fb.current).formBuilder({
+
+			fields,
+			templates,
+			formData,
+			...options
+		});
+	});
+
 	let fields = [
 		{
 		label: 'Signature',
@@ -46,25 +57,35 @@ const FormCreationComponent = (props) => {
 		}
 	];
 	const handleSubmit = (event) => {
-		// event.preventDefault(); // Prevent the default form submission behavior
-		console.log(formJsonObject)
-		//to be changed to updateForm, get current formID
-		fetch('http://localhost:8080/Form/insertForm', {
-			method: 'POST',
-			body: JSON.stringify(formJsonObject),
-			headers: {
-			'Content-Type': 'application/json'
-			}
-		})
-		.then(response => response.json())
-		.then(data => {
-			alert("submitted")
-			console.log(data); // Handle the response data
-		})
-		.catch(error => {
-			console.error('Error:', error);
-			alert("failed")
-		});
+		event.preventDefault(); // Prevent the default form submission behavior
+		formJsonObject.FormName = formNameValue;
+		console.log(JSON.stringify(formJsonObject))
+		// console.log(idToPass)
+		//6412db6e15da8346ffc889d7
+		var url = "http://localhost:8080/Form/updateFormById/" + idToPass
+		fetch(url, {
+				method: "PUT",
+				headers: {
+				"Content-Type": "application/json",
+				},
+				body: JSON.stringify(formJsonObject)
+			})
+				.then((response) => {
+				if (response.ok) {
+					alert("Form updated!")
+					window.location.reload(); // Reload the current page
+					return response.json();
+				} else {
+					throw new Error("Something went wrong");
+				}
+				})
+				.then((data) => {
+				console.log(data);
+				})
+				.catch((error) => {
+				console.error(error);
+				});
+		
 	};
 	let templates = {
 		canvas: function(fieldData) {
@@ -72,41 +93,19 @@ const FormCreationComponent = (props) => {
 			field: '<canvas id="'+fieldData.name+'" width="0" height="0"></canvas>',
 			onRender: function() {
 				var canvas = document.getElementById(fieldData.name);
-				var context = canvas.getContext("2d");
-				context.fillStyle = "white";
-				context.fillRect(0, 0, canvas.width, canvas.height);
-				canvas.addEventListener("mousedown", startDrawing);
-				canvas.addEventListener("mousemove", draw);
-				canvas.addEventListener("mouseup", stopDrawing);
-				canvas.addEventListener("mouseout", stopDrawing);
-	
-				var isDrawing = false;
-				var lastX, lastY;
-	
-				function startDrawing(event) {
-				isDrawing = true;
-				lastX = event.offsetX;
-				lastY = event.offsetY;
-				}
-	
-				function draw(event) {
-				if (isDrawing) {
-					context.beginPath();
-					context.moveTo(lastX, lastY);
-					context.lineTo(event.offsetX, event.offsetY);
-					context.stroke();
-					lastX = event.offsetX;
-					lastY = event.offsetY;
-				}
-				}
-	
-				function stopDrawing() {
-				isDrawing = false;
-				}
+
 			}
 			};
 		},
-		rating:{}
+		rating:function(fieldData){
+			return{
+				field: '<rating></rating>',
+				onRender: function() {
+	
+				}
+			}
+
+		}
 		
 	};
 	const options = {
@@ -157,8 +156,7 @@ const FormCreationComponent = (props) => {
 				const jsonObject = JSON.parse(formData.replace(/\\/g, '').replace(/\t/g, ''));
 				// setJsonObjectToReturn(jsonObject)
 				const testJson = {};
-				testJson["FormName"] = formName
-				testJson["FormType"]=""
+				testJson["FormName"] = formNameValue
 				testJson["questionData"] = jsonObject
 				console.log(testJson)
 				setFormJsonObject(testJson)
@@ -168,30 +166,17 @@ const FormCreationComponent = (props) => {
 			}
 		};
 		
-
-	useEffect(() => {
-        console.log(jsonDataToPass)
-		fetch(`http://localhost:8080/getForm/${idToPass}`)
-        .then((res) => res.json())
-        .then((data) => {
-			console.log(data)
-			$(fb.current).formBuilder({
-
-				fields,
-				templates,
-				jsonDataToPass,
-				...options
-			});
-        });
-
-		}, [jsonDataToPass]);
+	// const setFormNameValue = (value) => {
+	// 	console.log('New form name:', value);
+	// 	setJsonDataToPass((prevState) => ({ ...prevState, formName: value }));
+	// };
 
 
 	return (
 		<Container maxWidth="lg" sx={{ textAlign: 'left', mt:5 }}>
 			
 
-			<TextField id="formName" variant="outlined" onChange={(event) => setFormName(event.target.value)} value={jsonDataToPass.formName}></TextField>				
+			<TextField id="formName" variant="outlined" onChange={(event) => setFormNameValue(event.target.value)} value={formNameValue}></TextField>				
 				<div id="fb-editor" ref={fb} />	
 					<form onSubmit={handleSubmit} sx={{ width: "100%" }}>
 						<Box sx={{ border: 1, borderRadius: 1,padding:"15px", mt:3 }}>

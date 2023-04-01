@@ -58,6 +58,7 @@ function ViewForms() {
 
   const handleFormSelect = (formId) => {
     setSelectedFormID(formId);
+    
   };
 
   const handleDeleteForm = () => {
@@ -103,11 +104,11 @@ function ViewForms() {
       ) : selectedForm.formName ? (
         <FormCreationComponent
           idToPass={idToPass}
-          jsonDataToPass={jsonDataToPass}
+          jsonDataToPass={selectedForm}
           setJsonDataToPass={setJsonDataToPass}
           formFields={formFields}
           setFormFields={setFormFields}
-          
+          initialValue={selectedForm.formName}
         />
       ) : (
         <p>No form selected</p>

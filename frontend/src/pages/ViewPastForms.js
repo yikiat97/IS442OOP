@@ -162,12 +162,13 @@ function ViewDeletedForms(){
     const restoreForm = (record) => {
         // Implement your logic to send alert for the selected record
         const id = record.formID;
+        const name = record.formName;
         console.log(record)
         axios
             .put(`http://localhost:8080/restoreForm/${id}`)
             .then((res) => {
                 // handle success
-                alert(`Form ${id} restored successfully.`);
+                alert(`Form '${name}' restored successfully.`);
                 window.location.reload();
 
             })

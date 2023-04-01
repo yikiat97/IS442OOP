@@ -164,7 +164,6 @@ const FormCreation = (props) => {
 				// setJsonObjectToReturn(jsonObject)
 				const testJson = {};
 				testJson["FormName"] = formName
-				testJson["FormType"]=""
 				testJson["questionData"] = jsonObject
 				console.log(testJson)
 				setFormJsonObject(testJson)
