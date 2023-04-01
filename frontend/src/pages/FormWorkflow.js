@@ -176,10 +176,16 @@ function FormWorkflow(){
 
     const finalApproval = () =>{
         let approverComplete=true;
+        
         for(let step of steps){
-            if(role=='Approver' && (step.status!='Approved'||step.status!='Rejected')){
+            if(role=='Approver' && (step.status=='Rejected')){
                 approverComplete=false;
+            } else if(role=='Approver' && (step.status=='Approved' ||step.status=='Rejected')){
+                approverComplete=null
+                alert("Form has not been reviewed!")
+                break;
             }
+            
         }
 
         if(role=='Approver' && approverComplete){
@@ -290,7 +296,7 @@ function FormWorkflow(){
                         </Select>
                     </FormControl>
                 </Grid>
-                {(role=='Admin' || role=='Approver') &&
+                {(role=='Admin') &&
                 <Grid item>
                     <Button variant="contained" onClick={handleStatusChange}>Update Workflow</Button>
                 </Grid>
