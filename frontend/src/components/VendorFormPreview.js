@@ -32,14 +32,14 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 
-const VendorFormPreview = ({ formData, fakeID, status,role }) => {
+const VendorFormPreview = ({ formData, fakeID, status,role, form }) => {
   //console.log(formData)
   const [updatedStructure, setUpdatedStructure] = useState(formData.questionData);
   const [invalidFields, setInvalidFields] = useState([]);
   const [signature, setSignature] = useState(null)
   const [rating,setRating] = useState(null)
 
-console.log(formData)
+console.log(form)
   const [updateStatus, setStatus]=useState(status)
   const [comments, setComments]=useState("");
   // console.log(updateStatus)
