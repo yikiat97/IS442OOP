@@ -51,7 +51,7 @@ function ForgetPassword(props) {
 
     try {
       const res = await axios.post(
-        "http://localhost:8080/login/changePassword?email=" + email
+        "http://localhost:8080/login/forgetPassword?email=" + email
       );
       console.log(res, "res");
       setMessage("Email has been sent.");
