@@ -55,8 +55,33 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
   }
 
   const submit = (data) => {
-  // Check for invalid fields
-  const invalidFields = data
+    // Check for invalid fields
+    const newInvalidFields = data.filter((field) => {
+      if (field.required && field.role === role && (field.value === undefined || field.value === '')) {
+        return true;
+      }
+  
+      if (field.type === 'checkbox-group' && field.role === role) {
+        const hasSelectedOption = field.values.some((option) => option.selected);
+        return !hasSelectedOption;
+      }
+  
+      if (field.type === 'radio-group' && field.role === role) {
+        const hasSelectedOption = field.values.some((option) => option.selected);
+        return !hasSelectedOption;
+      }
+  
+      return false;
+    }).map((field) => field.name);
+  
+    setInvalidFields(newInvalidFields);
+  
+    if (newInvalidFields.length > 0) {
+      alert('Please fill out all required fields.');
+      return;
+    }
+  
+  
   console.log(data)
   
   if(role=='Vendor'){
@@ -103,7 +128,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
       .then((response) => response.json())
       .then((data) => {
         alert("Submitted");
-        //window.location.reload();
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -164,6 +189,10 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
       console.log(updatedFields)
       // Update the updatedStructure state using setUpdatedStructure
       setUpdatedStructure(updatedFields);
+      setInvalidFields((prevInvalidFields) => {
+        const newInvalidFields = prevInvalidFields.filter((fieldName) => fieldName !== fieldId);
+        return newInvalidFields;
+      });
     };
 
 
@@ -184,6 +213,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
     
       // Update the fields state using setUpdatedStructure
       setUpdatedStructure(newStructure);
+      
     };
 
 
@@ -214,6 +244,10 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
       });
       // Update the fields state using setFields
       setUpdatedStructure(newStructure);
+      setInvalidFields((prevInvalidFields) => {
+        const newInvalidFields = prevInvalidFields.filter((fieldName) => fieldName !== fieldId);
+        return newInvalidFields;
+      });
     };
 
 
@@ -235,22 +269,57 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
             
                 // Update the updatedStructure state
                 setUpdatedStructure(newStructure);
+                setInvalidFields((prevInvalidFields) => {
+                  const newInvalidFields = prevInvalidFields.filter((fieldName) => fieldName !== fieldId);
+                  return newInvalidFields;
+                });
+      
     };
 
+
+    const handleSelectChange = (fieldId, selectedValue) => {
+      const fieldIndex = updatedStructure.findIndex((field) => field.name === fieldId);
+      let value = null;
+    
+      const newStructure = updatedStructure.map((field, index) => {
+        if (index === fieldIndex) {
+          return { ...field, value: selectedValue };
+        }
+        return field;
+      });
+    
+      setUpdatedStructure(newStructure);
+    
+      setInvalidFields((prevInvalidFields) => {
+        const newInvalidFields = prevInvalidFields.filter((fieldName) => fieldName !== fieldId);
+        return newInvalidFields;
+      });
+    };
+
+
+
+
       const handleFieldChange = (fieldId, value) => {
-          // Find the index of the field in the updatedStructure array
-          const fieldIndex = updatedStructure.findIndex((field) => field.name === fieldId);
-          field.value = value;
-          // Create a new structure array with the updated field value
-          const newStructure = updatedStructure.map((field, index) => {
-              if (index === fieldIndex) {
-                  return { ...field, value };
-              }
-              return field;
-          });
-      
-          // Update the updatedStructure state
-          setUpdatedStructure(newStructure);
+   // Find the index of the field in the updatedStructure array
+   const fieldIndex = updatedStructure.findIndex((field) => field.name === fieldId);
+   field.value = value;
+ 
+   // Create a new structure array with the updated field value
+   const newStructure = updatedStructure.map((field, index) => {
+     if (index === fieldIndex) {
+       return { ...field, value };
+     }
+     return field;
+   });
+ 
+   // Update the updatedStructure state
+   setUpdatedStructure(newStructure);
+ 
+   // If the field's value has changed, remove it from the invalidFields array
+   setInvalidFields((prevInvalidFields) => {
+     const newInvalidFields = prevInvalidFields.filter((fieldName) => fieldName !== fieldId);
+     return newInvalidFields;
+   });
           
       };
       console.log(field)
