@@ -20,6 +20,7 @@ function Rating(props) {
         id="rating-select"
         class="rating"
         onChange={handleChange}
+        defaultValue={props.value || ''}
       >
         <MenuItem value={1}>1 (Poor)</MenuItem>
         <MenuItem value={2}>2 (Below Average)</MenuItem>

@@ -439,7 +439,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form }) => {
         );
 
       case "canvas":
-        console.log(field.role)
+       // console.log(field.role)
           return (
             <Item sx={{ opacity: field.role === role ? 1 : 0 }}>
               <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
@@ -459,9 +459,9 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form }) => {
           );
       case "rating":
         // haveRating=true;
-        console.log(rating)
+        console.log(field.value)
         return(
-            <Rating rating={rating} 
+            <Rating rating={rating} value={field.value}
             setRating={setRating}  
             
             onRatingChange={(newRating) => handleRatingChange(field.name, newRating)}>
