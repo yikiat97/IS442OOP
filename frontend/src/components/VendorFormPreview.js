@@ -175,25 +175,26 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
 
     // Add and update the field handling functions here
     const handleTextareaChange = (fieldId, newValue) => {
-      
       // Clone the updatedStructure array to avoid modifying the original state
       const updatedFields = [...updatedStructure];
     
       // Find the field index
       const fieldIndex = updatedFields.findIndex((f) => f.name === fieldId);
     
-      // Update the value of the textarea
-      updatedFields[fieldIndex].value = newValue;
-      updatedFields[fieldIndex].src = newValue;
-      
-      console.log(updatedFields)
-      // Update the updatedStructure state using setUpdatedStructure
-      setUpdatedStructure(updatedFields);
-      setInvalidFields((prevInvalidFields) => {
-        const newInvalidFields = prevInvalidFields.filter((fieldName) => fieldName !== fieldId);
-        return newInvalidFields;
-      });
+      // Check if the field is found and then update its value
+      if (fieldIndex !== -1) {
+        // Update the value of the textarea
+        updatedFields[fieldIndex].value = newValue;
+        updatedFields[fieldIndex].src = newValue;
+    
+        console.log(updatedFields);
+        // Update the updatedStructure state using setUpdatedStructure
+        setUpdatedStructure(updatedFields);
+      } else {
+        console.error('Field not found:', fieldId);
+      }
     };
+    
 
 
 
