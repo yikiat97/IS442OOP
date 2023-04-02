@@ -509,12 +509,16 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
         // haveRating=true;
         console.log(field.value)
         return(
-            <Rating rating={rating} value={field.value}
-            setRating={setRating}  
-            
-            onRatingChange={(newRating) => handleRatingChange(field.name, newRating)}>
+          <Item>
+              <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
+              <Rating rating={rating} value={field.value}
+              setRating={setRating}  
+              
+              onRatingChange={(newRating) => handleRatingChange(field.name, newRating)}>
 
-            </Rating>
+              </Rating>            
+          </Item>
+
         );
       default:
         return null;
