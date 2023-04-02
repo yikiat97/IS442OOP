@@ -528,7 +528,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
   };
 
   return (
-    <Container maxWidth="xl" sx={{py:5}}>
+    <Container maxWidth="xl" id="generatePDF" sx={{py:5}}>
       <Divider/>
       <Typography variant="h4" component="h4" sx={{ fontWeight: 'bold', py:2}}>
           {form}

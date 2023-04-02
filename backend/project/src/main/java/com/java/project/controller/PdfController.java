@@ -6,6 +6,7 @@ import com.java.project.repository.PdfRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -70,10 +71,29 @@ public class PdfController {
 
     @PostMapping("/saveReactPage/{formID}/{workflowID}")
     public ResponseEntity saveReactPage(@PathVariable("formID") String formID, @PathVariable("workflowID") String workflowID, @RequestBody String pageSource){
+        List<Pdf> pdfList = PdfRepository.findPdfByWorkflowForm(workflowID);
+        String downloadPath = System.getProperty("user.home") + "/Downloads/";
+
+        for (Pdf pdf: pdfList
+             ) {
+            if(pdf.getFormID().equals(formID)){
+                try{
+                    FileOutputStream outputStream = new FileOutputStream(downloadPath + workflowID + "_"+ pdf.getFormID() +"_"+".pdf");
+                    outputStream.write(pdf.getPdfByte());
+                    outputStream.close();
+                    return ResponseEntity.ok("ok");
+
+                }catch(IOException e){
+                    System.out.println(e);
+                    return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
+                }
+            }
+        }
+
         try{
             Document document = Jsoup.parse(pageSource);
             document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
-            File output = new File("current.pdf");
+            File output = new File(downloadPath + workflowID + "_"+ formID +"_"+".pdf");
             ITextRenderer iTextRenderer = new ITextRenderer();
             iTextRenderer.setDocumentFromString(document.html());
             iTextRenderer.layout();
@@ -82,17 +102,20 @@ public class PdfController {
             os.close();
         }catch (IOException e){
             System.out.println(e);
+            return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
         }
 
         try{
-            Path pdfPath = Paths.get("current.pdf");
+            Path pdfPath = Paths.get(downloadPath + workflowID + "_"+ formID +"_"+".pdf");
             byte[] data = Files.readAllBytes(pdfPath);
             Pdf pdf = new Pdf(formID, workflowID, data);
             PdfRepository.save(pdf);
         }catch(FileNotFoundException e){
             System.out.println(e);
+            return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
         }catch(IOException e){
             System.out.println(e);
+            return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
         }
 
         return ResponseEntity.ok("ok");

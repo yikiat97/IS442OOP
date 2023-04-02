@@ -24,6 +24,7 @@ import Divider from '@mui/material/Divider';
 import VendorFormPreview from '../components/VendorFormPreview';
 import { useParams, useNavigate } from 'react-router-dom';
 import { message, Steps, theme } from 'antd';
+import ReactDOMServer from 'react-dom/server';
 
 function FormWorkflow(){
     useEffect(() => {
@@ -88,7 +89,7 @@ function FormWorkflow(){
     console.log(workflow)
     const navigate = useNavigate();
     const viewEmails = (event) =>{
-        navigate("/ViewWorkflowEmails/" + workflowID)
+        navigate("/ViewWorkflowEmails/" + workflowID);
     }
     
     const statuses = [
@@ -246,6 +247,46 @@ function FormWorkflow(){
             finalApproval()
         }
     }
+
+    const savePage = async (pageSource) => {
+        const currFormID = stepsContent[current].key
+        
+        const response = await fetch('http://localhost:8080/pdf/saveReactPage/'+ currFormID+'/' +workflowID, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain',
+          },
+          body: pageSource,
+        });
+      
+        if (response.ok) {
+            alert("PDF generated successfully");
+        } else {
+            if(response.status === 409){
+                alert("PDF already generated");
+            }else{
+                console.log(response);
+            }
+          
+        }
+      };
+
+    const generatePDF = () =>{
+        const target = document.getElementById("generatePDF").outerHTML;
+        const arrTarget = target.split('checked="">');
+        let finalTarget = "";
+        for(let i=0; i<arrTarget.length; i++){
+            if(i===arrTarget.length-1){
+                finalTarget += arrTarget[i];
+            }else{
+                finalTarget += (arrTarget[i] + '><span style="color:red;">Selected: </span>');
+            }
+                
+        }
+    
+        console.log(finalTarget);
+        savePage(finalTarget);
+    }
     
     return(
     
@@ -283,7 +324,6 @@ function FormWorkflow(){
                             View Emails
                             </Button>
                         }
-                        
                     
                 </Grid>
 
@@ -370,7 +410,15 @@ function FormWorkflow(){
         <div style={contentStyle}>
 
             <Grid container sx={{pt:2, pr:2}} columns={{xs:12, sm:12,md:12}} spacing={2}>
-                    <Grid item md={9}></Grid>
+                    <Grid item md={7}></Grid>
+                    <Grid item md={2} sx={{}}>
+                        {(role==="Admin" || role==="Approver") && status==="Approved"
+                            ?<Button color="primary" variant="contained" fullWidth sx={{ backgroundColor:"#2596BE"}} onClick={generatePDF}>
+                                Generate PDF
+                            </Button>
+                            : <></>
+                        }
+                    </Grid>
                     <Grid item md={1.5} sx={{}}>
     
                             <Button sx={{backgroundColor:"#fafafa", color:"#212121"}} variant='contained' fullWidth onClick={() => next()} 
