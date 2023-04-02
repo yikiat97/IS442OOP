@@ -187,7 +187,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
       
       console.log(fieldId)
       const updatedFields = [...updatedStructure];
-    
+      console.log(newValue)
       // Find the field index
       const fieldIndex = updatedFields.findIndex((f) => f.name === fieldId);
     
@@ -316,7 +316,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
    const fieldIndex = updatedStructure.findIndex((field) => field.name === fieldId);
    field.value = value;
    //alert(field.name);
- 
+  
    // Create a new structure array with the updated field value
    const newStructure = updatedStructure.map((field, index) => {
      if (index === fieldIndex) {
@@ -335,7 +335,6 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
    });
           
       };
-      
       
       switch (field.type) {
       case "h2":
@@ -497,7 +496,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
               disabled={field.role !== role}
               required={field.role === role}              
               style={getStylesForField(field.name)}
-              value={field.value}
+              value={field.value || ''}
               onChange={(e) => handleTextareaChange(field.name, e.target.value)}
             />
           </Item>
