@@ -260,14 +260,9 @@ function FormWorkflow(){
         });
       
         if (response.ok) {
-            alert("PDF generated successfully");
+            alert("PDF downloaded successfully");
         } else {
-            if(response.status === 409){
-                alert("PDF already generated");
-            }else{
-                console.log(response);
-            }
-          
+            console.log(response);
         }
       };
 
