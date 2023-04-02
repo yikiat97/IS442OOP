@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.html.Option;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
@@ -46,6 +47,27 @@ public class CompanyController {
         List<User> userList = UserRepository.findByRole("Approver");
         if(!userList.isEmpty()){
             return ResponseEntity.ok(userList.get(0).getCompanyRegistrationNum());
+        }else{
+            throw new DataNotFoundException("Quantum registration number not found");
+        }
+    }
+
+    @GetMapping("/getActiveCompanies")
+    public ResponseEntity getActiveCompanies(){
+        List<User> vendorlist = UserRepository.findByRole("Vendor");
+        List<User> activeUserList = vendorlist.stream().filter(user -> !user.getDeleted()).toList();
+        List<Company> companyList = CompanyRepository.findAll();
+        List<Company> response = new ArrayList<>();
+
+        List<String> activeCompanyIdList = activeUserList.stream().map(User::getCompanyRegistrationNum).toList();
+        if(!companyList.isEmpty()){
+            for (Company company :
+                    companyList) {
+                if (activeCompanyIdList.contains(company.getRegistrationNum())) {
+                    response.add(company);
+                }
+            }
+            return ResponseEntity.ok(response);
         }else{
             throw new DataNotFoundException("Quantum registration number not found");
         }

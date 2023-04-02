@@ -205,6 +205,14 @@ function CompanyDetails(){
                                     <MenuItem value="Vendor">Vendor</MenuItem>
                                     </Select>
                             </FormControl>
+                            <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
+                                <FormHelperText id="outlined-weight-helper-text">Deleted Status</FormHelperText>
+                                {console.log(user, user.deleted)}
+                                    <Select value={user.deleted == true ? "Yes" :  "No"} disabled>
+                                    <MenuItem value="Yes">Yes</MenuItem>
+                                    <MenuItem value="No">No</MenuItem>
+                                    </Select>
+                            </FormControl>
                         </div>
                     ))}
                 </Box>
