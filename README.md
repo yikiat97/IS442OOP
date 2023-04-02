@@ -1,4 +1,4 @@
-# IS442OOP
+# IS442OOP G1T7
 
 Batch Script to run both Frontend and Backend in one command:
 1. Set JAVA_HOME environment variable if not set, recommended to set to java version 17. Example: C:\Program Files\Java\jdk-17.0.5
