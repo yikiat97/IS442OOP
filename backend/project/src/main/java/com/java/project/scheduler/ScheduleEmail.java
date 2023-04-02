@@ -27,12 +27,12 @@ public class ScheduleEmail {
     @Autowired
     VendorWorkflowRepository VendorWorkflowRepository;
 
-    @Scheduled(cron = "0 0 17 * * *") // everyday at 5pm
-    public void reportCurrentTime() {
+    @Scheduled(cron = "0 0 12 * * *") // everyday at 12pm
+    public void AutomatedOverdueEmails() {
         List<VendorWorkflow> vendorWorkflows = VendorWorkflowRepository.findAll();
         for (VendorWorkflow vendorWork : vendorWorkflows
         ) {
-            if (vendorWork.getStatus().equals("Pending") || vendorWork.getStatus().equals("In Progress")) {
+            if (vendorWork.getStatus().equals("Pending")) {
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 LocalDateTime now = LocalDateTime.now();
                 String[] currTimeArr = dtf.format(now).split("/");
