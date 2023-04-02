@@ -33,17 +33,22 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}) => {
+  console.log(formData)
+
   //console.log(formData)
-  const [updatedStructure, setUpdatedStructure] = useState(formData.questionData);
+  const [updatedStructure, setUpdatedStructure] = useState(null);
   const [invalidFields, setInvalidFields] = useState([]);
   const [signature, setSignature] = useState(null)
   const [rating,setRating] = useState(null)
-
-  console.log(workflowStatus)
   const [updateStatus, setStatus]=useState(status)
   const [comments, setComments]=useState(formData.comments);
-  console.log(updateStatus)
-  console.log(formData)
+  
+  useEffect(() => {
+    setUpdatedStructure(formData.questionData)
+  
+  }, [formData.questionData]);
+
+  
   if (formData == undefined) {
     return (
       
@@ -55,6 +60,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
   }
 
   const submit = (data) => {
+    //alert(fakeID)
     // Check for invalid fields
     const newInvalidFields = data.filter((field) => {
       if (field.required && field.role === role && (field.value === undefined || field.value === '')) {
@@ -75,14 +81,15 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
     }).map((field) => field.name);
   
     setInvalidFields(newInvalidFields);
+    //console.log()
   
     if (newInvalidFields.length > 0) {
       alert('Please fill out all required fields.');
       return;
     }
   
-  
-  console.log(data)
+    console.log(data)
+
   
   if(role=='Vendor'){
     status="Pending"
@@ -100,6 +107,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
     .then((response) => response.json())
     .then((data) => {
       alert("Submitted");
+   
       window.location.reload();
     })
     .catch((error) => {
@@ -114,9 +122,9 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
 
       // Check for invalid fields
     const invalidFields = data
-    console.log(data)
+
     let formJsonObject = { questionData: data, status: stat, comments: comments };
-    console.log(formJsonObject)
+
     alert(stat)
     fetch("http://localhost:8080/Question/updateQuestion/" + fakeID, {
       method: "PUT",
@@ -140,7 +148,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
   const save = (data) => {
  
     //alert(fakeID);
-    console.log(data);
+   
     let formJsonObject = { questionData: data };
     fetch("http://localhost:8080/Question/updateQuestion/" + fakeID, {
       method: "PUT",
@@ -152,7 +160,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
       .then((response) => response.json())
       .then((data) => {
         alert("Saved");
-        console.log(data);
+   
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -176,6 +184,8 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
     // Add and update the field handling functions here
     const handleTextareaChange = (fieldId, newValue) => {
       // Clone the updatedStructure array to avoid modifying the original state
+      
+      console.log(fieldId)
       const updatedFields = [...updatedStructure];
     
       // Find the field index
@@ -185,11 +195,12 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
       if (fieldIndex !== -1) {
         // Update the value of the textarea
         updatedFields[fieldIndex].value = newValue;
-        updatedFields[fieldIndex].src = newValue;
+        //updatedFields[fieldIndex].src = newValue;
     
-        console.log(updatedFields);
+        //alert(fieldId);
         // Update the updatedStructure state using setUpdatedStructure
         setUpdatedStructure(updatedFields);
+        console.log(updatedFields)
       } else {
         console.error('Field not found:', fieldId);
       }
@@ -234,7 +245,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
                           }
                           return field;
                       });
-      console.log(fieldIndex)
+     
       // Update the selected property of the radio options
       field.values.forEach((option) => {
         if (option.value === selectedValue) {
@@ -257,7 +268,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
       let value = null
       option.selected = !option.selected;
       // Log the updated fields array
-      console.log(field);
+     
 
       const fieldIndex = updatedStructure.findIndex((field) => field.name === fieldId);
                   // Create a new structure array with the updated field value
@@ -304,6 +315,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
    // Find the index of the field in the updatedStructure array
    const fieldIndex = updatedStructure.findIndex((field) => field.name === fieldId);
    field.value = value;
+   //alert(field.name);
  
    // Create a new structure array with the updated field value
    const newStructure = updatedStructure.map((field, index) => {
@@ -323,7 +335,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
    });
           
       };
-      console.log(field)
+      
       
       switch (field.type) {
       case "h2":
@@ -508,7 +520,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
           );
       case "rating":
         // haveRating=true;
-        console.log(field.value)
+       
         return(
           <Item>
               <Typography sx={{ fontWeight: 'bold' }}>{field.label}</Typography>
@@ -558,7 +570,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
             value={comments}
             disabled={role == 'Admin' || role == 'Vendor'}
             onChange={(e)=>{
-              console.log(e.target.value)
+            
                           setComments(e.target.value)
                       }} /></>
           }
@@ -577,7 +589,7 @@ const VendorFormPreview = ({ formData, fakeID, status,role, form,workflowStatus}
               <Button variant="contained" color="success" startIcon={<TaskAltIcon/>} 
                 onClick={() => { 
                                   updateForm(updatedStructure, "Approved")
-                                  console.log(fakeID)
+                                
                                   }}>
                 Approve
               </Button>  : <></>
