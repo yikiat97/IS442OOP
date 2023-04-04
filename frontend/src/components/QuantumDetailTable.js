@@ -6,6 +6,8 @@ import { Table, Space, Input } from "antd";
 import Highlighter from "react-highlight-words";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
+import axios from "axios";
+import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
 
 function QuantumDetailTable({ props }) {
   const [searchText, setSearchText] = useState("");
@@ -15,6 +17,22 @@ function QuantumDetailTable({ props }) {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
+  };
+
+  const handleDeleteUser = async (e, user) => {
+    console.log(user,)
+    await axios.delete(
+      "http://localhost:8080/login/softDeleteUser?email=" + user.email,
+      {
+        email: user.email,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    window.location.reload();
   };
 
   const getColumnSearchProps = (dataIndex) => ({
@@ -113,7 +131,27 @@ function QuantumDetailTable({ props }) {
       ...getColumnSearchProps("role"),
     },
     {
-      render: () => <DeleteOutlineIcon sx={{ color: "#c62828" }} />,
+      title: "Deleted Status",
+      dataIndex: "deleted",
+      key: "deleted",
+      render: (deleted) => <span>{deleted === true ? "Yes" : "No"}</span>,
+    },
+    {
+      render: (user) => (
+        <span>
+          {user.deleted === true ? (
+            <RestoreFromTrashIcon
+              sx={{ color: "#c62828" }}
+              onClick={(e) => handleDeleteUser(e, user)}
+            />
+          ) : (
+            <DeleteOutlineIcon
+              sx={{ color: "#c62828" }}
+              onClick={(e) => handleDeleteUser(e, user)}
+            />
+          )}
+        </span>
+      ),
     },
     {
       render: (val) => (

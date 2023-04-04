@@ -291,9 +291,12 @@ public class UserController {
 
     @DeleteMapping("/softDeleteUser")
     public ResponseEntity softDeleteUser(@RequestParam String email) {
+        System.out.println(email);
         if (userService.checkEmailExists(email)) {
             User user = UserRepository.findUserByEmail(email);
-            user.setDeleted(true);
+
+            user.setDeleted(!user.getDeleted());
+            UserRepository.save(user);
             return ResponseEntity.ok(user);
         } else {
             throw new DataNotFoundException("User does not exist");
